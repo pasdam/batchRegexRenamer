@@ -1,13 +1,11 @@
 package com.pasdam.regexren.gui.rules;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -24,27 +22,31 @@ import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.gui.RuleContentPanel;
 
 /**
- * @author Paco
- * @version 1.0
+ * Panel used to configure a "Change case" rule
+ * 
+ * @author paco
+ * @version 0.1
  */
 public class ChangeCasePanel extends RuleContentPanel implements ActionListener, DocumentListener, ItemListener {
 
 	private static final long serialVersionUID = 5273872928673106679L;
 
+	/** Array of targets combobox's items*/
 	private final String[] targetValues = new String[2];
+	
+	/** Array of operations combobox's items*/
 	private final String[] operationValues = new String[4];
 
 	// UI components
-	private JLabel separatorLbl, targetLbl, operationLbl;
+	private JLabel separatorLabel, targetLabel, operationLabel;
 	private SteppedComboBox targetCmb, operationCmb;
-	private JTextField separatorTxt;
-	private JCheckBox regexChk;
+	private JTextField separatorText;
+	private JCheckBox regexCheckbox;
 	
+	/**	Rule factory related to this panel */
 	private final ChangeCaseFactory ruleFactory;
 	
-	/**
-	 * Create the panel.
-	 */
+	/** Create the panel */
 	public ChangeCasePanel(ChangeCaseFactory ruleFactory) {
 		super(ruleFactory);
 		
@@ -54,54 +56,57 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 		setBorder(UIManager.getBorder("Button.border"));
 		setMaximumSize(new Dimension(Integer.MAX_VALUE, ONE_ROW_PANEL_HEIGHT));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-//		setLayout(new BorderLayout());
 		
-		// populate row
-		this.targetLbl = new JLabel();
-		this.targetLbl.setAlignmentX(CENTER_ALIGNMENT);
+		// create and add target label
+		this.targetLabel = new JLabel();
+		this.targetLabel.setAlignmentX(CENTER_ALIGNMENT);
+		add(this.targetLabel);
 		
-		add(targetLbl);
-		
+		// add spaces (between them will be added the targets combobox)
 		add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
-
 		add(Box.createHorizontalStrut(FIXED_SPACE_LONG));
 		
-		this.operationLbl = new JLabel();
+		// create and add the operation label
+		this.operationLabel = new JLabel();
+		add(this.operationLabel);
 		
-		add(operationLbl);
-		
+		// add spaces (between them will be added the operations combobox)
 		add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
-		
 		add(Box.createHorizontalStrut(FIXED_SPACE_LONG));
 		
-		this.separatorLbl = new JLabel();
-		add(separatorLbl);
+		// create and add the separator label
+		this.separatorLabel = new JLabel();
+		add(this.separatorLabel);
 
+		// add space
 		add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
 		
-		this.separatorTxt = new JTextField();
-		this.separatorTxt.setMaximumSize(new Dimension(10000, 100));
-		this.separatorTxt.getDocument().addDocumentListener(this);
-		add(separatorTxt);
+		// create and add the separator text
+		this.separatorText = new JTextField();
+		this.separatorText.setMaximumSize(new Dimension(10000, 100));
+		this.separatorText.getDocument().addDocumentListener(this);
+		add(this.separatorText);
 
+		// add space
 		add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
 		
-		this.regexChk = new JCheckBox();
-		this.regexChk.addItemListener(this);
-		add(regexChk);
-		
-		setBorder(BorderFactory.createLineBorder(Color.black));
+		// create and add the regex checkbox
+		this.regexCheckbox = new JCheckBox();
+		this.regexCheckbox.addItemListener(this);
+		add(this.regexCheckbox);
 		
 		// set parameters from ruleFactory
-		this.separatorTxt.setText(ruleFactory.getSentenceSeparator());
-		this.regexChk.setSelected(ruleFactory.isRegex());
+		this.separatorText.setText(ruleFactory.getSentenceSeparator());
+		this.regexCheckbox.setSelected(ruleFactory.isRegex());
 	}
 	
+	/**	Updates the target and operations comboboxes */
 	private void updateCombos() {
+		// remove previous target combobox and create a new one
+		// TODO: update model instead of recreate the view
 		if (this.targetCmb != null) {
 			remove(this.targetCmb);
 		}
-		
 		this.targetCmb = new SteppedComboBox(new DefaultComboBoxModel<String>(targetValues));
 		this.targetCmb.setPreferredSize(new Dimension(60, 20));
 		this.targetCmb.setMinimumSize(new Dimension(60, 18));
@@ -110,6 +115,7 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 		this.targetCmb.addActionListener(this);
 		add(targetCmb, 2);
 
+		// remove previous operation combobox and create a new one
 		if (operationCmb != null) {
 			remove(operationCmb);
 		}
@@ -119,18 +125,16 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 		this.operationCmb.setMaximumSize(new Dimension(100, 32767));
 		this.operationCmb.setSelectedIndex(this.ruleFactory.getOperation());
 		this.operationCmb.addActionListener(this);
-		// hide separator label/text
-		actionPerformed(new ActionEvent(operationCmb, 0, null));
 		add(operationCmb, 6);
 	}
 	
 	@Override
 	public void localeChanged(LocaleManager localeManager) {
-		this.targetLbl	 .setText(localeManager.getString("Rule.target"));
-		this.operationLbl.setText(localeManager.getString("Rule.operation"));
-		this.separatorLbl.setText(localeManager.getString("Rule.sentencesSeparator"));
-		this.regexChk	 .setText(localeManager.getString("Rule.regex"));
-		this.regexChk	 .setToolTipText(localeManager.getString("Rule.regex.tooltip"));
+		this.targetLabel	 .setText(localeManager.getString("Rule.target"));
+		this.operationLabel.setText(localeManager.getString("Rule.operation"));
+		this.separatorLabel.setText(localeManager.getString("Rule.sentencesSeparator"));
+		this.regexCheckbox	 .setText(localeManager.getString("Rule.regex"));
+		this.regexCheckbox	 .setToolTipText(localeManager.getString("Rule.regex.tooltip"));
 
 		this.targetValues[ChangeCaseFactory.TARGET_NAME]                       = localeManager.getString("Rule.name");
 		this.targetValues[ChangeCaseFactory.TARGET_EXTENSION]                  = localeManager.getString("Rule.extension");
@@ -156,13 +160,13 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 		}
 
 		if (operationCmb.getSelectedIndex() == ChangeCaseFactory.OPERATION_CAPITALIZE_SENTENCES) {
-			separatorLbl.setVisible(true);
-			separatorTxt.setVisible(true);
-			regexChk.setVisible(true);
+			separatorLabel.setVisible(true);
+			separatorText.setVisible(true);
+			regexCheckbox.setVisible(true);
 		} else {
-			separatorLbl.setVisible(false);
-			separatorTxt.setVisible(false);
-			regexChk.setVisible(false);
+			separatorLabel.setVisible(false);
+			separatorText.setVisible(false);
+			regexCheckbox.setVisible(false);
 		}
 		
 		super.configurationChanged();
@@ -171,11 +175,11 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 	@Override
 	public void changedUpdate(DocumentEvent event) {
 		try {
-			this.ruleFactory.setSentenceSeparator(this.separatorTxt.getText());
+			this.ruleFactory.setSentenceSeparator(this.separatorText.getText());
 			super.configurationChanged();
 			
 		} catch (Exception exception) {
-			if (LogManager.ENABLED) LogManager.error("RulesPanel.changedUpdate> Invalid regex separator: " + this.separatorTxt.getText());
+			if (LogManager.ENABLED) LogManager.error("RulesPanel.changedUpdate> Invalid regex separator: " + this.separatorText.getText());
 			// TODO: notify user, i.e. highlight input field 
 		}
 	}
@@ -193,11 +197,11 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
 		try {
-			this.ruleFactory.setRegex(this.regexChk.isSelected());
+			this.ruleFactory.setRegex(this.regexCheckbox.isSelected());
 			super.configurationChanged();
 			
 		} catch (Exception exception) {
-			if (LogManager.ENABLED) LogManager.error("RulesPanel.itemStateChanged> Invalid regex separator: " + this.separatorTxt.getText());
+			if (LogManager.ENABLED) LogManager.error("RulesPanel.itemStateChanged> Invalid regex separator: " + this.separatorText.getText());
 			// TODO: notify user, i.e. highlight input field 
 		}
 	}
@@ -206,7 +210,7 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 	protected String getDescription() {
 		if (this.operationCmb != null && this.targetCmb != null) {
 			return this.operationCmb.getSelectedItem() + " [" + this.targetCmb.getSelectedItem()
-					+ (this.separatorTxt.isVisible() ? "]: " + this.separatorTxt.getText() : "]");
+					+ (this.separatorText.isVisible() ? "]: " + this.separatorText.getText() : "]");
 		} else {
 			return "";
 		}

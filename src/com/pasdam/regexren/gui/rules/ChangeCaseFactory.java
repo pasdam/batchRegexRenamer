@@ -9,8 +9,10 @@ import com.pasdam.regexren.model.FileModelItem;
 import com.pasdam.regexren.model.RuleType;
 
 /**
- * @author Paco
- * @version 1.0
+ * {@link AbstractRuleFactory} used to create rules to change case of the name/extension
+ * 
+ * @author paco
+ * @version 0.1
  */
 public class ChangeCaseFactory extends AbstractRuleFactory {
 	
@@ -28,8 +30,6 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	/** Operation constraint: capitalize sentences */
 	public static final int OPERATION_CAPITALIZE_SENTENCES = 3;
 	
-	private static final Pattern PATTERN_WORD = Pattern.compile("\\w+");
-	
 	/** Index of the "target" parameter */
 	private static final int PARAMETER_TARGET    = 0;
 	/** Index of the "operation" parameter */
@@ -41,22 +41,42 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	/** Indicates how many parameters this component has */
 	private static final int PARAMETER_COUNT     = PARAMETER_REGEX + 1;
 	
+	/**	Pattern used to extract words */
+	private static final Pattern PATTERN_WORD = Pattern.compile("\\w+");
+	
+	/**	Indicates the target of the operation (name/extension) */
 	private int target;
+	
+	/**	Indicates the operation type */
 	private int operation;
-	private String sentenceSeparator;
+	
+	/**	Indicates the pattern used to separate the phrases */
+	private String sentenceSeparator = "";
+	
+	/**	Indicates if the sentence separator is a regular expression or not */
 	private boolean regex;
 	
+	/**	Creates a {@link ChangeCaseFactory} */
 	public ChangeCaseFactory() {
 		super(RuleType.CHANGE_CASE);
+		setValid(true);
 	}
 	
+	/**
+	 * Sets the target of the operation ({@link #TARGET_NAME}, {@link #TARGET_EXTENSION})
+	 * 
+	 * @param target
+	 *            the target of the operation
+	 * @throws IllegalArgumentException
+	 *             if the specified target is not supported
+	 */
 	public void setTarget(int target) throws IllegalArgumentException, NullPointerException {
 		configurationChanged();
 		switch (target) {
 			case TARGET_NAME:
 			case TARGET_EXTENSION:
 				this.target = target;
-				setValid(true);
+				checkState();
 				return;
 	
 			default:
@@ -65,11 +85,33 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		}
 	}
 	
+	/**
+	 * Returns the target of the renaming operation (name/extension)
+	 * 
+	 * @return the target of the renaming operation (name/extension)
+	 */
 	public int getTarget() {
 		return target;
 	}
 	
-	public void setOperation(int operation) throws IllegalArgumentException, NullPointerException {
+	/**
+	 * Sets the operation type
+	 * 
+	 * @param operation
+	 *            operation type
+	 * @throws IllegalArgumentException
+	 *             if the specified operation is not a supported type (
+	 *             {@link #OPERATION_TO_LOWERCASE},
+	 *             {@link #OPERATION_TO_UPPERCASE},
+	 *             {@link #OPERATION_CAPITALIZE_WORDS} or
+	 *             {@link #OPERATION_CAPITALIZE_SENTENCES})
+	 * @throws PatternSyntaxException
+	 *             if regex it true and the sentence separator is an invalid
+	 *             regular expression
+	 * @throws NullPointerException
+	 *             if regex is true and the sentence separator is null
+	 */
+	public void setOperation(int operation) throws IllegalArgumentException, PatternSyntaxException, NullPointerException {
 		configurationChanged();
 		switch (target) {
 			case OPERATION_TO_LOWERCASE:
@@ -77,7 +119,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			case OPERATION_CAPITALIZE_WORDS:
 			case OPERATION_CAPITALIZE_SENTENCES:
 				this.operation = operation;
-				setValid(true);
+				checkState();
 				return;
 	
 			default:
@@ -86,30 +128,77 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		}
 	}
 	
+	/**
+	 * Returns the operation to perform
+	 * 
+	 * @return the operation to perform
+	 */
 	public int getOperation() {
 		return operation;
 	}
 	
+	/**
+	 * Sets the pattern used to split sentences
+	 * 
+	 * @param sentenceSeparator
+	 *            pattern used to split sentences
+	 * @throws PatternSyntaxException
+	 *             if regex it true and the sentence separator is an invalid
+	 *             regular expression
+	 * @throws NullPointerException
+	 *             if regex is true and the sentence separator is null
+	 */
 	public void setSentenceSeparator(String sentenceSeparator) throws PatternSyntaxException, NullPointerException {
 		this.sentenceSeparator = sentenceSeparator;
 		checkState();
 		configurationChanged();
 	}
 	
+	/**
+	 * Returns the pattern used to separate sentences
+	 * 
+	 * @return the pattern used to separate sentences
+	 */
 	public String getSentenceSeparator() {
 		return sentenceSeparator;
 	}
 	
+	/**
+	 * Sets whether the sentence separator is a regular expression or not
+	 * 
+	 * @param regex
+	 *            true if the sentence separator is a regular expression, false
+	 *            otherwise
+	 * @throws PatternSyntaxException
+	 *             if regex it true and the sentence separator is an invalid
+	 *             regular expression
+	 * @throws NullPointerException
+	 *             if regex is true and the sentence separator is null
+	 */
 	public void setRegex(boolean regex) throws PatternSyntaxException, NullPointerException {
 		this.regex = regex;
 		checkState();
 		configurationChanged();
 	}
 	
+	/**
+	 * Returns true if the sentence separator is a regular expression
+	 * 
+	 * @return true if the sentence separator is a regular expression
+	 */
 	public boolean isRegex() {
 		return regex;
 	}
 	
+	/**
+	 * Checks the configuration of the rule
+	 * 
+	 * @throws PatternSyntaxException
+	 *             if regex it true and the sentence separator is an invalid
+	 *             regular expression
+	 * @throws NullPointerException
+	 *             if regex is true and the sentence separator is null
+	 */
 	private void checkState() throws PatternSyntaxException, NullPointerException {
 		if (this.regex) {
 			setValid(false);
@@ -210,6 +299,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		}
 	}
 
+	/** Rule to change the case of the name to uppercase*/
 	private static class UpperCaseName implements Rule {
 		
 		@Override
@@ -219,6 +309,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		}
 	}
 	
+	/** Rule to change the case of the name to lowercase */
 	private static class LowerCaseName implements Rule {
 		
 		@Override
@@ -228,6 +319,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		}
 	}
 	
+	/** Rule to capitalize all words of the name*/
 	private static class CapitalizeWordsName implements Rule {
 		
 		@Override
@@ -256,10 +348,18 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		}
 	}
 	
+	/** Rule to capitalize the sentences (delimited by a regex pattern) of the name*/
 	private static class CapitalizeSentencesNameRegex implements Rule {
 		
+		/** Pattern used to separate sentences */
 		private final Pattern patternSentences;
 
+		/**
+		 * Create a rule with the specified regex separator pattern
+		 * 
+		 * @param separator
+		 *            regex pattern
+		 */
 		public CapitalizeSentencesNameRegex(String separator) {
 			if (separator != null && !separator.equals("")) {
 				// capitalize sentences, separated by "separator"
@@ -314,6 +414,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		}
 	}
 	
+	/** Rule to capitalize the sentences (delimited by a pattern) of the name*/
 	private static class CapitalizeSentencesName implements Rule {
 		
 		private final String separator;
@@ -376,6 +477,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		}
 	}
 	
+	/** Rule to change the case of the extension to uppercase */
 	private static class UpperCaseExtension implements Rule {
 		
 		@Override
@@ -388,6 +490,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		}
 	}
 	
+	/** Rule to change the case of the extension to lowercase */
 	private static class LowerCaseExtension implements Rule {
 		
 		@Override
@@ -400,6 +503,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		}
 	}
 	
+	/** Rule to capitalize the extension */
 	private static class CapitalizeWordsExtension implements Rule {
 		
 		@Override
