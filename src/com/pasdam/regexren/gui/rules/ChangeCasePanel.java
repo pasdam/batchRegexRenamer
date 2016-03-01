@@ -111,8 +111,8 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 		this.targetCmb.setPreferredSize(new Dimension(60, 20));
 		this.targetCmb.setMinimumSize(new Dimension(60, 18));
 		this.targetCmb.setMaximumSize(new Dimension(60, 32767));
-		this.targetCmb.setSelectedIndex(this.ruleFactory.getTarget());
 		this.targetCmb.addActionListener(this);
+		this.targetCmb.setSelectedIndex(this.ruleFactory.getTarget());
 		add(targetCmb, 2);
 
 		// remove previous operation combobox and create a new one
@@ -123,8 +123,8 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 		this.operationCmb.setPreferredSize(new Dimension(100, 20));
 		this.operationCmb.setMinimumSize(new Dimension(100, 18));
 		this.operationCmb.setMaximumSize(new Dimension(100, 32767));
-		this.operationCmb.setSelectedIndex(this.ruleFactory.getOperation());
 		this.operationCmb.addActionListener(this);
+		this.operationCmb.setSelectedIndex(this.ruleFactory.getOperation());
 		add(operationCmb, 6);
 	}
 	
@@ -154,19 +154,20 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 			
 		} else if (source == this.operationCmb) {
 			this.ruleFactory.setOperation(this.operationCmb.getSelectedIndex());
+			
+			if (this.operationCmb.getSelectedIndex() == ChangeCaseFactory.OPERATION_CAPITALIZE_SENTENCES) {
+				this.separatorLabel.setVisible(true);
+				this.separatorText.setVisible(true);
+				this.regexCheckbox.setVisible(true);
+				
+			} else {
+				this.separatorLabel.setVisible(false);
+				this.separatorText.setVisible(false);
+				this.regexCheckbox.setVisible(false);
+			}
 		
 		} else {
 			return;
-		}
-
-		if (operationCmb.getSelectedIndex() == ChangeCaseFactory.OPERATION_CAPITALIZE_SENTENCES) {
-			separatorLabel.setVisible(true);
-			separatorText.setVisible(true);
-			regexCheckbox.setVisible(true);
-		} else {
-			separatorLabel.setVisible(false);
-			separatorText.setVisible(false);
-			regexCheckbox.setVisible(false);
 		}
 		
 		super.configurationChanged();
