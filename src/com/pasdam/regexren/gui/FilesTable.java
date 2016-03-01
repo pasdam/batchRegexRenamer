@@ -78,7 +78,7 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 		column.setMaxWidth(20);
 		
 		// set internal event handler
-		addMouseListener(new InternalEventHandler());
+		this.table.addMouseListener(new InternalEventHandler());
 		
 		// register as files list's listener
 		ApplicationManager.getInstance().getFilesListManager().addFilesListListener(this);
