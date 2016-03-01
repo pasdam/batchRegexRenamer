@@ -268,9 +268,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 						return new CapitalizeWordsName();
 					
 					case OPERATION_CAPITALIZE_SENTENCES:
-						return regex
-								? new CapitalizeSentencesNameRegex(sentenceSeparator)
-								: new CapitalizeSentencesName(sentenceSeparator);
+						return new CapitalizeSentencesName(sentenceSeparator, regex);
 
 					default:
 						throw new IllegalArgumentException("Invalid operation: " + operation + ". Use ChangeCaseFactory constraints to set this.");
@@ -348,23 +346,29 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		}
 	}
 	
-	/** Rule to capitalize the sentences (delimited by a regex pattern) of the name*/
-	private static class CapitalizeSentencesNameRegex implements Rule {
+	/** Rule to capitalize the sentences (delimited by a regex/simple pattern) of the name*/
+	private static class CapitalizeSentencesName implements Rule {
 		
 		/** Pattern used to separate sentences */
 		private final Pattern patternSentences;
-
+		
 		/**
 		 * Create a rule with the specified regex separator pattern
 		 * 
 		 * @param separator
 		 *            regex pattern
+		 * @param regex
+		 *            if true indicates that the separator is a regular
+		 *            expression pattern, otherwise <i>separator</i> will be
+		 *            interpreted as a literal pattern
 		 */
-		public CapitalizeSentencesNameRegex(String separator) {
+		public CapitalizeSentencesName(String separator, boolean regex) {
 			if (separator != null && !separator.equals("")) {
 				// capitalize sentences, separated by "separator"
-				patternSentences = Pattern.compile(separator);
-			
+				patternSentences = regex
+						? Pattern.compile(separator)
+						: Pattern.compile(Pattern.quote(separator));
+				
 			} else {
 				patternSentences = Pattern.compile("\\.+");
 			}
@@ -387,8 +391,8 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 					// change case of the first word
 					currentWord = wordsMatcher.group();
 					builder.append(name.substring(previousIndex, wordsMatcher.start()+previousIndex))
-						   .append(Character.toUpperCase(currentWord.charAt(0)))
-						   .append(name.substring(wordsMatcher.start()+previousIndex+1, sentencesMatcher.end()));
+					.append(Character.toUpperCase(currentWord.charAt(0)))
+					.append(name.substring(wordsMatcher.start()+previousIndex+1, sentencesMatcher.end()));
 				} else {
 					// append phrase as is
 					builder.append(name.substring(previousIndex, sentencesMatcher.end()));
@@ -402,76 +406,13 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			if (wordsMatcher.find()) {
 				currentWord = wordsMatcher.group();
 				builder.append(name.substring(previousIndex, wordsMatcher.start()+previousIndex))
-					   .append(Character.toUpperCase(currentWord.charAt(0)))
-					   .append(name.substring(wordsMatcher.start()+previousIndex+1));
+				.append(Character.toUpperCase(currentWord.charAt(0)))
+				.append(name.substring(wordsMatcher.start()+previousIndex+1));
 				name = builder.toString();
 			}
-
+			
 			// update renamer
 			renamer.setName(name);
-			
-			return renamer;
-		}
-	}
-	
-	/** Rule to capitalize the sentences (delimited by a pattern) of the name*/
-	private static class CapitalizeSentencesName implements Rule {
-		
-		private final String separator;
-
-		public CapitalizeSentencesName(String separator) {
-			if (separator != null && !separator.equals("")) {
-				// capitalize sentences, separated by "separator"
-				this.separator = separator;
-			
-			} else {
-				this.separator = ".";
-			}
-		}
-		
-		@Override
-		public FileModelItem apply(FileModelItem renamer) {
-			String name = renamer.getName();
-			String currentSentence;
-			StringBuilder builder = new StringBuilder(name.length());
-			Matcher wordsMatcher;
-			int previousIndex = 0;
-			int currentIndex = name.indexOf(separator, previousIndex);
-				
-			// iterate over phrases
-			while ((currentIndex = name.indexOf(separator, previousIndex)) >= 0) {
-				// get current phrase
-				currentSentence = name.substring(previousIndex, currentIndex + separator.length());
-				
-				// iterate over words
-				wordsMatcher = PATTERN_WORD.matcher(currentSentence);
-				if (wordsMatcher.find()) {
-					builder.append(currentSentence.substring(0, wordsMatcher.start()))
-						   .append(Character.toUpperCase(currentSentence.charAt(wordsMatcher.start())))
-						   .append(currentSentence.substring(wordsMatcher.start() + 1));
-				} else {
-					builder.append(currentSentence);
-				}
-				
-				previousIndex = currentIndex + separator.length();
-			}
-			
-			// evaluate last phrase
-			currentSentence = name.substring(previousIndex);
-			wordsMatcher = PATTERN_WORD.matcher(currentSentence);
-			if (wordsMatcher.find()) {
-				builder.append(
-						currentSentence.substring(0, wordsMatcher.start()))
-						.append(Character.toUpperCase(currentSentence
-								.charAt(wordsMatcher.start())))
-						.append(currentSentence.substring(wordsMatcher
-								.start() + 1));
-			} else {
-				builder.append(currentSentence);
-			}
-
-			// update renamer
-			renamer.setName(builder.toString());
 			
 			return renamer;
 		}
