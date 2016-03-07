@@ -31,10 +31,10 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 
 	private static final long serialVersionUID = 5273872928673106679L;
 
-	/** Array of targets combobox's items*/
+	/** Array of targets combobox's items */
 	private final String[] targetValues = new String[2];
 	
-	/** Array of operations combobox's items*/
+	/** Array of operations combobox's items */
 	private final String[] operationValues = new String[4];
 
 	// UI components
@@ -83,7 +83,7 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 		
 		// create and add the separator text
 		this.separatorText = new JTextField();
-		this.separatorText.setMaximumSize(new Dimension(10000, 100));
+		this.separatorText.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
 		this.separatorText.getDocument().addDocumentListener(this);
 		add(this.separatorText);
 
@@ -107,10 +107,9 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 		if (this.targetCmb != null) {
 			remove(this.targetCmb);
 		}
-		this.targetCmb = new SteppedComboBox(new DefaultComboBoxModel<String>(targetValues));
-		this.targetCmb.setPreferredSize(new Dimension(60, 20));
-		this.targetCmb.setMinimumSize(new Dimension(60, 18));
-		this.targetCmb.setMaximumSize(new Dimension(60, 32767));
+		this.targetCmb = new SteppedComboBox(new DefaultComboBoxModel<String>(this.targetValues));
+		this.targetCmb.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
+		this.targetCmb.setMaximumSize(this.targetCmb.getPreferredSize());
 		this.targetCmb.addActionListener(this);
 		this.targetCmb.setSelectedIndex(this.ruleFactory.getTarget());
 		add(targetCmb, 2);
@@ -120,9 +119,8 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 			remove(operationCmb);
 		}
 		this.operationCmb = new SteppedComboBox(new DefaultComboBoxModel<String>(operationValues));
-		this.operationCmb.setPreferredSize(new Dimension(100, 20));
-		this.operationCmb.setMinimumSize(new Dimension(100, 18));
-		this.operationCmb.setMaximumSize(new Dimension(100, 32767));
+		this.operationCmb.setPreferredSize(new Dimension(this.targetCmb.getPreferredSize()));
+		this.operationCmb.setMaximumSize(this.operationCmb.getPreferredSize());
 		this.operationCmb.addActionListener(this);
 		this.operationCmb.setSelectedIndex(this.ruleFactory.getOperation());
 		add(operationCmb, 6);
@@ -130,14 +128,14 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 	
 	@Override
 	public void localeChanged(LocaleManager localeManager) {
-		this.targetLabel	 .setText(localeManager.getString("Rule.target"));
+		this.targetLabel   .setText(localeManager.getString("Rule.target"));
 		this.operationLabel.setText(localeManager.getString("Rule.operation"));
 		this.separatorLabel.setText(localeManager.getString("Rule.sentencesSeparator"));
-		this.regexCheckbox	 .setText(localeManager.getString("Rule.regex"));
-		this.regexCheckbox	 .setToolTipText(localeManager.getString("Rule.regex.tooltip"));
+		this.regexCheckbox .setText(localeManager.getString("Rule.regex"));
+		this.regexCheckbox .setToolTipText(localeManager.getString("Rule.regex.tooltip"));
 
-		this.targetValues[ChangeCaseFactory.TARGET_NAME]                       = localeManager.getString("Rule.name");
-		this.targetValues[ChangeCaseFactory.TARGET_EXTENSION]                  = localeManager.getString("Rule.extension");
+		this.targetValues   [ChangeCaseFactory.TARGET_NAME]                    = localeManager.getString("Rule.name");
+		this.targetValues   [ChangeCaseFactory.TARGET_EXTENSION]               = localeManager.getString("Rule.extension");
 		this.operationValues[ChangeCaseFactory.OPERATION_TO_LOWERCASE]         = localeManager.getString("Rule.toLowerCase");
 		this.operationValues[ChangeCaseFactory.OPERATION_TO_UPPERCASE]         = localeManager.getString("Rule.toUpperCase");
 		this.operationValues[ChangeCaseFactory.OPERATION_CAPITALIZE_WORDS]     = localeManager.getString("Rule.capitalizeWords");
@@ -157,13 +155,13 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 			
 			if (this.operationCmb.getSelectedIndex() == ChangeCaseFactory.OPERATION_CAPITALIZE_SENTENCES) {
 				this.separatorLabel.setVisible(true);
-				this.separatorText.setVisible(true);
-				this.regexCheckbox.setVisible(true);
+				this.separatorText .setVisible(true);
+				this.regexCheckbox .setVisible(true);
 				
 			} else {
 				this.separatorLabel.setVisible(false);
-				this.separatorText.setVisible(false);
-				this.regexCheckbox.setVisible(false);
+				this.separatorText .setVisible(false);
+				this.regexCheckbox .setVisible(false);
 			}
 		
 		} else {
@@ -180,7 +178,7 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 			super.configurationChanged();
 			
 		} catch (Exception exception) {
-			if (LogManager.ENABLED) LogManager.error("RulesPanel.changedUpdate> Invalid regex separator: " + this.separatorText.getText());
+			if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.changedUpdate> Invalid regex separator: " + this.separatorText.getText());
 			// TODO: notify user, i.e. highlight input field 
 		}
 	}
@@ -202,7 +200,7 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 			super.configurationChanged();
 			
 		} catch (Exception exception) {
-			if (LogManager.ENABLED) LogManager.error("RulesPanel.itemStateChanged> Invalid regex separator: " + this.separatorText.getText());
+			if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.itemStateChanged> Invalid regex separator: " + this.separatorText.getText());
 			// TODO: notify user, i.e. highlight input field 
 		}
 	}

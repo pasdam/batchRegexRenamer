@@ -39,7 +39,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	/** Index of the "regex" parameter */
 	private static final int PARAMETER_REGEX     = PARAMETER_SEPARATOR + 1;
 	/** Indicates how many parameters this component has */
-	private static final int PARAMETER_COUNT     = PARAMETER_REGEX + 1;
+	private static final int PARAMETERS_COUNT    = PARAMETER_REGEX + 1;
 	
 	/**	Pattern used to extract words */
 	private static final Pattern PATTERN_WORD = Pattern.compile("\\w+");
@@ -60,6 +60,11 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	public ChangeCaseFactory() {
 		super(RuleType.CHANGE_CASE);
 		setValid(true);
+		
+		// set default values
+		this.target    = TARGET_NAME;
+		this.operation = OPERATION_TO_LOWERCASE;
+		this.regex     = false;
 	}
 	
 	/**
@@ -76,7 +81,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			case TARGET_NAME:
 			case TARGET_EXTENSION:
 				this.target = target;
-				checkState();
+				checkConfiguration();
 				return;
 	
 			default:
@@ -119,7 +124,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			case OPERATION_CAPITALIZE_WORDS:
 			case OPERATION_CAPITALIZE_SENTENCES:
 				this.operation = operation;
-				checkState();
+				checkConfiguration();
 				return;
 	
 			default:
@@ -150,7 +155,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	 */
 	public void setSentenceSeparator(String sentenceSeparator) throws PatternSyntaxException, NullPointerException {
 		this.sentenceSeparator = sentenceSeparator;
-		checkState();
+		checkConfiguration();
 		configurationChanged();
 	}
 	
@@ -177,7 +182,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	 */
 	public void setRegex(boolean regex) throws PatternSyntaxException, NullPointerException {
 		this.regex = regex;
-		checkState();
+		checkConfiguration();
 		configurationChanged();
 	}
 	
@@ -199,7 +204,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	 * @throws NullPointerException
 	 *             if regex is true and the sentence separator is null
 	 */
-	private void checkState() throws PatternSyntaxException, NullPointerException {
+	private void checkConfiguration() throws PatternSyntaxException, NullPointerException {
 		if (this.regex) {
 			setValid(false);
 			Pattern.compile(this.sentenceSeparator);
@@ -209,7 +214,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	
 	@Override
 	public void parseRuleSpecificParameters(String[] parameters) throws IllegalArgumentException {
-		if (parameters.length == PARAMETER_COUNT) {
+		if (parameters.length == PARAMETERS_COUNT) {
 			this.target            = Integer.parseInt(parameters[PARAMETER_TARGET]);
 			this.operation         = Integer.parseInt(parameters[PARAMETER_OPERATION]);
 			this.sentenceSeparator = parameters[PARAMETER_SEPARATOR];
@@ -221,7 +226,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 
 	@Override
 	public String[] getRuleSpecificParameters() {
-		String[] parameters = new String[PARAMETER_COUNT];
+		String[] parameters = new String[PARAMETERS_COUNT];
 		parameters[PARAMETER_TARGET]    = ""+this.target;
 		parameters[PARAMETER_OPERATION] = ""+this.operation;
 		parameters[PARAMETER_SEPARATOR] = this.sentenceSeparator;
