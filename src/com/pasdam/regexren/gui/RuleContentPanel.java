@@ -21,8 +21,6 @@ public abstract class RuleContentPanel extends JPanel implements Localizable {
 
 	private static final long serialVersionUID = -5837835553536001443L;
 
-	// public static final int ROW_HEIGHT = 20;
-	
 	/** Height of panel with only one row */
 	public static final int ONE_ROW_PANEL_HEIGHT = 35;
 
@@ -34,6 +32,15 @@ public abstract class RuleContentPanel extends JPanel implements Localizable {
 
 	/** Size of a long space */
 	public static final int FIXED_SPACE_LONG = 20;
+	
+	/** Height of panel's widgets */
+	public static final int WIDGET_HEIGHT = 20;
+	
+	/**	Minimum width of text fields */
+	public static final int WIDGET_TEXT_MIN_WIDTH = 100;
+	
+	/**	Minimum width of spinners */
+	public static final int WIDGET_SPINNER_MIN_WIDTH = 40;
 	
 	/** Listener to notify content changes */
 	private RuleContentListener contentListener;
