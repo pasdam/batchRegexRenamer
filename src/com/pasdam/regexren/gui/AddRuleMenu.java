@@ -13,6 +13,7 @@ import com.pasdam.regexren.controller.LocaleManager.Localizable;
 import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
 import com.pasdam.regexren.gui.rules.ChangeCaseFactory;
+import com.pasdam.regexren.gui.rules.ReplaceFactory;
 import com.pasdam.regexren.model.RuleType;
 
 /** Menu that shows all available rule types */
@@ -102,29 +103,26 @@ class AddRuleMenu extends JPopupMenu implements ActionListener, Localizable {
 		int componentId = Integer.valueOf(e.getActionCommand().trim()).intValue();
 		if (LogManager.ENABLED) LogManager.trace("AddRuleMenu.mouseClicked> Clicked menu item " + componentId);
 		switch (RULE_TYPES[componentId]) {
-//			case RULE_INSERT_TEXT_AT_POSITION:
-//				rule = new InsertTextAtPositionPanel();
+//			case INSERT_TEXT_AT_POSITION:
+//				rule = new InsertTextAtPositionFactory();
 //				break;
 //				
-//			case RULE_INSERT_TEXT_BEFORE_AFTER:
-//				rule = new InsertTextBeforeAfterPanel();
+//			case INSERT_TEXT_BEFORE_AFTER:
+//				rule = new InsertTextBeforeAfterFactory();
 //				break;
 //			
-//			case RULE_INSERT_COUNTER_AT_POSITION:
-//				rule = new InsertCounterAtPositionPanel();
+//			case INSERT_COUNTER_AT_POSITION:
+//				rule = new InsertCounterAtPositionFactory();
 //				break;
 //			
-//			case RULE_INSERT_COUNTER_BEFORE_AFTER:
-//				rule = new InsertCounterBeforeAfterPanel();
+//			case INSERT_COUNTER_BEFORE_AFTER:
+//				rule = new InsertCounterBeforeAfterFactory();
 //				break;
-//			
-//			case RULE_REPLACE:
-//				rule = new ReplacePanel();
-//				break;
-//			
-//			case RULE_REMOVE:
-//				rule = new RemovePanel();
-//				break;
+			
+			case REPLACE:
+			case REMOVE:
+				rule = new ReplaceFactory();
+				break;
 			
 			case CHANGE_CASE:
 				rule = new ChangeCaseFactory();

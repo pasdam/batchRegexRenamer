@@ -14,6 +14,8 @@ import com.pasdam.regexren.controller.RulesManager.RulesListener;
 import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
 import com.pasdam.regexren.gui.rules.ChangeCaseFactory;
 import com.pasdam.regexren.gui.rules.ChangeCasePanel;
+import com.pasdam.regexren.gui.rules.ReplaceFactory;
+import com.pasdam.regexren.gui.rules.ReplacePanel;
 
 public class RulesPanel extends JScrollPane implements RulesListener {
 
@@ -48,34 +50,34 @@ public class RulesPanel extends JScrollPane implements RulesListener {
 	@Override
 	public void ruleAdded(int index, AbstractRuleFactory addedRule) {
 		if (LogManager.ENABLED) LogManager.trace("RulesPanel.ruleAdded> Adding rule (at index " + index + "): " + addedRule.getType());
-		ChangeCasePanel ruleContentPanel;
+		RuleContentPanel ruleContentPanel;
 		
 		switch (addedRule.getType()) {
-	//		case RULE_INSERT_TEXT_AT_POSITION:
+	//		case INSERT_TEXT_AT_POSITION:
 	//			ruleContentPanel = new InsertTextAtPositionPanel(() addedRule);
 	//			break;
 
-	//		case RULE_INSERT_TEXT_BEFORE_AFTER:
+	//		case INSERT_TEXT_BEFORE_AFTER:
 	//			ruleContentPanel = new InsertTextBeforeAfterPanel(() addedRule);
 	//			break;
 
-	//		case RULE_INSERT_COUNTER_AT_POSITION:
+	//		case INSERT_COUNTER_AT_POSITION:
 	//			ruleContentPanel = new InsertCounterAtPositionPanel(() addedRule);
 	//			break;
 
-	//		case RULE_INSERT_COUNTER_BEFORE_AFTER:
+	//		case INSERT_COUNTER_BEFORE_AFTER:
 	//			ruleContentPanel = new InsertCounterBeforeAfterPanel(() addedRule);
 	//			break;
 
-	//		case RULE_REPLACE:
-	//			ruleContentPanel = new ReplacePanel(() addedRule);
-	//			break;
+			case REPLACE:
+				ruleContentPanel = new ReplacePanel((ReplaceFactory) addedRule);
+				break;
 
-	//		case RULE_MOVE:
+	//		case MOVE:
 	//			ruleContentPanel = new MoveTextBeforeAfterPanel(() addedRule);
 	//			break;
 
-	//		case RULE_REMOVE:
+	//		case REMOVE:
 	//			ruleContentPanel = new RemovePanel(() addedRule);
 	//			break;
 
