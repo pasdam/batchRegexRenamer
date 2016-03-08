@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.gui.Rule;
 import com.pasdam.regexren.model.FileModelItem;
 import com.pasdam.regexren.model.RuleType;
@@ -67,16 +68,29 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	/** Pattern to find and replace */
 	private String textToReplace;
 	
-	/**	Creates a {@link ReplaceFactory} */
-	public ReplaceFactory() {
-		super(RuleType.REPLACE);
+	/**
+	 * Creates a {@link ReplaceFactory}
+	 * 
+	 * @param removeOnly
+	 *            if true indicates that the instance refers to a remove rule,
+	 *            instead a relace one
+	 */
+	public ReplaceFactory(boolean removeOnly) {
+		super(removeOnly ? RuleType.REMOVE : RuleType.REPLACE);
 		
 		setValid(false);
 		
 		// set default values
-		this.matchCase = this.regex = false;
-		this.endIndex  = this.startIndex = 1;
-		this.target    = TARGET_NAME_ALL;
+		this.matchCase  = this.regex = false;
+		this.endIndex   = this.startIndex = 1;
+		this.target     = TARGET_NAME_ALL;
+		this.startIndex = 0;
+		this.endIndex   = this.startIndex+1;
+	}
+	
+	/** Creates a {@link ReplaceFactory} */
+	public ReplaceFactory() {
+		this(false);
 	}
 	
 	/**
@@ -321,6 +335,7 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 *             if <i>target</i> is invalid
 	 */
 	public static Rule getRule(String textToReplace, boolean regex, boolean matchCase, String textToInsert, int startIndex, int endIndex, int target) throws IllegalArgumentException {
+		if (LogManager.ENABLED) LogManager.trace(String.format("ReplaceFactory.getRule(textToReplace=%s, regex=%b, matchCase=%b, textToInsert=%s, startIndex=%d, endIndex=%d, target=%d)", textToReplace, regex, matchCase, textToInsert, startIndex, endIndex, target));
 		switch (target) {
 			case TARGET_NAME_ALL:
 				return new ReplaceNameAll(textToReplace, textToInsert, startIndex, endIndex, regex, matchCase);

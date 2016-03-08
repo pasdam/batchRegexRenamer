@@ -120,8 +120,11 @@ class AddRuleMenu extends JPopupMenu implements ActionListener, Localizable {
 //				break;
 			
 			case REPLACE:
-			case REMOVE:
 				rule = new ReplaceFactory();
+				break;
+
+			case REMOVE:
+				rule = new ReplaceFactory(true);
 				break;
 			
 			case CHANGE_CASE:
