@@ -28,9 +28,12 @@ public abstract class AbstractRuleFactory {
 
 	/** Indicates whether the rule's configuration is valid */
 	private boolean valid = false;
-
+	
 	/** Indicates whether the rule's configuration is changed until last rule build */
 	private boolean changed = true;
+
+	/** Indicates whether the rule must be created each time the {@link #getRule()} method is called */
+	private boolean recreateAlways = false;
 	
 	/** Listener to notify on rule configuration changes */
 	private RuleFactoryListener listener;
@@ -68,7 +71,7 @@ public abstract class AbstractRuleFactory {
 	 * @return the configured rule
 	 */
 	public Rule getRule() {
-		if (this.changed || (this.rule == null && valid)) {
+		if (this.recreateAlways || this.changed || (this.rule == null && valid)) {
 			this.rule = createConfiguredRule();
 			this.changed = false;
 		}
@@ -122,6 +125,28 @@ public abstract class AbstractRuleFactory {
 		configurationChanged();
 	}
 	
+	/**
+	 * Returns true if the rule is created each time the method
+	 * {@link #getRule()} is called
+	 * 
+	 * @return true if the rule is created each time the method
+	 *         {@link #getRule()} is called, false otherwise
+	 */
+	public boolean isRecreateAlways() {
+		return this.recreateAlways;
+	}
+
+	/**
+	 * Sets whether the rule must be created each time the method
+	 * {@link #getRule()} is called
+	 * 
+	 * @param recreateAlways
+	 *            if true the rule is recreated each time
+	 */
+	public void setRecreateAlways(boolean recreateAlways) {
+		this.recreateAlways = recreateAlways;
+	}
+
 	/**
 	 * Returns the configured rule
 	 * 
