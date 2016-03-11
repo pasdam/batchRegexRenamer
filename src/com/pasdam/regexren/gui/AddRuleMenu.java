@@ -13,6 +13,7 @@ import com.pasdam.regexren.controller.LocaleManager.Localizable;
 import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
 import com.pasdam.regexren.gui.rules.ChangeCaseFactory;
+import com.pasdam.regexren.gui.rules.InsertCounterAtPositionFactory;
 import com.pasdam.regexren.gui.rules.ReplaceFactory;
 import com.pasdam.regexren.model.RuleType;
 
@@ -110,10 +111,10 @@ class AddRuleMenu extends JPopupMenu implements ActionListener, Localizable {
 //			case INSERT_TEXT_BEFORE_AFTER:
 //				rule = new InsertTextBeforeAfterFactory();
 //				break;
-//			
-//			case INSERT_COUNTER_AT_POSITION:
-//				rule = new InsertCounterAtPositionFactory();
-//				break;
+			
+			case INSERT_COUNTER_AT_POSITION:
+				rule = new InsertCounterAtPositionFactory();
+				break;
 //			
 //			case INSERT_COUNTER_BEFORE_AFTER:
 //				rule = new InsertCounterBeforeAfterFactory();

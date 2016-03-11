@@ -14,6 +14,8 @@ import com.pasdam.regexren.controller.RulesManager.RulesListener;
 import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
 import com.pasdam.regexren.gui.rules.ChangeCaseFactory;
 import com.pasdam.regexren.gui.rules.ChangeCasePanel;
+import com.pasdam.regexren.gui.rules.InsertCounterAtPositionFactory;
+import com.pasdam.regexren.gui.rules.InsertCounterAtPositionPanel;
 import com.pasdam.regexren.gui.rules.RemovePanel;
 import com.pasdam.regexren.gui.rules.ReplaceFactory;
 import com.pasdam.regexren.gui.rules.ReplacePanel;
@@ -62,9 +64,9 @@ public class RulesPanel extends JScrollPane implements RulesListener {
 	//			ruleContentPanel = new InsertTextBeforeAfterPanel(() addedRule);
 	//			break;
 
-	//		case INSERT_COUNTER_AT_POSITION:
-	//			ruleContentPanel = new InsertCounterAtPositionPanel(() addedRule);
-	//			break;
+			case INSERT_COUNTER_AT_POSITION:
+				ruleContentPanel = new InsertCounterAtPositionPanel((InsertCounterAtPositionFactory) addedRule);
+				break;
 
 	//		case INSERT_COUNTER_BEFORE_AFTER:
 	//			ruleContentPanel = new InsertCounterBeforeAfterPanel(() addedRule);
