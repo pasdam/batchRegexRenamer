@@ -31,21 +31,21 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	public static final int TARGET_EXTENSION_LAST  = TARGET_EXTENSION_FIRST + 1;
 	
 	/** Index of the "text_to_replace" parameter */
-	public static final int PARAMETER_TEXT_TO_REPLACE = 0; 
+	private static final int PARAMETER_TEXT_TO_REPLACE = 0; 
 	/** Index of the "text_to_insert" parameter */
-	public static final int PARAMETER_TEXT_TO_INSERT  = PARAMETER_TEXT_TO_REPLACE + 1;
+	private static final int PARAMETER_TEXT_TO_INSERT  = PARAMETER_TEXT_TO_REPLACE + 1;
 	/** Index of the "target" parameter */
-	public static final int PARAMETER_TARGET          = PARAMETER_TEXT_TO_INSERT  + 1;
+	private static final int PARAMETER_TARGET          = PARAMETER_TEXT_TO_INSERT  + 1;
 	/** Index of the "start_index" parameter */
-	public static final int PARAMETER_START_INDEX     = PARAMETER_TARGET       	  + 1;
+	private static final int PARAMETER_START_INDEX     = PARAMETER_TARGET       	  + 1;
 	/** Index of the "end_index" parameter */
-	public static final int PARAMETER_END_INDEX       = PARAMETER_START_INDEX     + 1;
+	private static final int PARAMETER_END_INDEX       = PARAMETER_START_INDEX     + 1;
 	/** Index of the "match_case" parameter */
-	public static final int PARAMETER_MATCH_CASE      = PARAMETER_END_INDEX       + 1;
+	private static final int PARAMETER_MATCH_CASE      = PARAMETER_END_INDEX       + 1;
 	/** Index of the "regex" parameter */
-	public static final int PARAMETER_REGEX           = PARAMETER_MATCH_CASE      + 1;
+	private static final int PARAMETER_REGEX           = PARAMETER_MATCH_CASE      + 1;
 	/** Indicates how many parameters this component has */
-	public static final int PARAMETERS_COUNT          = PARAMETER_REGEX           + 1;
+	private static final int PARAMETERS_COUNT          = PARAMETER_REGEX           + 1;
 	
 	/** Indicates whether the pattern should match case or not */
 	private boolean matchCase;
@@ -111,7 +111,7 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 */
 	public void setMatchCase(boolean matchCase) {
 		this.matchCase = matchCase;
-		configurationChanged();
+		super.configurationChanged();
 	}
 
 	/**
@@ -139,6 +139,7 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 */
 	public void setRegex(boolean regex) throws PatternSyntaxException, NullPointerException {
 		this.regex = regex;
+		super.configurationChanged();
 		checkConfiguration();
 	}
 
@@ -161,7 +162,7 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 */
 	public void setEndIndex(int endIndex) {
 		this.endIndex = endIndex;
-		configurationChanged();
+		super.configurationChanged();
 	}
 
 	/**
@@ -182,7 +183,7 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 */
 	public void setStartIndex(int startIndex) {
 		this.startIndex = startIndex;
-		configurationChanged();
+		super.configurationChanged();
 	}
 
 	/**
@@ -202,7 +203,7 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 */
 	public void setTarget(int target) {
 		this.target = target;
-		configurationChanged();
+		super.configurationChanged();
 	}
 
 	/**
@@ -222,7 +223,7 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 */
 	public void setTextToInsert(String textToInsert) {
 		this.textToInsert = textToInsert;
-		configurationChanged();
+		super.configurationChanged();
 	}
 
 	/**
@@ -247,8 +248,8 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 */
 	public void setTextToReplace(String textToReplace) throws PatternSyntaxException, NullPointerException {
 		this.textToReplace = textToReplace;
+		super.configurationChanged();
 		checkConfiguration();
-		configurationChanged();
 	}
 	
 	/**

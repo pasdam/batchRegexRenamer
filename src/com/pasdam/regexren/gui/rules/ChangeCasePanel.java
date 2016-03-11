@@ -12,7 +12,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -27,7 +26,7 @@ import com.pasdam.regexren.gui.RuleContentPanel;
  * @author paco
  * @version 0.1
  */
-public class ChangeCasePanel extends RuleContentPanel implements ActionListener, DocumentListener, ItemListener {
+public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> implements ActionListener, DocumentListener, ItemListener {
 
 	private static final long serialVersionUID = 5273872928673106679L;
 
@@ -38,24 +37,17 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 	private final String[] operationValues = new String[4];
 
 	// UI components
-	private JLabel separatorLabel, targetLabel, operationLabel;
-	private SteppedComboBox targetCmb, operationCmb;
-	private JTextField separatorText;
 	private JCheckBox regexCheckbox;
-	
-	/**	Rule factory related to this panel */
-	private final ChangeCaseFactory ruleFactory;
+	private JLabel operationLabel;
+	private JLabel separatorLabel;
+	private JLabel targetLabel;
+	private JTextField separatorText;
+	private SteppedComboBox operationCmb;
+	private SteppedComboBox targetCmb;
 	
 	/** Create the panel */
 	public ChangeCasePanel(ChangeCaseFactory ruleFactory) {
-		super(ruleFactory);
-		
-		this.ruleFactory = ruleFactory;
-		
-		// set panel properties
-		setBorder(UIManager.getBorder("Button.border"));
-		setMaximumSize(new Dimension(Integer.MAX_VALUE, ONE_ROW_PANEL_HEIGHT));
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		super(ruleFactory, ONE_ROW_PANEL_HEIGHT, BoxLayout.X_AXIS);
 		
 		// create and add target label
 		this.targetLabel = new JLabel();
@@ -111,7 +103,7 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 		this.targetCmb.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
 		this.targetCmb.setMaximumSize(this.targetCmb.getPreferredSize());
 		this.targetCmb.addActionListener(this);
-		this.targetCmb.setSelectedIndex(this.ruleFactory.getTarget());
+		this.targetCmb.setSelectedIndex(super.ruleFactory.getTarget());
 		add(targetCmb, 2);
 
 		// remove previous operation combobox and create a new one
@@ -122,7 +114,7 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 		this.operationCmb.setPreferredSize(new Dimension(this.targetCmb.getPreferredSize()));
 		this.operationCmb.setMaximumSize(this.operationCmb.getPreferredSize());
 		this.operationCmb.addActionListener(this);
-		this.operationCmb.setSelectedIndex(this.ruleFactory.getOperation());
+		this.operationCmb.setSelectedIndex(super.ruleFactory.getOperation());
 		add(operationCmb, 6);
 	}
 	
@@ -148,10 +140,10 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 		if (source == this.targetCmb) {
-			this.ruleFactory.setTarget(this.targetCmb.getSelectedIndex());
+			super.ruleFactory.setTarget(this.targetCmb.getSelectedIndex());
 			
 		} else if (source == this.operationCmb) {
-			this.ruleFactory.setOperation(this.operationCmb.getSelectedIndex());
+			super.ruleFactory.setOperation(this.operationCmb.getSelectedIndex());
 			
 			if (this.operationCmb.getSelectedIndex() == ChangeCaseFactory.OPERATION_CAPITALIZE_SENTENCES) {
 				this.separatorLabel.setVisible(true);
@@ -167,15 +159,12 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 		} else {
 			return;
 		}
-		
-		super.configurationChanged();
 	}
 
 	@Override
 	public void changedUpdate(DocumentEvent event) {
 		try {
-			this.ruleFactory.setSentenceSeparator(this.separatorText.getText());
-			super.configurationChanged();
+			super.ruleFactory.setSentenceSeparator(this.separatorText.getText());
 			
 		} catch (Exception exception) {
 			if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.changedUpdate> Invalid regex separator: " + this.separatorText.getText());
@@ -196,8 +185,7 @@ public class ChangeCasePanel extends RuleContentPanel implements ActionListener,
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
 		try {
-			this.ruleFactory.setRegex(this.regexCheckbox.isSelected());
-			super.configurationChanged();
+			super.ruleFactory.setRegex(this.regexCheckbox.isSelected());
 			
 		} catch (Exception exception) {
 			if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.itemStateChanged> Invalid regex separator: " + this.separatorText.getText());

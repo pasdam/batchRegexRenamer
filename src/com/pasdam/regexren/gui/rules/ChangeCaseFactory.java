@@ -59,7 +59,6 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	/**	Creates a {@link ChangeCaseFactory} */
 	public ChangeCaseFactory() {
 		super(RuleType.CHANGE_CASE);
-		setValid(true);
 		
 		// set default values
 		this.target    = TARGET_NAME;
@@ -76,7 +75,6 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	 *             if the specified target is not supported
 	 */
 	public void setTarget(int target) throws IllegalArgumentException, NullPointerException {
-		configurationChanged();
 		switch (target) {
 			case TARGET_NAME:
 			case TARGET_EXTENSION:
@@ -117,7 +115,6 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	 *             if regex is true and the sentence separator is null
 	 */
 	public void setOperation(int operation) throws IllegalArgumentException, PatternSyntaxException, NullPointerException {
-		configurationChanged();
 		switch (target) {
 			case OPERATION_TO_LOWERCASE:
 			case OPERATION_TO_UPPERCASE:
@@ -155,8 +152,8 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	 */
 	public void setSentenceSeparator(String sentenceSeparator) throws PatternSyntaxException, NullPointerException {
 		this.sentenceSeparator = sentenceSeparator;
+		super.configurationChanged();
 		checkConfiguration();
-		configurationChanged();
 	}
 	
 	/**
@@ -182,8 +179,8 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	 */
 	public void setRegex(boolean regex) throws PatternSyntaxException, NullPointerException {
 		this.regex = regex;
+		super.configurationChanged();
 		checkConfiguration();
-		configurationChanged();
 	}
 	
 	/**

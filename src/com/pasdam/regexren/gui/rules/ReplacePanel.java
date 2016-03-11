@@ -82,7 +82,6 @@ public class ReplacePanel extends AbstractReplacePanel {
 		@Override
 		public void changedUpdate(DocumentEvent e) {
 			ReplacePanel.super.ruleFactory.setTextToInsert(ReplacePanel.this.textToInsertText.getText());
-			ReplacePanel.super.configurationChanged();
 		}
 	
 		@Override

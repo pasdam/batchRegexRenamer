@@ -29,7 +29,7 @@ import com.pasdam.regexren.gui.RuleContentPanel;
  * @author paco
  * @version 0.1
  */
-abstract class AbstractReplacePanel extends RuleContentPanel {
+abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 
 	private static final long serialVersionUID = -7951879690934241967L;
 
@@ -52,22 +52,13 @@ abstract class AbstractReplacePanel extends RuleContentPanel {
 	/** Handler of internal events */
 	private final InternalEventHandler eventHandler;
 
-	/**	Rule factory related to this panel */
-	protected final ReplaceFactory ruleFactory;
-
 	/** Create the panel */
 	public AbstractReplacePanel(ReplaceFactory ruleFactory) {
-		super(ruleFactory);
-		this.ruleFactory = ruleFactory;
+		super(ruleFactory, TWO_ROW_PANEL_HEIGHT, BoxLayout.Y_AXIS);
 		
 		// create event handler
 		this.eventHandler = new InternalEventHandler();
 
-		// set panel properties
-		setBorder(UIManager.getBorder("Button.border"));
-		setMaximumSize(new Dimension(Integer.MAX_VALUE, TWO_ROW_PANEL_HEIGHT));
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
 		// create first row box
 		Box row1Panel = Box.createHorizontalBox();
 		row1Panel.setBorder(UIManager.getBorder("ComboBox.editorBorder"));
@@ -155,11 +146,11 @@ abstract class AbstractReplacePanel extends RuleContentPanel {
 		add(this.row2Panel);
 		
 		// read initial ruls's values
-		this.endSpinner.setValue(this.ruleFactory.getEndIndex()+1);
-		this.matchCaseCheckbox.setSelected(this.ruleFactory.isMatchCase());
-		this.regexCheckbox.setSelected(this.ruleFactory.isRegex());
-		this.startSpinner.setValue(this.ruleFactory.getStartIndex()+1);
-		this.textToReplaceText.setText(this.ruleFactory.getTextToReplace());
+		this.endSpinner.setValue(super.ruleFactory.getEndIndex()+1);
+		this.matchCaseCheckbox.setSelected(super.ruleFactory.isMatchCase());
+		this.regexCheckbox.setSelected(super.ruleFactory.isRegex());
+		this.startSpinner.setValue(super.ruleFactory.getStartIndex()+1);
+		this.textToReplaceText.setText(super.ruleFactory.getTextToReplace());
 	}
 	
 	/**	Updates the target and operations comboboxes */
@@ -172,7 +163,7 @@ abstract class AbstractReplacePanel extends RuleContentPanel {
 		this.targetCombobox = new SteppedComboBox(new DefaultComboBoxModel<String>(this.targetValues));
 		this.targetCombobox.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
 		this.targetCombobox.setMaximumSize(new Dimension(this.targetCombobox.getPreferredSize()));
-		this.targetCombobox.setSelectedIndex(this.ruleFactory.getTarget());
+		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
 		this.targetCombobox.addActionListener(this.eventHandler);
 		this.targetCombobox.setBorder(UIManager.getBorder("ComboBox.editorBorder"));
 		this.row2Panel.add(this.targetCombobox, this.row2Panel.getComponentCount()-1);
@@ -202,12 +193,10 @@ abstract class AbstractReplacePanel extends RuleContentPanel {
 		@Override
 		public void changedUpdate(DocumentEvent e) {
 			try {
-				AbstractReplacePanel.this.ruleFactory.setTextToReplace(AbstractReplacePanel.this.textToReplaceText.getText());
+				AbstractReplacePanel.super.ruleFactory.setTextToReplace(AbstractReplacePanel.this.textToReplaceText.getText());
 			} catch (Exception exception) {
 				if (LogManager.ENABLED) LogManager.error("ReplacePanel.InternalEventHandler.changedUpdate> Invalid regex pattern: " + AbstractReplacePanel.this.textToReplaceText.getText());
 			}
-			
-			AbstractReplacePanel.super.configurationChanged();
 		}
 	
 		@Override
@@ -224,13 +213,11 @@ abstract class AbstractReplacePanel extends RuleContentPanel {
 		public void stateChanged(ChangeEvent e) {
 			Object source = e.getSource();
 			if (source == AbstractReplacePanel.this.startSpinner) {
-				AbstractReplacePanel.this.ruleFactory.setStartIndex(((Integer)AbstractReplacePanel.this.startSpinner.getValue())-1);
+				AbstractReplacePanel.super.ruleFactory.setStartIndex(((Integer)AbstractReplacePanel.this.startSpinner.getValue())-1);
 				
 			} else if (source == AbstractReplacePanel.this.endSpinner) {
-				AbstractReplacePanel.this.ruleFactory.setEndIndex(((Integer)AbstractReplacePanel.this.endSpinner.getValue())-1);
+				AbstractReplacePanel.super.ruleFactory.setEndIndex(((Integer)AbstractReplacePanel.this.endSpinner.getValue())-1);
 			}
-
-			AbstractReplacePanel.super.configurationChanged();
 		}
 	
 		@Override
@@ -238,19 +225,17 @@ abstract class AbstractReplacePanel extends RuleContentPanel {
 			Object source = e.getSource();
 			if (source == AbstractReplacePanel.this.regexCheckbox) {
 				try {
-					AbstractReplacePanel.this.ruleFactory.setRegex(AbstractReplacePanel.this.regexCheckbox.isSelected());
+					AbstractReplacePanel.super.ruleFactory.setRegex(AbstractReplacePanel.this.regexCheckbox.isSelected());
 				} catch (Exception exception) {
 					if (LogManager.ENABLED) LogManager.error("ReplacePanel.InternalEventHandler.actionPerformed> Invalid regex pattern: " + AbstractReplacePanel.this.textToReplaceText.getText());
 				}
 				
 			} else if (source == AbstractReplacePanel.this.matchCaseCheckbox) {
-				AbstractReplacePanel.this.ruleFactory.setMatchCase(AbstractReplacePanel.this.matchCaseCheckbox.isSelected());
+				AbstractReplacePanel.super.ruleFactory.setMatchCase(AbstractReplacePanel.this.matchCaseCheckbox.isSelected());
 				
 			} else if (source == AbstractReplacePanel.this.targetCombobox) {
-				AbstractReplacePanel.this.ruleFactory.setTarget(AbstractReplacePanel.this.targetCombobox.getSelectedIndex());
+				AbstractReplacePanel.super.ruleFactory.setTarget(AbstractReplacePanel.this.targetCombobox.getSelectedIndex());
 			}
-
-			AbstractReplacePanel.super.configurationChanged();
 		}
 	}
 }

@@ -10,11 +10,11 @@ package com.pasdam.regexren.gui.rules;
 public interface RuleFactoryListener {
 	
 	/**
-	 * Indicates that the validation value of the rule is changed
+	 * Indicates that the configuration of the rule is changed
 	 * 
 	 * @param valid
 	 *            if true indicates that the rule's current configuration is
 	 *            valid, false indicates that is invalid
 	 */
-	public void isValidChanged(boolean valid);
+	public void configurationChanged(boolean valid);
 }

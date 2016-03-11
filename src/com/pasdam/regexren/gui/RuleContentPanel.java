@@ -1,6 +1,10 @@
 package com.pasdam.regexren.gui;
 
+import java.awt.Dimension;
+
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import com.pasdam.regexren.controller.LocaleManager.Localizable;
 import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
@@ -17,7 +21,7 @@ import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
  * @author paco
  * @version 0.1
  */
-public abstract class RuleContentPanel extends JPanel implements Localizable {
+public abstract class RuleContentPanel<T extends AbstractRuleFactory> extends JPanel implements Localizable {
 
 	private static final long serialVersionUID = -5837835553536001443L;
 
@@ -42,15 +46,23 @@ public abstract class RuleContentPanel extends JPanel implements Localizable {
 	/**	Minimum width of spinners */
 	public static final int WIDGET_SPINNER_MIN_WIDTH = 40;
 	
-	/** Listener to notify content changes */
-	private RuleContentListener contentListener;
-	
 	/** Rule factory related to the content */
-	private final AbstractRuleFactory ruleFactory;
+	protected final T ruleFactory;
 	
-	/** Constructor that initialize the type of the rule */
-	public RuleContentPanel(AbstractRuleFactory ruleFactory) {
+	/** 
+	 * Constructor that initialize the type of the rule
+	 * 
+	 * @param ruleFactory rule factory associated with the panel
+	 * @param panelHeight
+	 * @param layoutAxis
+	 */
+	public RuleContentPanel(T ruleFactory, int panelHeight, int layoutAxis) {
 		this.ruleFactory = ruleFactory;
+		
+		// set panel style
+		setBorder(UIManager.getBorder("Button.border"));
+		setMaximumSize(new Dimension(Integer.MAX_VALUE, panelHeight));
+		setLayout(new BoxLayout(this, layoutAxis));
 	}
 	
 	/**
@@ -58,26 +70,8 @@ public abstract class RuleContentPanel extends JPanel implements Localizable {
 	 * 
 	 * @return the rule factory associated with this view
 	 */
-	public AbstractRuleFactory getRuleFactory() {
+	public T getRuleFactory() {
 		return ruleFactory;
-	}
-	
-	/**
-	 * Sets the content listener to notify on content changes
-	 * 
-	 * @param contentListener
-	 *            listener of content changes
-	 */
-	public void setContentListener(RuleContentListener contentListener) {
-		this.contentListener = contentListener;
-		configurationChanged();
-	}
-	
-	/** This method must be called by derived classes whenever their content is changed */
-	protected void configurationChanged() {
-		if (this.contentListener != null) {
-			this.contentListener.descriptionChanged(getDescription());
-		}
 	}
 	
 	/**
@@ -86,22 +80,4 @@ public abstract class RuleContentPanel extends JPanel implements Localizable {
 	 * @return a brief description of the rule, to be shown as title
 	 */
 	protected abstract String getDescription();
-	
-	/**
-	 * Interface implemented by those classes that need to be notified of
-	 * content changes
-	 * 
-	 * @author paco
-	 * @version 0.1
-	 */
-	public static interface RuleContentListener {
-		
-		/**
-		 * Indicates that the description of the rule is changed
-		 * 
-		 * @param description
-		 *            new description
-		 */
-		public void descriptionChanged(String description);
-	}
 }

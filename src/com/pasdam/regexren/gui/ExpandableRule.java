@@ -13,17 +13,19 @@ import com.pasdam.gui.swing.panel.ExpandableItem;
 import com.pasdam.regexren.controller.ApplicationManager;
 import com.pasdam.regexren.controller.LocaleManager;
 import com.pasdam.regexren.controller.LocaleManager.Localizable;
-import com.pasdam.regexren.gui.RuleContentPanel.RuleContentListener;
-import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
 import com.pasdam.regexren.gui.rules.RuleFactoryListener;
 
 /**
- * @author Paco
- * @version 1.0
+ * Expandable panel that contains a {@link RuleContentPanel}
+ * 
+ * @author paco
+ * @version 0.1
  */
-@SuppressWarnings("serial")
-public class ExpandableRule extends ExpandableItem implements RuleFactoryListener, Localizable, ItemListener, RuleContentListener {
+public class ExpandableRule extends ExpandableItem implements RuleFactoryListener, Localizable, ItemListener {
 	
+	private static final long serialVersionUID = 8443447294086054937L;
+
+	// Localizable string keys
 	private static final String STRING_KEY_INVALID_PARAMETERS = "Error.RulesPanel.invalidParameters";
 
 	// UI components
@@ -33,18 +35,18 @@ public class ExpandableRule extends ExpandableItem implements RuleFactoryListene
 	// private RuleMenu menu;
 	
 	/** The rule factory related to the contained panel */
-	private AbstractRuleFactory ruleFactory;
+	private RuleContentPanel<?> ruleContentPanel;
 	
 	/** Create the panel */
-	public ExpandableRule(RuleContentPanel ruleContentPanel) {
-		this.ruleFactory = ruleContentPanel.getRuleFactory();
+	public ExpandableRule(RuleContentPanel<?> ruleContentPanel) {
+		this.ruleContentPanel = ruleContentPanel;
 		
 		// create title panel
 		final Box titlePanel = Box.createHorizontalBox();
 		
 		// create and add checkbox
 		this.selectCheckbox = new JCheckBox();
-		this.selectCheckbox.setSelected(ruleFactory.isEnabled());
+		this.selectCheckbox.setSelected(ruleContentPanel.getRuleFactory().isEnabled());
 		this.selectCheckbox.addItemListener(this);
 		titlePanel.add(this.selectCheckbox);
 		
@@ -67,18 +69,19 @@ public class ExpandableRule extends ExpandableItem implements RuleFactoryListene
 		// titlePanel.add(menu);
 		
 		// read initial rule's data
-		isValidChanged(this.ruleFactory.isValid());
+		configurationChanged(ruleContentPanel.getRuleFactory().isValid());
 
 		// add rule's content
 		setContent(ruleContentPanel);
 		
 		// set itself as content listener
-		ruleContentPanel.setContentListener(this);
-		this.ruleFactory.setListener(this);
+		ruleContentPanel.getRuleFactory().setListener(this);
 	}
 
 	@Override
-	public void isValidChanged(boolean valid) {
+	public void configurationChanged(boolean valid) {
+		this.titleLabel.setText(this.ruleContentPanel.getDescription());
+
 		if (valid) {
 			this.validLabel.setIcon(new ImageIcon("images" + File.separator + "green_button.png"));
 		
@@ -86,11 +89,6 @@ public class ExpandableRule extends ExpandableItem implements RuleFactoryListene
 			this.validLabel.setIcon(new ImageIcon("images" + File.separator + "red_button.png"));
 			this.validLabel.setToolTipText(ApplicationManager.getInstance().getLocaleManager().getString(STRING_KEY_INVALID_PARAMETERS));
 		}
-	}
-
-	@Override
-	public void descriptionChanged(String description) {
-		this.titleLabel.setText(description);
 	}
 
 	@Override
@@ -103,6 +101,6 @@ public class ExpandableRule extends ExpandableItem implements RuleFactoryListene
 
 	@Override
 	public void itemStateChanged(ItemEvent event) {
-		this.ruleFactory.setEnabled(this.selectCheckbox.isSelected());
+		this.ruleContentPanel.getRuleFactory().setEnabled(this.selectCheckbox.isSelected());
 	}
 }
