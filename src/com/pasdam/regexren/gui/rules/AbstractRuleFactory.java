@@ -3,7 +3,6 @@ package com.pasdam.regexren.gui.rules;
 import java.util.Arrays;
 
 import com.pasdam.regexren.controller.LogManager;
-import com.pasdam.regexren.gui.Rule;
 import com.pasdam.regexren.model.RuleType;
 
 /**
@@ -32,12 +31,9 @@ public abstract class AbstractRuleFactory {
 	/** Indicates whether the rule's configuration is changed until last rule build */
 	private boolean changed = true;
 
-	/** Indicates whether the rule must be created each time the {@link #getRule()} method is called */
-	private boolean recreateAlways = false;
-	
 	/** Listener to notify on rule configuration changes */
 	private RuleFactoryListener listener;
-
+	
 	/**
 	 * Create a factory class for the specified rule's type
 	 * 
@@ -45,7 +41,7 @@ public abstract class AbstractRuleFactory {
 	 *            type of the rule of the factory
 	 */
 	public AbstractRuleFactory(RuleType type) {
-		this.type = type;
+		this.type           = type;
 	}
 
 	/**
@@ -71,7 +67,7 @@ public abstract class AbstractRuleFactory {
 	 * @return the configured rule
 	 */
 	public Rule getRule() {
-		if (this.recreateAlways || this.changed || (this.rule == null && valid)) {
+		if (this.changed || (this.rule == null && valid)) {
 			this.rule = createConfiguredRule();
 			this.changed = false;
 		}
@@ -123,28 +119,6 @@ public abstract class AbstractRuleFactory {
 	protected void setValid(boolean valid) {
 		this.valid = valid;
 		configurationChanged();
-	}
-	
-	/**
-	 * Returns true if the rule is created each time the method
-	 * {@link #getRule()} is called
-	 * 
-	 * @return true if the rule is created each time the method
-	 *         {@link #getRule()} is called, false otherwise
-	 */
-	public boolean isRecreateAlways() {
-		return this.recreateAlways;
-	}
-
-	/**
-	 * Sets whether the rule must be created each time the method
-	 * {@link #getRule()} is called
-	 * 
-	 * @param recreateAlways
-	 *            if true the rule is recreated each time
-	 */
-	public void setRecreateAlways(boolean recreateAlways) {
-		this.recreateAlways = recreateAlways;
 	}
 
 	/**

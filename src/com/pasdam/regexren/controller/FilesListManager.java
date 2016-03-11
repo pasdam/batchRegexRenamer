@@ -68,6 +68,13 @@ public class FilesListManager implements PropertyChangeListener<File>, FiltersLi
 
 				// TODO: check for invalid rules
 				// TODO: add support to check if a file with the same name already exists
+				
+				// reset rules state
+				for (AbstractRuleFactory ruleFactory : rules) {
+					if (ruleFactory.isEnabled()) {
+						ruleFactory.getRule().reset();
+					}
+				}
 
 				for (int i = 0; i < this.fileRenamersList.size(); i++) {
 					renamer = this.fileRenamersList.get(i);

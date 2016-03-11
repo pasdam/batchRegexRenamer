@@ -4,7 +4,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import com.pasdam.regexren.gui.Rule;
 import com.pasdam.regexren.model.FileModelItem;
 import com.pasdam.regexren.model.RuleType;
 
@@ -307,6 +306,9 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			renamer.setName(renamer.getName().toUpperCase());
 			return renamer;
 		}
+
+		@Override
+		public void reset() {}
 	}
 	
 	/** Rule to change the case of the name to lowercase */
@@ -317,6 +319,9 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			renamer.setName(renamer.getName().toLowerCase());
 			return renamer;
 		}
+
+		@Override
+		public void reset() {}
 	}
 	
 	/** Rule to capitalize all words of the name*/
@@ -346,6 +351,9 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			
 			return renamer;
 		}
+
+		@Override
+		public void reset() {}
 	}
 	
 	/** Rule to capitalize the sentences (delimited by a regex/simple pattern) of the name*/
@@ -418,6 +426,9 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			
 			return renamer;
 		}
+
+		@Override
+		public void reset() {}
 	}
 	
 	/** Rule to change the case of the extension to uppercase */
@@ -431,6 +442,9 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			}
 			return renamer;
 		}
+
+		@Override
+		public void reset() {}
 	}
 	
 	/** Rule to change the case of the extension to lowercase */
@@ -444,6 +458,9 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			}
 			return renamer;
 		}
+
+		@Override
+		public void reset() {}
 	}
 	
 	/** Rule to capitalize the extension */
@@ -457,5 +474,8 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			}
 			return renamer;
 		}
+
+		@Override
+		public void reset() {}
 	}
 }

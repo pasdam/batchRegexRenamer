@@ -1,4 +1,4 @@
-package com.pasdam.regexren.gui;
+package com.pasdam.regexren.gui.rules;
 
 import com.pasdam.regexren.model.FileModelItem;
 
@@ -15,4 +15,7 @@ public interface Rule {
 	 * @return the input fileRenamer with updated values, usefull when use more rules in pipe
 	 */
 	public FileModelItem apply(FileModelItem file);
+	
+	/**	Reset the internal state of the rule */
+	public void reset();
 }

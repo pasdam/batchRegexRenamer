@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import com.pasdam.regexren.controller.LogManager;
-import com.pasdam.regexren.gui.Rule;
 import com.pasdam.regexren.model.FileModelItem;
 import com.pasdam.regexren.model.RuleType;
 
@@ -407,6 +406,9 @@ public class ReplaceFactory extends AbstractRuleFactory {
 				this.pattern = Pattern.compile(regex ? textToReplace : Pattern.quote(textToReplace), Pattern.CASE_INSENSITIVE); 
 			}
 		}
+
+		@Override
+		public void reset() {}
 	}
 	
 	/** Abstract rule that has a method to replace all occurrences of a given pattern */

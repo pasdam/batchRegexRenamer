@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-import com.pasdam.regexren.gui.Rule;
 import com.pasdam.regexren.model.FileModelItem;
 import com.pasdam.test.TestFileReader;
 
