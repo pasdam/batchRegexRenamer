@@ -129,7 +129,7 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 		// create spacer and add to the panel
 		this.row2Panel.add(Box.createHorizontalGlue());
 
-		// add first row to the panel
+		// add second row to the panel
 		add(this.row2Panel);
 	}
 	
@@ -172,9 +172,10 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 
 	@Override
 	protected String getDescription() {
+		String textToInsert = super.ruleFactory.getTextToInsert();
 		return String.format(
 				this.description,
-				super.ruleFactory.getTextToInsert(),
+				textToInsert != null ? textToInsert : "",
 				super.ruleFactory.getPosition(),
 				this.fromCombobox.getSelectedItem(),
 				this.targetCombobox.getSelectedItem()

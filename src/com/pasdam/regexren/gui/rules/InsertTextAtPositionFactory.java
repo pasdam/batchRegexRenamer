@@ -66,7 +66,7 @@ public class InsertTextAtPositionFactory extends AbstractRuleFactory {
 		this.textToInsert = textToInsert;
 		
 		boolean valid = this.textToInsert != null && this.textToInsert.length() > 0;
-		setValid(valid);
+		super.setValid(valid);
 		if (!valid) {
 			throw new IllegalArgumentException("Invalid parameter, textToInsert cannot be null or empty");
 		}
