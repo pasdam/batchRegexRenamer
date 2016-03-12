@@ -104,6 +104,12 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 		
 		// add the second row to the panel
 		add(this.row2Panel);
+		
+		// read initial values from rule factory
+		this.textToMoveField.setText(ruleFactory.getTextToMove());
+		this.textToSearchField.setText(ruleFactory.getTextToSearch());
+		this.regexCheckbox.setSelected(ruleFactory.isRegex());
+		this.matchCaseCheckbox.setSelected(ruleFactory.isMatchCase());
 	}
 	
 	private void updateCombos() {

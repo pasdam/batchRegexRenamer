@@ -107,6 +107,12 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 
 		// add second row to the panel
 		add(this.row2Panel);
+		
+		// read initial values from rule factory
+		this.textToInsertField.setText(ruleFactory.getTextToInsert());
+		this.textToSearchField.setText(ruleFactory.getTextToSearch());
+		this.regexCheckbox.setSelected(ruleFactory.isRegex());
+		this.matchCaseCheckbox.setSelected(ruleFactory.isMatchCase());
 	}
 	
 	private void updateCombos() {

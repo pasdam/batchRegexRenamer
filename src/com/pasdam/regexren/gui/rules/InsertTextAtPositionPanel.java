@@ -131,6 +131,10 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 
 		// add second row to the panel
 		add(this.row2Panel);
+		
+		// read initial values from rule factory
+		this.textToInsertField.setText(ruleFactory.getTextToInsert());
+		this.positionSpinner.setValue(ruleFactory.getPosition()+1);
 	}
 	
 	private void updateCombos() {

@@ -34,7 +34,7 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 	public static final int AFTER  = BEFORE + 1;
 	
 	// GUI elements
-	private JCheckBox matchCaseChackbox;
+	private JCheckBox matchCaseCheckbox;
 	private JCheckBox regexCheckbox;
 	private JTextField textToSearchField;
 	private SteppedComboBox beforeAfterCombobox;
@@ -57,22 +57,32 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 		// create event handler
 		this.eventHandler = new InternalEventHandler();
 
+		// create text to search field and add it to the panel
 		this.textToSearchField = new JTextField();
 		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
 		this.textToSearchField.setColumns(10);
 		add(this.textToSearchField);
 		
+		// create spacer and add it to the panel
 		add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
 
+		// create regex checkbox and add it to the panel
 		this.regexCheckbox = new JCheckBox();
 		this.regexCheckbox.addItemListener(this.eventHandler);
 		add(this.regexCheckbox);
 		
+		// create spacer and add it to the panel
 		add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
 		
-		this.matchCaseChackbox = new JCheckBox();
-		this.matchCaseChackbox.addItemListener(this.eventHandler);
-		add(this.matchCaseChackbox);
+		// create match case checkbox and add it to the panel
+		this.matchCaseCheckbox = new JCheckBox();
+		this.matchCaseCheckbox.addItemListener(this.eventHandler);
+		add(this.matchCaseCheckbox);
+		
+		// read initial values from rule factory
+		this.textToSearchField.setText(ruleFactory.getTextToSearch());
+		this.regexCheckbox.setSelected(ruleFactory.isRegex());
+		this.matchCaseCheckbox.setSelected(ruleFactory.isMatchCase());
 	}
 	
 	private void updateCombos() {
@@ -93,8 +103,8 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 		
 		this.regexCheckbox.setText(localeManager.getString("Rule.regex"));
 		this.regexCheckbox.setToolTipText(localeManager.getString("Rule.regex.tooltip"));
-		this.matchCaseChackbox.setText(localeManager.getString("Rule.matchCase"));
-		this.matchCaseChackbox.setToolTipText(localeManager.getString("Rule.matchCase.tooltip"));
+		this.matchCaseCheckbox.setText(localeManager.getString("Rule.matchCase"));
+		this.matchCaseCheckbox.setToolTipText(localeManager.getString("Rule.matchCase.tooltip"));
 
 		this.description    = localeManager.getString("Rule.insertCounterPattern.description");
 		this.beforeAfter[0] = localeManager.getString("Rule.before");
@@ -161,9 +171,9 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 					if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.InsertCounterBeforeAfterPanel> Invalid pattern: " + InsertCounterBeforeAfterPanel.this.textToSearchField.getText());
 				}
 				
-			} else if (source == InsertCounterBeforeAfterPanel.this.matchCaseChackbox) {
+			} else if (source == InsertCounterBeforeAfterPanel.this.matchCaseCheckbox) {
 				InsertCounterBeforeAfterPanel.super.ruleFactory.setMatchCase(
-						InsertCounterBeforeAfterPanel.this.matchCaseChackbox.isSelected());
+						InsertCounterBeforeAfterPanel.this.matchCaseCheckbox.isSelected());
 			}
 		}
 	}
