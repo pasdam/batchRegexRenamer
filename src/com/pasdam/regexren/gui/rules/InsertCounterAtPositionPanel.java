@@ -31,7 +31,7 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 	/**	Indicates the index of the combobox for the value "End" */
 	private static final int FROM_END = FROM_BEGIN + 1;
 
-	// UI components	
+	// UI components
 	private JLabel fromLabel;
 	private JLabel positionLabel;
 	private JLabel targetLabel;
