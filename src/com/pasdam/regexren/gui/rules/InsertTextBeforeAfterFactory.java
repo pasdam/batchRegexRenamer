@@ -30,17 +30,17 @@ import com.pasdam.regexren.model.RuleType;
 public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 
 	/** Used to insert before all occurrence of input text */
-	public static final int BEFORE_ALL = 0;
+	public static final int BEFORE_ALL   = 0;
 	/** Used to insert before only the first occurrence of input text */
-	public static final int BEFORE_FIRST = BEFORE_ALL + 1;
+	public static final int BEFORE_FIRST = BEFORE_ALL   + 1;
 	/** Used to insert before only the last occurrence of input text */
-	public static final int BEFORE_LAST = BEFORE_FIRST + 1;
+	public static final int BEFORE_LAST  = BEFORE_FIRST + 1;
 	/** Used to insert after all occurrence of input text */
-	public static final int AFTER_ALL = BEFORE_LAST + 1;
+	public static final int AFTER_ALL    = BEFORE_LAST  + 1;
 	/** Used to insert after only the first occurrence of input text */
-	public static final int AFTER_FIRST = AFTER_ALL + 1;
+	public static final int AFTER_FIRST  = AFTER_ALL    + 1;
 	/** Used to insert after only the last occurrence of input text */
-	public static final int AFTER_LAST = AFTER_FIRST + 1;
+	public static final int AFTER_LAST   = AFTER_FIRST  + 1;
 
 	/** Index of the "text to insert" parameter */
 	private static final int PARAMETER_TEXT_TO_INSERT = 0;
@@ -49,11 +49,11 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	/** Index of the "textToSearch" parameter */
 	private static final int PARAMETER_TEXT_TO_SEARCH = PARAMETER_BEFORE_PATTERN + 1;
 	/** Index of the "matchCase" parameter */
-	private static final int PARAMETER_MATCH_CASE = PARAMETER_TEXT_TO_SEARCH + 1;
+	private static final int PARAMETER_MATCH_CASE     = PARAMETER_TEXT_TO_SEARCH + 1;
 	/** Index of the "regex" parameter */
-	private static final int PARAMETER_REGEX = PARAMETER_MATCH_CASE + 1;
+	private static final int PARAMETER_REGEX          = PARAMETER_MATCH_CASE     + 1;
 	/** Indicates how many parameters this component has */
-	private static final int PARAMETERS_COUNT = PARAMETER_REGEX + 1;
+	private static final int PARAMETERS_COUNT         = PARAMETER_REGEX          + 1;
 
 	/** Text to insert */
 	private String textToInsert;
@@ -339,7 +339,8 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 		 */
 		public AbstractInsertRule(String textToInsert, String textToSearch, boolean matchCase, boolean regex) {
 			this.textToInsert = textToInsert;
-			this.pattern = matchCase ? Pattern.compile(regex ? textToSearch : Pattern.quote(textToSearch))
+			this.pattern = matchCase 
+					? Pattern.compile(regex ? textToSearch : Pattern.quote(textToSearch))
 					: Pattern.compile(regex ? textToSearch : Pattern.quote(textToSearch), Pattern.CASE_INSENSITIVE);
 		}
 
@@ -359,19 +360,19 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 		}
 
 		@Override
-		public FileModelItem apply(FileModelItem fileRenamer) {
-			Matcher matcher = super.pattern.matcher(fileRenamer.getName());
-			StringBuilder builder = new StringBuilder(super.textToInsert.length() + fileRenamer.getName().length());
+		public FileModelItem apply(FileModelItem fileModelItem) {
+			Matcher matcher = super.pattern.matcher(fileModelItem.getName());
+			StringBuilder builder = new StringBuilder(super.textToInsert.length() + fileModelItem.getName().length());
 			int previousEndIndex = 0;
 			while (matcher.find()) {
-				builder.append(fileRenamer.getName().substring(previousEndIndex, matcher.start()));
+				builder.append(fileModelItem.getName().substring(previousEndIndex, matcher.start()));
 				builder.append(super.textToInsert);
 				previousEndIndex = matcher.start();
 			}
 			if (builder.length() > 0) {
-				fileRenamer.setName(builder.toString() + fileRenamer.getName().substring(previousEndIndex));
+				fileModelItem.setName(builder.toString() + fileModelItem.getName().substring(previousEndIndex));
 			}
-			return fileRenamer;
+			return fileModelItem;
 		}
 	}
 
@@ -384,13 +385,13 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 		}
 
 		@Override
-		public FileModelItem apply(FileModelItem fileRenamer) {
-			Matcher matcher = super.pattern.matcher(fileRenamer.getName());
+		public FileModelItem apply(FileModelItem fileModelItem) {
+			Matcher matcher = super.pattern.matcher(fileModelItem.getName());
 			if (matcher.find()) {
-				fileRenamer.setName(fileRenamer.getName().substring(0, matcher.start()) + super.textToInsert
-						+ fileRenamer.getName().substring(matcher.start()));
+				fileModelItem.setName(fileModelItem.getName().substring(0, matcher.start()) + super.textToInsert
+						+ fileModelItem.getName().substring(matcher.start()));
 			}
-			return fileRenamer;
+			return fileModelItem;
 		}
 	}
 
@@ -406,17 +407,17 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 		}
 
 		@Override
-		public FileModelItem apply(FileModelItem fileRenamer) {
-			Matcher matcher = super.pattern.matcher(fileRenamer.getName());
+		public FileModelItem apply(FileModelItem fileModelItem) {
+			Matcher matcher = super.pattern.matcher(fileModelItem.getName());
 			int index = -1;
 			while (matcher.find()) {
 				index = matcher.start();
 			}
 			if (index > -1) {
-				fileRenamer.setName(fileRenamer.getName().substring(0, index) + super.textToInsert
-						+ fileRenamer.getName().substring(index));
+				fileModelItem.setName(fileModelItem.getName().substring(0, index) + super.textToInsert
+						+ fileModelItem.getName().substring(index));
 			}
-			return fileRenamer;
+			return fileModelItem;
 		}
 	}
 
@@ -432,19 +433,19 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 		}
 
 		@Override
-		public FileModelItem apply(FileModelItem fileRenamer) {
-			Matcher matcher = super.pattern.matcher(fileRenamer.getName());
-			StringBuilder builder = new StringBuilder(super.textToInsert.length() + fileRenamer.getName().length());
+		public FileModelItem apply(FileModelItem fileModelItem) {
+			Matcher matcher = super.pattern.matcher(fileModelItem.getName());
+			StringBuilder builder = new StringBuilder(super.textToInsert.length() + fileModelItem.getName().length());
 			int previousEndIndex = 0;
 			while (matcher.find()) {
-				builder.append(fileRenamer.getName().substring(previousEndIndex, matcher.end()));
+				builder.append(fileModelItem.getName().substring(previousEndIndex, matcher.end()));
 				builder.append(super.textToInsert);
 				previousEndIndex = matcher.end();
 			}
 			if (builder.length() > 0) {
-				fileRenamer.setName(builder.toString() + fileRenamer.getName().substring(previousEndIndex));
+				fileModelItem.setName(builder.toString() + fileModelItem.getName().substring(previousEndIndex));
 			}
-			return fileRenamer;
+			return fileModelItem;
 		}
 	}
 
@@ -460,13 +461,13 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 		}
 
 		@Override
-		public FileModelItem apply(FileModelItem fileRenamer) {
-			Matcher matcher = super.pattern.matcher(fileRenamer.getName());
+		public FileModelItem apply(FileModelItem fileModelItem) {
+			Matcher matcher = super.pattern.matcher(fileModelItem.getName());
 			if (matcher.find()) {
-				fileRenamer.setName(fileRenamer.getName().substring(0, matcher.end()) + super.textToInsert
-						+ fileRenamer.getName().substring(matcher.end()));
+				fileModelItem.setName(fileModelItem.getName().substring(0, matcher.end()) + super.textToInsert
+						+ fileModelItem.getName().substring(matcher.end()));
 			}
-			return fileRenamer;
+			return fileModelItem;
 		}
 	}
 
@@ -482,17 +483,17 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 		}
 
 		@Override
-		public FileModelItem apply(FileModelItem fileRenamer) {
-			Matcher matcher = super.pattern.matcher(fileRenamer.getName());
+		public FileModelItem apply(FileModelItem fileModelItem) {
+			Matcher matcher = super.pattern.matcher(fileModelItem.getName());
 			int previousEndIndex = -1;
 			while (matcher.find()) {
 				previousEndIndex = matcher.end();
 			}
 			if (previousEndIndex > -1) {
-				fileRenamer.setName(fileRenamer.getName().substring(0, previousEndIndex) + super.textToInsert
-						+ fileRenamer.getName().substring(previousEndIndex));
+				fileModelItem.setName(fileModelItem.getName().substring(0, previousEndIndex) + super.textToInsert
+						+ fileModelItem.getName().substring(previousEndIndex));
 			}
-			return fileRenamer;
+			return fileModelItem;
 		}
 	}
 }
