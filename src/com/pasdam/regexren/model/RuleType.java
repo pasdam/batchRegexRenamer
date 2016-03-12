@@ -25,9 +25,12 @@ public enum RuleType {
 	
 	/**	Rule that allows to remove specific text */
 	REMOVE								(5),
+	
+	/**	Rule that allows to replace specific text*/
+	REPLACE								(6),
 
 	/**	Rule that allows to replace specific text*/
-	REPLACE								(6);
+	MOVE								(7);
 
 	/** ID of the rule, used to store it in a script file */
 	private final int id;
@@ -68,9 +71,12 @@ public enum RuleType {
 			
 			case 5:
 				return REMOVE;
-			
+				
 			case 6:
 				return REPLACE;
+			
+			case 7:
+				return MOVE;
 
 			default:
 				return null;

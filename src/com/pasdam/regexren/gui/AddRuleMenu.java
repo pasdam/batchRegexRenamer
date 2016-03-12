@@ -17,6 +17,7 @@ import com.pasdam.regexren.gui.rules.InsertCounterAtPositionFactory;
 import com.pasdam.regexren.gui.rules.InsertCounterBeforeAfterFactory;
 import com.pasdam.regexren.gui.rules.InsertTextAtPositionFactory;
 import com.pasdam.regexren.gui.rules.InsertTextBeforeAfterFactory;
+import com.pasdam.regexren.gui.rules.MoveTextBeforeAfterFactory;
 import com.pasdam.regexren.gui.rules.ReplaceFactory;
 import com.pasdam.regexren.model.RuleType;
 
@@ -26,13 +27,14 @@ class AddRuleMenu extends JPopupMenu implements ActionListener, Localizable {
 	private static final long serialVersionUID = 8219513433720040595L;
 
 	// GUI elements
+	private final JMenuItem changeCaseItem;
+	private final JMenuItem insertCounterAtPositionItem;
+	private final JMenuItem insertCounterBeforeAfterItem;
 	private final JMenuItem insertTextAtPositionItem;
 	private final JMenuItem insertTextBeforeAfterItem;
-	private final JMenuItem insertCounterAtPositionItem;
-	private final JMenuItem replaceItem;
-	private final JMenuItem changeCaseItem;
+	private final JMenuItem moveItem;
 	private final JMenuItem removeItem;
-	private final JMenuItem insertCounterBeforeAfterItem;
+	private final JMenuItem replaceItem;
 	
 	// Rule type values used as id of the menu item: at runtime the ordinal
 	// value of each type doesn't change so it is safe to use it as ID
@@ -66,12 +68,18 @@ class AddRuleMenu extends JPopupMenu implements ActionListener, Localizable {
 		
 		// separator
 		add(new JSeparator(JSeparator.HORIZONTAL));
-
+		
 		// Replace
 		this.replaceItem = new JMenuItem();
 		this.replaceItem.setActionCommand("" + RuleType.REPLACE.ordinal());
 		this.replaceItem.addActionListener(this);
 		add(this.replaceItem);
+
+		// Move
+		this.moveItem = new JMenuItem();
+		this.moveItem.setActionCommand("" + RuleType.MOVE.ordinal());
+		this.moveItem.addActionListener(this);
+		add(this.moveItem);
 		
 		// Remove
 		this.removeItem = new JMenuItem();
@@ -96,6 +104,7 @@ class AddRuleMenu extends JPopupMenu implements ActionListener, Localizable {
     	this.insertCounterBeforeAfterItem .setText(localeManager.getString("AddRuleMenu.insertCounterBeforeAfterItem.label"));
     	this.insertTextAtPositionItem	  .setText(localeManager.getString("AddRuleMenu.insertTextAtPositionItem.label"));
     	this.insertTextBeforeAfterItem	  .setText(localeManager.getString("AddRuleMenu.insertTextBeforeAfterItem.label"));
+    	this.moveItem					  .setText(localeManager.getString("AddRuleMenu.moveItem.label"));
     	this.removeItem					  .setText(localeManager.getString("AddRuleMenu.removeItem.label"));
     	this.replaceItem				  .setText(localeManager.getString("AddRuleMenu.replaceItem.label"));
 	}
@@ -121,6 +130,10 @@ class AddRuleMenu extends JPopupMenu implements ActionListener, Localizable {
 			
 			case INSERT_COUNTER_BEFORE_AFTER_PATTERN:
 				rule = new InsertCounterBeforeAfterFactory();
+				break;
+				
+			case MOVE:
+				rule = new MoveTextBeforeAfterFactory();
 				break;
 			
 			case REPLACE:
