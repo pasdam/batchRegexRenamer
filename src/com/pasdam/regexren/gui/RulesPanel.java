@@ -16,6 +16,10 @@ import com.pasdam.regexren.gui.rules.ChangeCaseFactory;
 import com.pasdam.regexren.gui.rules.ChangeCasePanel;
 import com.pasdam.regexren.gui.rules.InsertCounterAtPositionFactory;
 import com.pasdam.regexren.gui.rules.InsertCounterAtPositionPanel;
+import com.pasdam.regexren.gui.rules.InsertCounterBeforeAfterFactory;
+import com.pasdam.regexren.gui.rules.InsertCounterBeforeAfterPanel;
+import com.pasdam.regexren.gui.rules.InsertTextAtPositionFactory;
+import com.pasdam.regexren.gui.rules.InsertTextAtPositionPanel;
 import com.pasdam.regexren.gui.rules.RemovePanel;
 import com.pasdam.regexren.gui.rules.ReplaceFactory;
 import com.pasdam.regexren.gui.rules.ReplacePanel;
@@ -53,12 +57,12 @@ public class RulesPanel extends JScrollPane implements RulesListener {
 	@Override
 	public void ruleAdded(int index, AbstractRuleFactory addedRule) {
 		if (LogManager.ENABLED) LogManager.trace("RulesPanel.ruleAdded> Adding rule (at index " + index + "): " + addedRule.getType());
-		RuleContentPanel ruleContentPanel;
+		RuleContentPanel<?> ruleContentPanel;
 		
 		switch (addedRule.getType()) {
-	//		case INSERT_TEXT_AT_POSITION:
-	//			ruleContentPanel = new InsertTextAtPositionPanel(() addedRule);
-	//			break;
+			case INSERT_TEXT_AT_POSITION:
+				ruleContentPanel = new InsertTextAtPositionPanel((InsertTextAtPositionFactory) addedRule);
+				break;
 
 	//		case INSERT_TEXT_BEFORE_AFTER:
 	//			ruleContentPanel = new InsertTextBeforeAfterPanel(() addedRule);
@@ -68,9 +72,9 @@ public class RulesPanel extends JScrollPane implements RulesListener {
 				ruleContentPanel = new InsertCounterAtPositionPanel((InsertCounterAtPositionFactory) addedRule);
 				break;
 
-	//		case INSERT_COUNTER_BEFORE_AFTER:
-	//			ruleContentPanel = new InsertCounterBeforeAfterPanel(() addedRule);
-	//			break;
+			case INSERT_COUNTER_BEFORE_AFTER_PATTERN:
+				ruleContentPanel = new InsertCounterBeforeAfterPanel((InsertCounterBeforeAfterFactory) addedRule);
+				break;
 		
 	//		case MOVE:
 	//			ruleContentPanel = new MoveTextBeforeAfterPanel(() addedRule);
