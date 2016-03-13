@@ -28,7 +28,7 @@ public class InsertCounterBeforeAfterFactory extends AbstractInsertCounterFactor
 	private static final int PARAMETERS_COUNT         = PARAMETER_REGEX          + 1;
 
 	/** Indicates whether the pattern should be inserted before the searched pattern or after */
-	private boolean beforePattern;
+	private boolean beforePattern = true;
 	
 	/** Pattern to find */
 	private String textToSearch;
@@ -175,7 +175,7 @@ public class InsertCounterBeforeAfterFactory extends AbstractInsertCounterFactor
 
 	@Override
 	protected void parseRuleSpecificParameters(String[] parameters) throws IllegalArgumentException {
-		if (parameters.length == PARAMETERS_COUNT + AbstractInsertCounterFactory.PARAMETERS_COUNT) {
+		if (parameters.length == PARAMETERS_COUNT) {
 			super.parseRuleSpecificParameters(parameters);
 			
 			this.beforePattern = intToBool(Integer.parseInt(parameters[PARAMETER_BEFORE_PATTERN]));
@@ -191,7 +191,7 @@ public class InsertCounterBeforeAfterFactory extends AbstractInsertCounterFactor
 	@Override
 	protected String[] getRuleSpecificParameters() {
 		String[] superParameters = super.getRuleSpecificParameters();
-		String[] parameters = Arrays.copyOf(superParameters, superParameters.length + PARAMETERS_COUNT);
+		String[] parameters = Arrays.copyOf(superParameters, PARAMETERS_COUNT);
 		parameters[PARAMETER_BEFORE_PATTERN] = ""+boolToInt(this.beforePattern);
 		parameters[PARAMETER_TEXT_TO_SEARCH] = this.textToSearch;
 		parameters[PARAMETER_MATCH_CASE]     = ""+boolToInt(this.matchCase);
