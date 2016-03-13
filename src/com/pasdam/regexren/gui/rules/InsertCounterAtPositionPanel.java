@@ -43,7 +43,7 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 	private final String[] fromValues = new String[2];
 	
 	/** Array of "Target" combobox values */
-	private final String[] targetValues = new String[3];
+	private final String[] targetValues = new String[2];
 	
 	/** Handler of internal events */
 	private final InternalEventHandler eventHandler;
