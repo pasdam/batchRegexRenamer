@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.pasdam.regexren.controller.FilterManager.FiltersListener;
 import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
@@ -67,14 +69,16 @@ public class FilesListManager implements PropertyChangeListener<File>, FiltersLi
 				File newFile;
 
 				// TODO: check for invalid rules
-				// TODO: add support to check if a file with the same name already exists
-				
+
 				// reset rules state
 				for (AbstractRuleFactory ruleFactory : rules) {
 					if (ruleFactory.isEnabled()) {
 						ruleFactory.getRule().reset();
 					}
 				}
+				
+				Map<String, Object> fileNamesMap = new HashMap<String, Object>();
+				String name;
 
 				for (int i = 0; i < this.fileRenamersList.size(); i++) {
 					renamer = this.fileRenamersList.get(i);
@@ -88,12 +92,19 @@ public class FilesListManager implements PropertyChangeListener<File>, FiltersLi
 								ruleFactory.getRule().apply(fileData);
 							}
 						}
-
+						
 						// rename file
 						if (rename) {
-							newFile = new File(renamer.getCurrentFile().getParentFile(), fileData.getNewFullName());
-							renamer.renameTo(newFile);
-							this.filesDataList.set(i, new FileModelItem(newFile));
+							name = fileData.getNewFullName();
+							if (!fileNamesMap.containsKey(name)) {
+								fileNamesMap.put(name, null);
+								
+								// rename
+								newFile = new File(renamer.getCurrentFile().getParentFile(), name);
+								renamer.renameTo(newFile);
+								this.filesDataList.set(i, new FileModelItem(newFile));
+								
+							} // else skip it
 						}
 					}
 				}
