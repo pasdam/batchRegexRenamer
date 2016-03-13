@@ -6,7 +6,9 @@ import java.awt.SystemColor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -141,11 +143,12 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 		}
 			
 		@SuppressWarnings("rawtypes")
-		private Class[] columnTypes = new Class[] {
+		private final Class[] columnTypes = new Class[] {
 			Boolean.class,	// 0) check column
 			String.class,	// 1) current name
 			String.class	// 2) new name
 		};
+		private final Map<Integer, Object> duplicateNameIndexes = new HashMap<Integer, Object>();
 		
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public Class getColumnClass(int columnIndex) {
@@ -171,11 +174,28 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 		 *            list of file data to add to the model
 		 */
 		public void addFilesData(List<FileModelItem> list) {
-			for (FileModelItem fileData : list) {
+			this.duplicateNameIndexes.clear();
+
+			Map<String, Integer> names = new HashMap<String, Integer>();
+			String newName;
+			FileModelItem fileData;
+			
+			for (int i = 0; i < list.size(); i++) {
+				// check for duplicates
+				fileData = list.get(i);
+				newName = fileData.getNewFullName();
+				if (names.containsKey(newName)) {
+					duplicateNameIndexes.put(names.get(newName), null);
+					duplicateNameIndexes.put(i, null);
+				} else {
+					names.put(newName, i);
+				}
+				
+				// add single row
 				addRow(new Object[] { 
 						fileData.isChecked(), 
 						fileData.getFile(),
-						fileData.getNewFullName()
+						newName
 				});
 			}
 		}
@@ -187,6 +207,10 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 			if (row >= 0 && column == 0) {
 				ApplicationManager.getInstance().getFilesListManager().setChecked(row, (Boolean) FilesTable.this.model.getValueAt(row, column));
 			}
+		}
+		
+		public boolean isDuplicated(int row) {
+			return this.duplicateNameIndexes.containsKey(row);
 		}
 	}
 
@@ -220,6 +244,8 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 						label.setToolTipText(name);
 						if (((File) table.getValueAt(row, 1)).getName().equals(name)) {
 							label.setForeground(Color.LIGHT_GRAY);
+						} else if (FilesTable.this.model.isDuplicated(row)) {
+							label.setForeground(Color.RED);
 						} else {
 							label.setForeground(Color.BLACK);
 						}
