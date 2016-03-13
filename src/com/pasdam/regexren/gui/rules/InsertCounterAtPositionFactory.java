@@ -28,7 +28,7 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 	private static final int PARAMETERS_COUNT      = PARAMETER_TARGET     + 1;
 
 	/** Indicates whether the position starts from the beginning (true), or the end (false) */
-	private boolean fromBegin;
+	private boolean fromBegin = true;
 	
 	/** Indicates the position at which insert the counter */
 	private int position;
@@ -124,7 +124,7 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 
 	@Override
 	protected void parseRuleSpecificParameters(String[] parameters) throws IllegalArgumentException {
-		if (parameters.length == PARAMETERS_COUNT + AbstractInsertCounterFactory.PARAMETERS_COUNT) {
+		if (parameters.length == InsertCounterAtPositionFactory.PARAMETERS_COUNT) {
 			super.parseRuleSpecificParameters(parameters);
 			this.fromBegin  = intToBool(Integer.parseInt(parameters[PARAMETER_FROM_BEGIN]));
 			this.position   = Integer.parseInt(parameters[PARAMETER_POSITION]);
@@ -138,7 +138,7 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 	@Override
 	protected String[] getRuleSpecificParameters() {
 		String[] superParameters = super.getRuleSpecificParameters();
-		String[] parameters = Arrays.copyOf(superParameters, superParameters.length + PARAMETERS_COUNT);
+		String[] parameters = Arrays.copyOf(superParameters, InsertCounterAtPositionFactory.PARAMETERS_COUNT);
 		parameters[PARAMETER_FROM_BEGIN]  = ""+boolToInt(this.fromBegin);
 		parameters[PARAMETER_POSITION]    = ""+this.position;
 		parameters[PARAMETER_TARGET]      = ""+this.target;
@@ -182,7 +182,7 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 	/** Abstract insert counter rule, with utility methods */
 	private static abstract class AbstractCounterPositionRule extends AbstractCounterRule {
 		
-		/** Inficates the position at which insert the counter */
+		/** Indicates the position at which insert the counter */
 		private final int position;
 		
 		/**
