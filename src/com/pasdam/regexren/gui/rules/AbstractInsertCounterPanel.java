@@ -77,7 +77,7 @@ abstract class AbstractInsertCounterPanel<T extends AbstractInsertCounterFactory
 		
 		// read initial values from factory
 		this.counterStartSpinner.setValue(super.ruleFactory.getStartCount());
-		this.paddingSpinner.setValue(super.ruleFactory.getPadding()+1);
+		this.paddingSpinner.setValue(super.ruleFactory.getPadding());
 	}
 	
 	@Override
@@ -99,7 +99,7 @@ abstract class AbstractInsertCounterPanel<T extends AbstractInsertCounterFactory
 			
 			} else if (source == AbstractInsertCounterPanel.this.paddingSpinner) {
 				AbstractInsertCounterPanel.super.ruleFactory.setPadding(
-						((Integer)AbstractInsertCounterPanel.this.paddingSpinner.getValue())-1);
+						((Integer)AbstractInsertCounterPanel.this.paddingSpinner.getValue()));
 			}
 		}
 	}
