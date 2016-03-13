@@ -34,7 +34,7 @@ public class InsertTextAtPositionFactory extends AbstractRuleFactory {
 	private int position;
 	
 	/**	Indicates whether position starts from begin or from end */
-	private boolean fromBegin;
+	private boolean fromBegin = true;
 	
 	/**	Indicates the target of the operation (name/extension) */
 	private int target;

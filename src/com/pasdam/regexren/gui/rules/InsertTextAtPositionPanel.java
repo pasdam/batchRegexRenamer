@@ -53,7 +53,7 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 	private final String[] fromValues = new String[2];
 	
 	/** Array of "Target" combobox values */
-	private final String[] targetValues   = new String[3];
+	private final String[] targetValues   = new String[2];
 
 	/** Handler of internal events */
 	private final InternalEventHandler eventHandler;
@@ -152,7 +152,6 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 			remove(this.targetCombobox);
 		}
 		this.targetCombobox = new SteppedComboBox(new DefaultComboBoxModel<String>(this.targetValues));
-		this.targetCombobox.setInheritsPopupMenu(true);
 		this.targetCombobox.setPreferredSize(new Dimension(this.fromCombobox.getPreferredSize()));
 		this.targetCombobox.setMaximumSize(new Dimension(this.targetCombobox.getPreferredSize()));
 		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
@@ -162,9 +161,9 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 	
 	@Override
 	public void localeChanged(LocaleManager localeManager) {
-		this.description                    = localeManager.getString("Rule.insertTextPosition.description");
-		this.fromValues[FROM_BEGIN]         = localeManager.getString("Rule.begin");
-		this.fromValues[FROM_END]           = localeManager.getString("Rule.end");
+		this.description            = localeManager.getString("Rule.insertTextPosition.description");
+		this.fromValues[FROM_BEGIN] = localeManager.getString("Rule.begin");
+		this.fromValues[FROM_END]   = localeManager.getString("Rule.end");
 		this.targetValues[InsertTextAtPositionFactory.TARGET_NAME]      = localeManager.getString("Rule.name");
 		this.targetValues[InsertTextAtPositionFactory.TARGET_EXTENSION] = localeManager.getString("Rule.extension");
 		this.textToInsertLabel.setText(localeManager.getString("Rule.text"));
