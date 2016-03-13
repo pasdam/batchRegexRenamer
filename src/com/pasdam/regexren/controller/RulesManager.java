@@ -13,6 +13,13 @@ import java.util.regex.Pattern;
 
 import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
 import com.pasdam.regexren.gui.rules.ChangeCaseFactory;
+import com.pasdam.regexren.gui.rules.InsertCounterAtPositionFactory;
+import com.pasdam.regexren.gui.rules.InsertCounterBeforeAfterFactory;
+import com.pasdam.regexren.gui.rules.InsertCounterOnCollisionFactory;
+import com.pasdam.regexren.gui.rules.InsertTextAtPositionFactory;
+import com.pasdam.regexren.gui.rules.InsertTextBeforeAfterFactory;
+import com.pasdam.regexren.gui.rules.MoveTextBeforeAfterFactory;
+import com.pasdam.regexren.gui.rules.ReplaceFactory;
 import com.pasdam.regexren.model.RuleType;
 
 /**
@@ -183,29 +190,36 @@ public class RulesManager extends ErrorListenerManager {
 			AbstractRuleFactory ruleFactory;
 			switch (ruleType) {
 				case INSERT_TEXT_AT_POSITION:
-					// TODO ruleFactory = new InsertTextAtPositionFactory();
-					// break;
+					ruleFactory = new InsertTextAtPositionFactory();
+					break;
 	
 				case INSERT_TEXT_BEFORE_AFTER_PATTERN:
-					// TODO ruleFactory = new InsertTextBeforeAfterFactory();
-					// break;
+					ruleFactory = new InsertTextBeforeAfterFactory();
+					break;
 					
 				case INSERT_COUNTER_AT_POSITION:
-					// TODO ruleFactory = new InsertCounterAtPositionFactory();
-					// break;
+					ruleFactory = new InsertCounterAtPositionFactory();
+					break;
 					
 				case INSERT_COUNTER_BEFORE_AFTER_PATTERN:
-					// TODO ruleFactory = new InsertCounterBeforeAfterFactory();
-					// break;
+					ruleFactory = new InsertCounterBeforeAfterFactory();
+					break;
+					
+				case INSERT_COUNTER_ON_COLLISION:
+					ruleFactory = new InsertCounterOnCollisionFactory();
+					break;
 					
 				case REPLACE:
-					// TODO ruleFactory = new ReplaceFactory();
-					// break;
-				
+					ruleFactory = new ReplaceFactory();
+					break;
+					
 				case REMOVE:
-					// TODO ruleFactory = new ReplaceFactory();
-					// break;
-					return null;
+					ruleFactory = new ReplaceFactory();
+					break;
+				
+				case MOVE:
+					ruleFactory = new MoveTextBeforeAfterFactory();
+					break;
 	
 				case CHANGE_CASE:
 					ruleFactory = new ChangeCaseFactory();
@@ -228,7 +242,7 @@ public class RulesManager extends ErrorListenerManager {
 			return ruleFactory;
 			
 		} catch (Exception e) {
-			if (LogManager.ENABLED) LogManager.error("RulesManager.parseRule: " + e.getMessage());
+			if (LogManager.ENABLED) LogManager.error("RulesManager.parseRule: " + e.getMessage() + ". Invalid rule: " + rule);
 			return null;
 		}
 	}
