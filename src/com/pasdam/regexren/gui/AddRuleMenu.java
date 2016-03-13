@@ -15,6 +15,7 @@ import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
 import com.pasdam.regexren.gui.rules.ChangeCaseFactory;
 import com.pasdam.regexren.gui.rules.InsertCounterAtPositionFactory;
 import com.pasdam.regexren.gui.rules.InsertCounterBeforeAfterFactory;
+import com.pasdam.regexren.gui.rules.InsertCounterOnCollisionFactory;
 import com.pasdam.regexren.gui.rules.InsertTextAtPositionFactory;
 import com.pasdam.regexren.gui.rules.InsertTextBeforeAfterFactory;
 import com.pasdam.regexren.gui.rules.MoveTextBeforeAfterFactory;
@@ -30,6 +31,7 @@ class AddRuleMenu extends JPopupMenu implements ActionListener, Localizable {
 	private final JMenuItem changeCaseItem;
 	private final JMenuItem insertCounterAtPositionItem;
 	private final JMenuItem insertCounterBeforeAfterItem;
+	private final JMenuItem insertCounterOnCollisionItem;
 	private final JMenuItem insertTextAtPositionItem;
 	private final JMenuItem insertTextBeforeAfterItem;
 	private final JMenuItem moveItem;
@@ -53,18 +55,27 @@ class AddRuleMenu extends JPopupMenu implements ActionListener, Localizable {
 		this.insertTextBeforeAfterItem.setActionCommand("" + RuleType.INSERT_TEXT_BEFORE_AFTER_PATTERN.ordinal());
 		this.insertTextBeforeAfterItem.addActionListener(this);
 		add(this.insertTextBeforeAfterItem);
+		
+		// separator
+		add(new JSeparator(JSeparator.HORIZONTAL));
 
 		// Insert counter at position
 		this.insertCounterAtPositionItem = new JMenuItem();
 		this.insertCounterAtPositionItem.setActionCommand("" + RuleType.INSERT_COUNTER_AT_POSITION.ordinal());
 		this.insertCounterAtPositionItem.addActionListener(this);
 		add(this.insertCounterAtPositionItem);
-
+		
 		// Insert counter before/after
 		this.insertCounterBeforeAfterItem = new JMenuItem();
 		this.insertCounterBeforeAfterItem.setActionCommand("" + RuleType.INSERT_COUNTER_BEFORE_AFTER_PATTERN.ordinal());
 		this.insertCounterBeforeAfterItem.addActionListener(this);
 		add(this.insertCounterBeforeAfterItem);
+
+		// Insert counter before/after
+		this.insertCounterOnCollisionItem = new JMenuItem();
+		this.insertCounterOnCollisionItem.setActionCommand("" + RuleType.INSERT_COUNTER_ON_COLLISION.ordinal());
+		this.insertCounterOnCollisionItem.addActionListener(this);
+		add(this.insertCounterOnCollisionItem);
 		
 		// separator
 		add(new JSeparator(JSeparator.HORIZONTAL));
@@ -102,6 +113,7 @@ class AddRuleMenu extends JPopupMenu implements ActionListener, Localizable {
     	this.changeCaseItem				  .setText(localeManager.getString("AddRuleMenu.changeCaseItem.label"));
     	this.insertCounterAtPositionItem  .setText(localeManager.getString("AddRuleMenu.insertCounterAtPositionItem.label"));
     	this.insertCounterBeforeAfterItem .setText(localeManager.getString("AddRuleMenu.insertCounterBeforeAfterItem.label"));
+    	this.insertCounterOnCollisionItem .setText(localeManager.getString("AddRuleMenu.insertCounterOnCollisionItem.label"));
     	this.insertTextAtPositionItem	  .setText(localeManager.getString("AddRuleMenu.insertTextAtPositionItem.label"));
     	this.insertTextBeforeAfterItem	  .setText(localeManager.getString("AddRuleMenu.insertTextBeforeAfterItem.label"));
     	this.moveItem					  .setText(localeManager.getString("AddRuleMenu.moveItem.label"));
@@ -127,9 +139,13 @@ class AddRuleMenu extends JPopupMenu implements ActionListener, Localizable {
 			case INSERT_COUNTER_AT_POSITION:
 				rule = new InsertCounterAtPositionFactory();
 				break;
-			
+				
 			case INSERT_COUNTER_BEFORE_AFTER_PATTERN:
 				rule = new InsertCounterBeforeAfterFactory();
+				break;
+			
+			case INSERT_COUNTER_ON_COLLISION:
+				rule = new InsertCounterOnCollisionFactory();
 				break;
 				
 			case MOVE:

@@ -17,20 +17,23 @@ public enum RuleType {
 	/**	Rule that allows to insert a counter before/after a specific phrase */
 	INSERT_COUNTER_BEFORE_AFTER_PATTERN	(2),
 	
+	/**	Rule that allows to insert a counter on name collision */
+	INSERT_COUNTER_ON_COLLISION			(3),
+	
 	/**	Rule that allows to insert a text at specific position */
-	INSERT_TEXT_AT_POSITION				(3),
+	INSERT_TEXT_AT_POSITION				(4),
 	
 	/**	Rule that allows to insert a text before/after a specific phrase */
-	INSERT_TEXT_BEFORE_AFTER_PATTERN	(4),
+	INSERT_TEXT_BEFORE_AFTER_PATTERN	(5),
 	
 	/**	Rule that allows to remove specific text */
-	REMOVE								(5),
+	REMOVE								(6),
 	
 	/**	Rule that allows to replace specific text*/
-	REPLACE								(6),
+	REPLACE								(7),
 
 	/**	Rule that allows to replace specific text*/
-	MOVE								(7);
+	MOVE								(8);
 
 	/** ID of the rule, used to store it in a script file */
 	private final int id;
@@ -59,23 +62,26 @@ public enum RuleType {
 			
 			case 1:
 				return INSERT_COUNTER_AT_POSITION;
-			
+				
 			case 2:
 				return INSERT_COUNTER_BEFORE_AFTER_PATTERN;
 			
 			case 3:
-				return INSERT_TEXT_AT_POSITION;
+				return INSERT_COUNTER_ON_COLLISION;
 			
 			case 4:
-				return INSERT_TEXT_BEFORE_AFTER_PATTERN;
+				return INSERT_TEXT_AT_POSITION;
 			
 			case 5:
+				return INSERT_TEXT_BEFORE_AFTER_PATTERN;
+			
+			case 6:
 				return REMOVE;
 				
-			case 6:
+			case 7:
 				return REPLACE;
 			
-			case 7:
+			case 8:
 				return MOVE;
 
 			default:

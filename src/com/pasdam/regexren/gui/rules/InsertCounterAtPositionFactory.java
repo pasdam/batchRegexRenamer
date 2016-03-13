@@ -14,9 +14,7 @@ import com.pasdam.regexren.model.RuleType;
 public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory {
 
 	/** Used to specify that the filter must modify only file name */
-	public static final int OF_NAME = 0;
-	/** Used to specify that the filter must modify only file name (and only in case of collision)*/
-//	public static final int OF_NAME_ON_COLLISION = OF_NAME + 1;
+	public static final int OF_NAME      = 0;
 	/** Used to specify that the filter must modify only file extension */
 	public static final int OF_EXTENSION = OF_NAME + 1;
 	
@@ -170,7 +168,7 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 				return fromBegin
 						? new InsertFromNameBeginning(startCount, padding, position)
 						: new InsertFromNameEnd(startCount, padding, position);
-			
+						
 			case OF_EXTENSION:
 				return fromBegin
 						? new InsertFromExtensionBeginning(startCount, padding, position)
@@ -301,4 +299,6 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 			return file;
 		}
 	}
+	
+	
 }
