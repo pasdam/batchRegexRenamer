@@ -1,5 +1,7 @@
 package com.pasdam.regexren.controller;
 
+import java.io.File;
+
 /**
  * Application manager, it allows access to all data managers
  * 
@@ -76,5 +78,15 @@ public class ApplicationManager {
 	 */
 	public FilesListManager getFilesListManager() {
 		return filesListManager;
+	}
+	
+	/** Terminates the application */
+	public void terminate() {
+		if (this.preferenceManager.getRememberPreviousScript()) {
+			File file = new File(PreferenceManager.LAST_SCRIPT_FILE);
+			if (this.rulesManager.saveToFile(file)) {
+				this.preferenceManager.setPreviousScriptFile(file);
+			}
+		}
 	}
 }

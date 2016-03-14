@@ -169,9 +169,8 @@ public class MainWindow extends JFrame {
 
 		@Override
 		public void windowClosing(WindowEvent e) {
-			if (LogManager.ENABLED)
-				LogManager.trace("MainWindow.windowClosing>");
-			// TODO: save rules list
+			if (LogManager.ENABLED) LogManager.trace("MainWindow.windowClosing>");
+			ApplicationManager.getInstance().terminate();
 		}
 	
 		/** Event ignored */

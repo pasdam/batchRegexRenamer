@@ -18,8 +18,8 @@ import com.pasdam.utils.PropertyListenersManager;
  */
 public class PreferenceManager {
 	
-	// TODO: save current script on application exit
-	// private static final String LAST_SCRIPT_FILE = "lastScript.brr";
+	/** Name of the default script file, saved on application exit */
+	public static final String LAST_SCRIPT_FILE = "lastScript.brr";
 	
 	// Preference keys
 	private static final String PREFS                          = "prefs";
@@ -70,23 +70,10 @@ public class PreferenceManager {
 		int previousFilter = prefs.getInt(PREFS_PREVIOUS_FILTER, FilterManager.FILTER_FILES);
 		this.filterManager.setFilter(previousFilter, showHidden);
 		
-		// TODO: load last script
-		/*
-		if (rememberPreviousScript) {
-			RulesPanel rulesPanel = guiManager.getRulesPanel();
-			if (savedScript) {
-				File file;
-				if (previousScriptFile!=null && !previousScriptFile.equals("") && (file = new File(previousScriptFile)).isFile()) {
-					rulesPanel.loadScriptFile(file);
-				}
-			} else {
-				String[] rules = previousScriptFile.split("\n");
-				for (String rule : rules) {
-					rulesPanel.addRule(rule);
-				}
-			}
+		if (getRememberPreviousScript()) {
+			// load last script
+			ApplicationManager.getInstance().getRulesManager().loadScriptFile(getPreviousScriptFile());
 		}
-		*/
 	}
 
 	/**
@@ -261,7 +248,7 @@ public class PreferenceManager {
 	 * 
 	 * @return true if the last script should be remembered, false otherwise
 	 */
-	public boolean rememberPreviousScript() {
+	public boolean getRememberPreviousScript() {
 		return prefs.getBoolean(PREFS_REMEMBER_PREVIOUS_SCRIPT, true);
 	}
 
@@ -301,7 +288,7 @@ public class PreferenceManager {
 	 *            script file used
 	 */
 	public void setPreviousScriptFile(File file) {
-		if (rememberPreviousScript()) {
+		if (getRememberPreviousScript()) {
 			prefs.put(PREFS_PREVIOUS_SCRIPT_FILE, file.getAbsolutePath());
 		}
 	}

@@ -166,7 +166,7 @@ public class RulesManager extends ErrorListenerManager {
 			
 		} catch (Exception e) {
 			if (LogManager.ENABLED) LogManager.error("RulesManager.openScriptFile: " + e.getMessage());
-			notifyError("Error.RulesManager.loadScriptFile");
+			notifyError("Error.RulesManager.loadScript");
 		}
 	}
 
@@ -261,7 +261,7 @@ public class RulesManager extends ErrorListenerManager {
 	 * @param file
 	 *            script file to save
 	 */
-	public void saveToFile(File file) {
+	public boolean saveToFile(File file) {
 		if (this.rulesList.size() > 0) {
 			BufferedWriter writer;
 			try {
@@ -293,11 +293,15 @@ public class RulesManager extends ErrorListenerManager {
 				// save last script
 				ApplicationManager.getInstance().getPreferenceManager().setPreviousScriptFile(file);
 				
+				return true;
+				
 			} catch (IOException e) {
 				if (LogManager.ENABLED) LogManager.error("RulesManager.save: " + e.getMessage());
-				notifyError("Error.RulesManager.addRule");
+				notifyError("Error.RulesManager.saveScript");
 			}
 		}
+		
+		return false;
 	}
 	
 	/** Interface implemented by all components that need to be notified of rules list changes */
