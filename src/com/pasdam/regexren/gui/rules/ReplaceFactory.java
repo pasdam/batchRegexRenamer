@@ -81,10 +81,9 @@ public class ReplaceFactory extends AbstractRuleFactory {
 		
 		// set default values
 		this.matchCase  = this.regex = false;
-		this.endIndex   = this.startIndex = 1;
 		this.target     = TARGET_NAME_ALL;
 		this.startIndex = 0;
-		this.endIndex   = this.startIndex+1;
+		this.endIndex   = 100;
 	}
 	
 	/** Creates a {@link ReplaceFactory} */
