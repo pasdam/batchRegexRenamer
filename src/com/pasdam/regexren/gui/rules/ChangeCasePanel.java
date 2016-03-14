@@ -1,17 +1,20 @@
 package com.pasdam.regexren.gui.rules;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -166,9 +169,12 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> impleme
 		try {
 			super.ruleFactory.setSentenceSeparator(this.separatorText.getText());
 			
+			// reset border
+			this.separatorText.setBorder(UIManager.getBorder("TextField.border"));
+			
 		} catch (Exception exception) {
+			this.separatorText.setBorder(BorderFactory.createLineBorder(Color.RED));
 			if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.changedUpdate> Invalid regex separator: " + this.separatorText.getText());
-			// TODO: notify user, i.e. highlight input field 
 		}
 	}
 
@@ -187,9 +193,12 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> impleme
 		try {
 			super.ruleFactory.setRegex(this.regexCheckbox.isSelected());
 			
+			// reset border
+			this.separatorText.setBorder(UIManager.getBorder("TextField.border"));
+			
 		} catch (Exception exception) {
+			this.separatorText.setBorder(BorderFactory.createLineBorder(Color.RED));
 			if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.itemStateChanged> Invalid regex separator: " + this.separatorText.getText());
-			// TODO: notify user, i.e. highlight input field 
 		}
 	}
 

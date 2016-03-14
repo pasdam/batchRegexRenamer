@@ -1,16 +1,18 @@
 package com.pasdam.regexren.gui.rules;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.regex.PatternSyntaxException;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -134,13 +136,14 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 		@Override
 		public void changedUpdate(DocumentEvent e) {
 			try {
-				InsertCounterBeforeAfterPanel.super.ruleFactory.setTextToSearch(InsertCounterBeforeAfterPanel.this.textToSearchField.getText());
+				InsertCounterBeforeAfterPanel.super.ruleFactory.setTextToSearch(
+						InsertCounterBeforeAfterPanel.this.textToSearchField.getText());
 				
-			} catch (PatternSyntaxException exception) {
-				// TODO: notify user, i.e. highlight input field 
-				if (LogManager.ENABLED) LogManager.error("InsertCounterBeforeAfterPanel.changedUpdate> Invalid pattern: " + InsertCounterBeforeAfterPanel.this.textToSearchField.getText());
-			} catch (NullPointerException exception) {
-				// TODO: notify user, i.e. highlight input field 
+				// reset border
+				InsertCounterBeforeAfterPanel.this.textToSearchField.setBorder(UIManager.getBorder("TextField.border"));
+				
+			} catch (Exception exception) {
+				InsertCounterBeforeAfterPanel.this.textToSearchField.setBorder(BorderFactory.createLineBorder(Color.RED));
 				if (LogManager.ENABLED) LogManager.error("InsertCounterBeforeAfterPanel.changedUpdate> Invalid pattern: " + InsertCounterBeforeAfterPanel.this.textToSearchField.getText());
 			}
 		}
@@ -162,12 +165,12 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 				try {
 					InsertCounterBeforeAfterPanel.super.ruleFactory.setRegex(
 							InsertCounterBeforeAfterPanel.this.regexCheckbox.isSelected());
+				
+					// reset border
+					InsertCounterBeforeAfterPanel.this.textToSearchField.setBorder(UIManager.getBorder("TextField.border"));
 
-				} catch (PatternSyntaxException exception) {
-					// TODO: notify user, i.e. highlight input field 
-					if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.InsertCounterBeforeAfterPanel> Invalid pattern: " + InsertCounterBeforeAfterPanel.this.textToSearchField.getText());
-				} catch (NullPointerException exception) {
-					// TODO: notify user, i.e. highlight input field 
+				} catch (Exception exception) {
+					InsertCounterBeforeAfterPanel.this.textToSearchField.setBorder(BorderFactory.createLineBorder(Color.RED));
 					if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.InsertCounterBeforeAfterPanel> Invalid pattern: " + InsertCounterBeforeAfterPanel.this.textToSearchField.getText());
 				}
 				

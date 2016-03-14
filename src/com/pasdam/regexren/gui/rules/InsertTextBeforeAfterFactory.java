@@ -1,5 +1,7 @@
 package com.pasdam.regexren.gui.rules;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -43,17 +45,17 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	public static final int AFTER_LAST   = AFTER_FIRST  + 1;
 
 	/** Index of the "text to insert" parameter */
-	private static final int PARAMETER_TEXT_TO_INSERT = 0;
+	public static final int PARAMETER_TEXT_TO_INSERT = 0;
 	/** Index of the "beforePattern" parameter */
-	private static final int PARAMETER_BEFORE_PATTERN = PARAMETER_TEXT_TO_INSERT + 1;
+	public static final int PARAMETER_BEFORE_PATTERN = PARAMETER_TEXT_TO_INSERT + 1;
 	/** Index of the "textToSearch" parameter */
-	private static final int PARAMETER_TEXT_TO_SEARCH = PARAMETER_BEFORE_PATTERN + 1;
+	public static final int PARAMETER_TEXT_TO_SEARCH = PARAMETER_BEFORE_PATTERN + 1;
 	/** Index of the "matchCase" parameter */
-	private static final int PARAMETER_MATCH_CASE     = PARAMETER_TEXT_TO_SEARCH + 1;
+	public static final int PARAMETER_MATCH_CASE     = PARAMETER_TEXT_TO_SEARCH + 1;
 	/** Index of the "regex" parameter */
-	private static final int PARAMETER_REGEX          = PARAMETER_MATCH_CASE     + 1;
+	public static final int PARAMETER_REGEX          = PARAMETER_MATCH_CASE     + 1;
 	/** Indicates how many parameters this component has */
-	private static final int PARAMETERS_COUNT         = PARAMETER_REGEX          + 1;
+	public static final int PARAMETERS_COUNT         = PARAMETER_REGEX          + 1;
 
 	/** Text to insert */
 	private String textToInsert;
@@ -93,15 +95,10 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	 * 
 	 * @param textToInsert
 	 *            text to insert
-	 * @throws IllegalArgumentException
-	 *             if <i>textToInsert</i> is null or empty
-	 * @throws NullPointerException
-	 *             if the pattern is null or empty
-	 * @throws PatternSyntaxException
-	 *             if regex is true and the pattern isn't a valid regular
-	 *             expression
+	 * @throws InvalidParametersException
+	 *             if one ore more parameters are invalid
 	 */
-	public void setTextToInsert(String textToInsert) throws NullPointerException, PatternSyntaxException, IllegalArgumentException {
+	public void setTextToInsert(String textToInsert) throws InvalidParametersException {
 		this.textToInsert = textToInsert;
 		checkConfiguration();
 	}
@@ -141,15 +138,10 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	 * 
 	 * @param textToSearch
 	 *            the pattern to search
-	 * @throws NullPointerException
-	 *             if the pattern is null or empty
-	 * @throws PatternSyntaxException
-	 *             if regex is true and the pattern isn't a valid regular
-	 *             expression
-	 * @throws IllegalArgumentException
-	 *             if text to insert is null or empty
+	 * @throws InvalidParametersException
+	 *             if one ore more parameters are invalid
 	 */
-	public void setTextToSearch(String textToSearch) throws NullPointerException, PatternSyntaxException, IllegalArgumentException {
+	public void setTextToSearch(String textToSearch) throws InvalidParametersException {
 		this.textToSearch = textToSearch;
 		checkConfiguration();
 	}
@@ -192,15 +184,10 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	 * @param regex
 	 *            if true the pattern will be used as a regular expression, as a
 	 *            literal pattern if false
-	 * @throws NullPointerException
-	 *             if the pattern is null or empty
-	 * @throws PatternSyntaxException
-	 *             if regex is true and the pattern isn't a valid regular
-	 *             expression
-	 * @throws IllegalArgumentException
-	 *             if text to insert is null or empty
+	 * @throws InvalidParametersException
+	 *             if one ore more parameters are invalid
 	 */
-	public void setRegex(boolean regex) throws NullPointerException, PatternSyntaxException, IllegalArgumentException {
+	public void setRegex(boolean regex) throws InvalidParametersException {
 		this.regex = regex;
 		checkConfiguration();
 	}
@@ -208,26 +195,35 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	/**
 	 * Checks the rule's configuration
 	 * 
-	 * @throws NullPointerException
-	 *             if the pattern is null or empty
-	 * @throws PatternSyntaxException
-	 *             if regex is true and the pattern isn't a valid regular
-	 *             expression
-	 * @throws IllegalArgumentException
-	 *             if text to insert is null or empty
+	 * @throws InvalidParametersException
+	 *             if one ore more parameters are invalid
 	 */
-	private void checkConfiguration() throws NullPointerException, PatternSyntaxException, IllegalArgumentException {
-		super.setValid(false);
-		if (this.textToInsert == null || this.textToInsert.isEmpty()) {
-			throw new IllegalArgumentException("Invalid parameter, textToInsert cannot be null or empty");
+	private void checkConfiguration() throws InvalidParametersException {
+		List<Integer> invalidParameters = new ArrayList<Integer>(PARAMETERS_COUNT);
 
-		} else if (this.textToSearch == null || this.textToSearch.isEmpty()) {
-			throw new NullPointerException("Invalid parameter, textToSearch cannot be null or empty");
+		if (this.textToInsert == null || this.textToInsert.isEmpty()) {
+			invalidParameters.add(PARAMETER_TEXT_TO_INSERT);
+
+		}
+		
+		if (this.textToSearch == null || this.textToSearch.isEmpty()) {
+			invalidParameters.add(PARAMETER_TEXT_TO_SEARCH);
 
 		} else if (this.regex) {
-			Pattern.compile(this.textToSearch);
+			try {
+				Pattern.compile(this.textToSearch);
+			} catch (PatternSyntaxException exception) {
+				invalidParameters.add(PARAMETER_TEXT_TO_SEARCH);
+			}
 		}
-		super.setValid(true);
+		
+		if (invalidParameters.size() > 0) {
+			super.setValid(false);
+			throw new InvalidParametersException(invalidParameters, "One or more paramters are invalid");
+			
+		} else {
+			super.setValid(true);
+		}
 	}
 
 	@Override

@@ -1,9 +1,11 @@
 package com.pasdam.regexren.gui.rules;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -193,7 +195,12 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 			try {
 				InsertTextAtPositionPanel.super.ruleFactory.setTextToInsert(
 						InsertTextAtPositionPanel.this.textToInsertField.getText());
+
+				// reset border
+				InsertTextAtPositionPanel.this.textToInsertField.setBorder(UIManager.getBorder("TextField.border"));
+				
 			} catch (IllegalArgumentException e) {
+				InsertTextAtPositionPanel.this.textToInsertField.setBorder(BorderFactory.createLineBorder(Color.RED));
 				if (LogManager.ENABLED) LogManager.error("InsertTextAtPositionPanel.InternalEventHandler.changedUpdate> Text is null or empty");
 			}
 		}

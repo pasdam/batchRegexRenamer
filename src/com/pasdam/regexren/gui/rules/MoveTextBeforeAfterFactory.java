@@ -1,5 +1,7 @@
 package com.pasdam.regexren.gui.rules;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -33,17 +35,17 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	public static final int POSITION_END   = POSITION_BEGIN  + 1;
 	
 	/** Index of the "textToMove" parameter */
-	private static final int PARAMETER_TEXT_TO_MOVE   = 0;
+	public static final int PARAMETER_TEXT_TO_MOVE   = 0;
 	/** Index of the "textToMove" parameter */
-	private static final int PARAMETER_POSITION       = PARAMETER_TEXT_TO_MOVE   + 1;
+	public static final int PARAMETER_POSITION       = PARAMETER_TEXT_TO_MOVE   + 1;
 	/** Index of the "textToSearch" parameter */
-	private static final int PARAMETER_TEXT_TO_SEARCH = PARAMETER_POSITION       + 1;
+	public static final int PARAMETER_TEXT_TO_SEARCH = PARAMETER_POSITION       + 1;
 	/** Index of the "matchCase" parameter */
-	private static final int PARAMETER_MATCH_CASE     = PARAMETER_TEXT_TO_SEARCH + 1;
+	public static final int PARAMETER_MATCH_CASE     = PARAMETER_TEXT_TO_SEARCH + 1;
 	/** Index of the "regex" parameter */
-	private static final int PARAMETER_REGEX          = PARAMETER_MATCH_CASE     + 1;
+	public static final int PARAMETER_REGEX          = PARAMETER_MATCH_CASE     + 1;
 	/** Indicates how many parameters this component has */
-	private static final int PARAMETERS_COUNT         = PARAMETER_REGEX          + 1;
+	public static final int PARAMETERS_COUNT         = PARAMETER_REGEX          + 1;
 
 	/** Text to move */
 	private String textToMove;
@@ -74,15 +76,10 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 * 
 	 * @param textToMove
 	 *            the text to move
-	 * @throws NullPointerException
-	 *             if the pattern is null or empty
-	 * @throws PatternSyntaxException
-	 *             if regex is true and the pattern isn't a valid regular
-	 *             expression
-	 * @throws IllegalArgumentException
-	 *             if text to move is null or empty
+	 * @throws InvalidParametersException
+	 *             if one ore more parameters are invalid
 	 */
-	public void setTextToMove(String textToMove) throws NullPointerException, PatternSyntaxException, IllegalArgumentException {
+	public void setTextToMove(String textToMove) throws InvalidParametersException {
 		this.textToMove = textToMove;
 		checkConfiguration();
 	}
@@ -121,15 +118,10 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 * 
 	 * @param textToSearch
 	 *            the pattern near which insert the text
-	 * @throws NullPointerException
-	 *             if the pattern is null or empty
-	 * @throws PatternSyntaxException
-	 *             if regex is true and the pattern isn't a valid regular
-	 *             expression
-	 * @throws IllegalArgumentException
-	 *             if text to move is null or empty
+	 * @throws InvalidParametersException
+	 *             if one ore more parameters are invalid
 	 */
-	public void setTextToSearch(String textToSearch) throws NullPointerException, PatternSyntaxException, IllegalArgumentException {
+	public void setTextToSearch(String textToSearch) throws InvalidParametersException {
 		this.textToSearch = textToSearch;
 		checkConfiguration();
 	}
@@ -151,15 +143,10 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 * @param regex
 	 *            true if textToSearch is a regular expression, false if it is a
 	 *            literal pattern
-	 * @throws NullPointerException
-	 *             if the pattern is null or empty
-	 * @throws PatternSyntaxException
-	 *             if regex is true and the pattern isn't a valid regular
-	 *             expression
-	 * @throws IllegalArgumentException
-	 *             if text to move is null or empty
+	 * @throws InvalidParametersException
+	 *             if one ore more parameters are invalid
 	 */
-	public void setRegex(boolean regex) throws NullPointerException, PatternSyntaxException, IllegalArgumentException {
+	public void setRegex(boolean regex) throws InvalidParametersException {
 		this.regex = regex;
 		checkConfiguration();
 	}
@@ -187,26 +174,41 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	/**
 	 * Checks the rule's configuration
 	 * 
-	 * @throws NullPointerException
-	 *             if the pattern is null or empty
-	 * @throws PatternSyntaxException
-	 *             if regex is true and the pattern isn't a valid regular
-	 *             expression
-	 * @throws IllegalArgumentException
-	 *             if text to move is null or empty
+	 * @throws InvalidParametersException
+	 *             if one ore more parameters are invalid
 	 */
-	private void checkConfiguration() throws NullPointerException, PatternSyntaxException, IllegalArgumentException {
-		super.setValid(false);
+	private void checkConfiguration() throws InvalidParametersException {
+		List<Integer> invalidParameters = new ArrayList<Integer>(PARAMETERS_COUNT);
+		
 		if (this.textToMove == null || this.textToMove.isEmpty()) {
-			throw new IllegalArgumentException("Invalid parameter, textToMove cannot be null or empty");
-
-		} else if (this.textToSearch == null || this.textToSearch.isEmpty()) {
-			throw new NullPointerException("Invalid parameter, textToSearch cannot be null or empty");
+			invalidParameters.add(PARAMETER_TEXT_TO_MOVE);
 
 		} else if (this.regex) {
-			Pattern.compile(this.textToSearch);
+			try {
+				Pattern.compile(this.textToMove);
+			} catch (PatternSyntaxException exception) {
+				invalidParameters.add(PARAMETER_TEXT_TO_MOVE);
+			}
 		}
-		super.setValid(true);
+		
+		if (this.textToSearch == null || this.textToSearch.isEmpty()) {
+			invalidParameters.add(PARAMETER_TEXT_TO_SEARCH);
+
+		} else if (this.regex) {
+			try {
+				Pattern.compile(this.textToSearch);
+			} catch (Exception exception) {
+				invalidParameters.add(PARAMETER_TEXT_TO_SEARCH);
+			}
+		}
+		
+		if (invalidParameters.size() > 0) {
+			super.setValid(false);
+			throw new InvalidParametersException(invalidParameters, "One or more paramters are invalid");
+			
+		} else {
+			super.setValid(true);
+		}
 	}
 
 	@Override

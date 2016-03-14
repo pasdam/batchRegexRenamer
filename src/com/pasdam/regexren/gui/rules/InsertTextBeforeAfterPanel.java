@@ -1,10 +1,13 @@
 package com.pasdam.regexren.gui.rules;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.regex.PatternSyntaxException;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -12,8 +15,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
@@ -94,7 +95,7 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 		
 		// create regex checkbox and add it to the second row
 		this.regexCheckbox = new JCheckBox();
-		this.regexCheckbox.addChangeListener(this.eventHandler);
+		this.regexCheckbox.addItemListener(this.eventHandler);
 		this.row2Panel.add(this.regexCheckbox);
 		
 		// create spacer and add it to the second row
@@ -102,7 +103,7 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 		
 		// create match case checkbox and add it to the second row
 		this.matchCaseCheckbox = new JCheckBox();
-		this.matchCaseCheckbox.addChangeListener(this.eventHandler);
+		this.matchCaseCheckbox.addItemListener(this.eventHandler);
 		this.row2Panel.add(this.matchCaseCheckbox);
 
 		// add second row to the panel
@@ -157,36 +158,46 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 	}
 	
 	/** Class that handles internal events */
-	private class InternalEventHandler implements ActionListener, ChangeListener, DocumentListener {
+	private class InternalEventHandler implements ActionListener, ItemListener, DocumentListener {
 
 		@Override
 		public void changedUpdate(DocumentEvent event) {
 			Document document = event.getDocument();
-			if (document == InsertTextBeforeAfterPanel.this.textToInsertField.getDocument()) {
-				try {
+			try {
+				if (document == InsertTextBeforeAfterPanel.this.textToInsertField.getDocument()) {
 					InsertTextBeforeAfterPanel.this.getRuleFactory().setTextToInsert(
 							InsertTextBeforeAfterPanel.this.textToInsertField.getText());
-				
-				} catch (PatternSyntaxException exception) {
-					if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.changedUpdate> Regular expression is invalid");
-				} catch (NullPointerException exception) {
-					if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.changedUpdate> Text to search is null or empty");
-				} catch (IllegalArgumentException exception) {
-					if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.changedUpdate> Text to insert is null or empty");
-				}
-				
-			} else if (document == InsertTextBeforeAfterPanel.this.textToSearchField.getDocument()) {
-				try {
+					
+				} else if (document == InsertTextBeforeAfterPanel.this.textToSearchField.getDocument()) {
 					InsertTextBeforeAfterPanel.this.getRuleFactory().setTextToSearch(
 							InsertTextBeforeAfterPanel.this.textToSearchField.getText());
-					
-				} catch (PatternSyntaxException exception) {
-					if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.changedUpdate> Regular expression is invalid");
-				} catch (NullPointerException exception) {
-					if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.changedUpdate> Text to search is null or empty");
-				} catch (IllegalArgumentException exception) {
-					if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.changedUpdate> Text to insert is null or empty");
+						
 				}
+				
+				// reset border
+				InsertTextBeforeAfterPanel.this.textToSearchField.setBorder(UIManager.getBorder("TextField.border"));
+				InsertTextBeforeAfterPanel.this.textToInsertField.setBorder(UIManager.getBorder("TextField.border"));
+			
+			} catch (InvalidParametersException exception) {
+				// reset border
+				InsertTextBeforeAfterPanel.this.textToSearchField.setBorder(UIManager.getBorder("TextField.border"));
+				InsertTextBeforeAfterPanel.this.textToInsertField.setBorder(UIManager.getBorder("TextField.border"));
+				// highlight invalid
+				for (Integer id : exception.getInvalidParameter()) {
+					switch (id) {
+						case InsertTextBeforeAfterFactory.PARAMETER_TEXT_TO_SEARCH:
+							InsertTextBeforeAfterPanel.this.textToSearchField.setBorder(BorderFactory.createLineBorder(Color.RED));
+							break;
+						
+						case InsertTextBeforeAfterFactory.PARAMETER_TEXT_TO_INSERT:
+							InsertTextBeforeAfterPanel.this.textToInsertField.setBorder(BorderFactory.createLineBorder(Color.RED));
+							break;
+	
+						default:
+							break;
+					}
+				}
+				if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.changedUpdate> One or more parameters are invalid");
 			}
 		}
 
@@ -199,21 +210,39 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 		public void removeUpdate(DocumentEvent event) {
 			changedUpdate(event);
 		}
-
+		
 		@Override
-		public void stateChanged(ChangeEvent event) {
+		public void itemStateChanged(ItemEvent event) {
 			Object source = event.getSource();
 			if (source == InsertTextBeforeAfterPanel.this.regexCheckbox) {
 				try {
 					InsertTextBeforeAfterPanel.this.getRuleFactory().setRegex(
 							InsertTextBeforeAfterPanel.this.regexCheckbox.isSelected());
+
+					// reset border
+					InsertTextBeforeAfterPanel.this.textToSearchField.setBorder(UIManager.getBorder("TextField.border"));
+					InsertTextBeforeAfterPanel.this.textToInsertField.setBorder(UIManager.getBorder("TextField.border"));
 				
-				} catch (PatternSyntaxException exception) {
-					if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.stateChanged> Regular expression is invalid");
-				} catch (NullPointerException exception) {
-					if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.stateChanged> Text to search is null or empty");
-				} catch (IllegalArgumentException exception) {
-					if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.stateChanged> Text to insert is null or empty");
+				} catch (InvalidParametersException exception) {
+					// reset border
+					InsertTextBeforeAfterPanel.this.textToSearchField.setBorder(UIManager.getBorder("TextField.border"));
+					InsertTextBeforeAfterPanel.this.textToInsertField.setBorder(UIManager.getBorder("TextField.border"));
+					// highlight invalid
+					for (Integer id : exception.getInvalidParameter()) {
+						switch (id) {
+							case InsertTextBeforeAfterFactory.PARAMETER_TEXT_TO_SEARCH:
+								InsertTextBeforeAfterPanel.this.textToSearchField.setBorder(BorderFactory.createLineBorder(Color.RED));
+								break;
+							
+							case InsertTextBeforeAfterFactory.PARAMETER_TEXT_TO_INSERT:
+								InsertTextBeforeAfterPanel.this.textToInsertField.setBorder(BorderFactory.createLineBorder(Color.RED));
+								break;
+		
+							default:
+								break;
+						}
+					}
+					if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.itemStateChanged> One or more parameters are invalid");
 				}
 				
 			} else if (source == InsertTextBeforeAfterPanel.this.matchCaseCheckbox) {
