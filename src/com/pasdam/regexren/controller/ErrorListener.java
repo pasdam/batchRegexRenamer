@@ -10,7 +10,7 @@ public interface ErrorListener {
 
 	/**
 	 * Invoked to notify an error occurred
-	 * @param message localized error message
+	 * @param messageKey key of the error message
 	 */
-	public void errorOccurred(String message);
+	public void errorOccurred(String messageKey);
 }

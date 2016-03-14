@@ -161,14 +161,12 @@ public class RulesManager extends ErrorListenerManager {
 			
 			} else {
 				if (LogManager.ENABLED) LogManager.error("RulesManager.openScriptFile: wrong rule [" + line + "]");
-				
-				notifyError(ApplicationManager.getInstance().getLocaleManager().getString("Error.RulesManager.addRule"));
+				notifyError("Error.RulesManager.addRule");
 			}
 			
 		} catch (Exception e) {
 			if (LogManager.ENABLED) LogManager.error("RulesManager.openScriptFile: " + e.getMessage());
-			
-			notifyError(ApplicationManager.getInstance().getLocaleManager().getString("Error.RulesManager.loadScriptFile"));
+			notifyError("Error.RulesManager.loadScriptFile");
 		}
 	}
 
@@ -297,8 +295,7 @@ public class RulesManager extends ErrorListenerManager {
 				
 			} catch (IOException e) {
 				if (LogManager.ENABLED) LogManager.error("RulesManager.save: " + e.getMessage());
-				
-				notifyError(ApplicationManager.getInstance().getLocaleManager().getString("Error.RulesManager.addRule"));
+				notifyError("Error.RulesManager.addRule");
 			}
 		}
 	}

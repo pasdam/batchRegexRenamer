@@ -23,11 +23,11 @@ public abstract class ErrorListenerManager {
 	
 	/**
 	 * Notify the listener that an error occurred
-	 * @param error error message
+	 * @param errorMessageKey key of the error message
 	 */
-	protected void notifyError(String error) {
+	protected void notifyError(String errorMessageKey) {
 		if (this.errorListener != null) {
-			this.errorListener.errorOccurred(error);
+			this.errorListener.errorOccurred(errorMessageKey);
 		}
 	}
 }

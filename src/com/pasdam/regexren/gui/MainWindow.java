@@ -9,6 +9,7 @@ import java.io.FileFilter;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -158,8 +159,12 @@ public class MainWindow extends JFrame {
 		}
 		
 		@Override
-		public void errorOccurred(String message) {
-			// TODO Notify error to the user
+		public void errorOccurred(String messageKey) {
+			LocaleManager localeManager = ApplicationManager.getInstance().getLocaleManager();
+			JOptionPane.showMessageDialog(MainWindow.this,
+					localeManager.getString(messageKey),
+				    localeManager.getString("Alert.error.title"),
+				    JOptionPane.ERROR_MESSAGE);
 		}
 
 		@Override
