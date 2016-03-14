@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.pasdam.regexren.controller.ApplicationManager;
+import com.pasdam.regexren.controller.LocaleManager;
+import com.pasdam.regexren.controller.LocaleManager.Localizable;
 import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.controller.RulesManager;
 import com.pasdam.regexren.controller.RulesManager.RulesListener;
@@ -30,12 +32,10 @@ import com.pasdam.regexren.gui.rules.RemovePanel;
 import com.pasdam.regexren.gui.rules.ReplaceFactory;
 import com.pasdam.regexren.gui.rules.ReplacePanel;
 
-public class RulesPanel extends JScrollPane implements RulesListener {
+public class RulesPanel extends JScrollPane implements RulesListener, Localizable {
 
 	private static final long serialVersionUID = -6600541345376059836L;
 	
-	// TODO: add localizable support for rules panels
-
 	// UI components
 	private final JPanel content;
 
@@ -56,7 +56,7 @@ public class RulesPanel extends JScrollPane implements RulesListener {
 	private void collapseAll(){
 		Component[] components = this.content.getComponents();
 		for (Component component : components) {
-			((ExpandableRule) component).collapse();;
+			((ExpandableRule) component).collapse();
 		}
 	}
 
@@ -140,5 +140,13 @@ public class RulesPanel extends JScrollPane implements RulesListener {
 	public void ruleMoved(int oldPosition, int newPosition, AbstractRuleFactory rule) {
 		// TODO Missing implementation
 		if (LogManager.ENABLED) LogManager.warning("RulesPanel.ruleMoved> Missing implementation");
+	}
+
+	@Override
+	public void localeChanged(LocaleManager localeManager) {
+		Component[] components = this.content.getComponents();
+		for (Component component : components) {
+			((ExpandableRule) component).localeChanged(localeManager);
+		}
 	}
 }

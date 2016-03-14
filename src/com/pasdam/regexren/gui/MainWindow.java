@@ -130,6 +130,7 @@ public class MainWindow extends JFrame {
 		// set locale listeners and initialize them
 		LocaleManager localeManager = ApplicationManager.getInstance().getLocaleManager();
 		localeManager.addLocalizableComponent(this.currentFolderToolbar);
+		localeManager.addLocalizableComponent(this.rulesPanel);
 		localeManager.addLocalizableComponent(this.toolBar);
 		localeManager.addLocalizableComponent(this.table);
 		
