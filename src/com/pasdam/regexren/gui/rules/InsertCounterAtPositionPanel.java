@@ -97,7 +97,7 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 		add(Box.createHorizontalGlue());
 		
 		// read initial values from factory
-		this.positionSpinner.setValue(super.ruleFactory.getPosition()+1);
+		this.positionSpinner.setValue(super.ruleFactory.getPosition() + 1);
 	}
 	
 	/**	Updates the target and operations comboboxes */
@@ -146,7 +146,7 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 		return String.format(
 				this.description,
 				super.ruleFactory.getStartCount(),
-				super.ruleFactory.getPosition(),
+				super.ruleFactory.getPosition() + 1,
 				this.fromCombobox.getSelectedItem(),
 				this.targetCombobox.getSelectedItem()
 		);
@@ -171,7 +171,7 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			InsertCounterAtPositionPanel.super.ruleFactory.setPosition(
-					((Integer)InsertCounterAtPositionPanel.this.positionSpinner.getValue())-1);
+					((Integer)InsertCounterAtPositionPanel.this.positionSpinner.getValue()) - 1);
 		}
 	}
 }
