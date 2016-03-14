@@ -44,7 +44,7 @@ public abstract class RuleContentPanel<T extends AbstractRuleFactory> extends JP
 	public static final int WIDGET_TEXT_MIN_WIDTH = 100;
 	
 	/**	Minimum width of spinners */
-	public static final int WIDGET_SPINNER_MIN_WIDTH = 40;
+	public static final int WIDGET_SPINNER_MIN_WIDTH = 50;
 	
 	/** Rule factory related to the content */
 	protected final T ruleFactory;
