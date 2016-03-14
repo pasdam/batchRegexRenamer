@@ -88,7 +88,7 @@ public class FilesListManager implements PropertyChangeListener<File>, FiltersLi
 					if (fileData.isChecked()) {
 						// apply rules for each checked file
 						for (AbstractRuleFactory ruleFactory : rules) {
-							if (ruleFactory.isEnabled()) {
+							if (ruleFactory.isEnabled() && ruleFactory.isValid()) {
 								ruleFactory.getRule().apply(fileData);
 							}
 						}
