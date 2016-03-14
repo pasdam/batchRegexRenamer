@@ -136,7 +136,7 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 		
 		// read initial values from rule factory
 		this.textToInsertField.setText(ruleFactory.getTextToInsert());
-		this.positionSpinner.setValue(ruleFactory.getPosition()+1);
+		this.positionSpinner.setValue(ruleFactory.getPosition() + 1);
 	}
 	
 	private void updateCombos() {
@@ -181,7 +181,7 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 		return String.format(
 				this.description,
 				textToInsert != null ? textToInsert : "",
-				super.ruleFactory.getPosition(),
+				super.ruleFactory.getPosition() + 1,
 				this.fromCombobox.getSelectedItem(),
 				this.targetCombobox.getSelectedItem()
 		);
@@ -218,7 +218,7 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 		@Override
 		public void stateChanged(ChangeEvent arg0) {
 			InsertTextAtPositionPanel.super.ruleFactory.setPosition(
-					((Integer)InsertTextAtPositionPanel.this.positionSpinner.getValue())-1);
+					((Integer)InsertTextAtPositionPanel.this.positionSpinner.getValue()) - 1);
 		}
 
 		@Override
