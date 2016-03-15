@@ -72,7 +72,7 @@ public class FilesListManager implements PropertyChangeListener<File>, FiltersLi
 
 				// reset rules state
 				for (AbstractRuleFactory ruleFactory : rules) {
-					if (ruleFactory.isEnabled()) {
+					if (ruleFactory.isEnabled() && ruleFactory.isValid()) {
 						ruleFactory.getRule().reset();
 					}
 				}
