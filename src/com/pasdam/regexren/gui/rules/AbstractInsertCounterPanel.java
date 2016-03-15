@@ -36,9 +36,6 @@ abstract class AbstractInsertCounterPanel<T extends AbstractInsertCounterFactory
 	public AbstractInsertCounterPanel(T ruleFactory) {
 		super(ruleFactory, ONE_ROW_PANEL_HEIGHT, BoxLayout.X_AXIS);
 		
-		// create event handler
-		this.eventHandler = new InternalEventHandler();
-		
 		// create start label and add to the panel
 		this.counterStartLabel = new JLabel();
 		add(counterStartLabel);
@@ -51,7 +48,6 @@ abstract class AbstractInsertCounterPanel<T extends AbstractInsertCounterFactory
 		this.counterStartSpinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		this.counterStartSpinner.setPreferredSize(new Dimension(WIDGET_SPINNER_MIN_WIDTH, WIDGET_HEIGHT));
 		this.counterStartSpinner.setMaximumSize(new Dimension(this.counterStartSpinner.getPreferredSize()));     
-		this.counterStartSpinner.addChangeListener(this.eventHandler);
 		add(counterStartSpinner);
 
 		// create spacer and add to the panel
@@ -69,7 +65,6 @@ abstract class AbstractInsertCounterPanel<T extends AbstractInsertCounterFactory
 		this.paddingSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
 		this.paddingSpinner.setPreferredSize(new Dimension(this.counterStartSpinner.getPreferredSize()));
 		this.paddingSpinner.setMaximumSize(new Dimension(this.paddingSpinner.getPreferredSize()));
-		this.paddingSpinner.addChangeListener(this.eventHandler);
 		add(paddingSpinner);
 		
 		// create spacer and add to the panel
@@ -78,6 +73,11 @@ abstract class AbstractInsertCounterPanel<T extends AbstractInsertCounterFactory
 		// read initial values from factory
 		this.counterStartSpinner.setValue(super.ruleFactory.getStartCount());
 		this.paddingSpinner.setValue(super.ruleFactory.getPadding());
+		
+		// create and set event handler
+		this.eventHandler = new InternalEventHandler();
+		this.counterStartSpinner.addChangeListener(this.eventHandler);
+		this.paddingSpinner.addChangeListener(this.eventHandler);
 	}
 	
 	@Override

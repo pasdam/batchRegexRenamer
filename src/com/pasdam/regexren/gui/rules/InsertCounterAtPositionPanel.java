@@ -55,9 +55,6 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 	public InsertCounterAtPositionPanel(InsertCounterAtPositionFactory ruleFactory) {
 		super(ruleFactory);
 		
-		// create event handler
-		this.eventHandler = new InternalEventHandler();
-		
 		// create position label and add to the panel
 		this.positionLabel = new JLabel();
 		add(positionLabel);
@@ -70,7 +67,6 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 		this.positionSpinner.setPreferredSize(new Dimension(new Dimension(WIDGET_SPINNER_MIN_WIDTH, WIDGET_HEIGHT)));
 		this.positionSpinner.setMaximumSize(new Dimension(this.positionSpinner.getPreferredSize()));
 		this.positionSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
-		this.positionSpinner.addChangeListener(this.eventHandler);
 		add(positionSpinner);
 		
 		// create spacer and add to the panel
@@ -98,6 +94,10 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 		
 		// read initial values from factory
 		this.positionSpinner.setValue(super.ruleFactory.getPosition() + 1);
+		
+		// create and set event handler
+		this.eventHandler = new InternalEventHandler();
+		this.positionSpinner.addChangeListener(this.eventHandler);
 	}
 	
 	/**	Updates the target and operations comboboxes */

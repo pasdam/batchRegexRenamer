@@ -34,9 +34,6 @@ public class ReplacePanel extends AbstractReplacePanel {
 	public ReplacePanel(ReplaceFactory ruleFactory) {
 		super(ruleFactory);
 		
-		// create event handler
-		this.eventHandler = new InternalEventHandler();
-		
 		// create and add text to insert label to the second row
 		this.textToInsertLabel = new JLabel();
 		super.row2Panel.add(this.textToInsertLabel, 0);
@@ -47,7 +44,6 @@ public class ReplacePanel extends AbstractReplacePanel {
 		// create and add text to insert field to the second row
 		this.textToInsertText = new JTextField();
 		this.textToInsertText.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
-		this.textToInsertText.getDocument().addDocumentListener(this.eventHandler);
 		super.row2Panel.add(this.textToInsertText, 2);
 		
 		// create and add space to the second row
@@ -55,6 +51,10 @@ public class ReplacePanel extends AbstractReplacePanel {
 		
 		// read initial ruls's values
 		this.textToInsertText.setText(this.ruleFactory.getTextToInsert());
+		
+		// create and set event handler
+		this.eventHandler = new InternalEventHandler();
+		this.textToInsertText.getDocument().addDocumentListener(this.eventHandler);
 	}
 
 	@Override

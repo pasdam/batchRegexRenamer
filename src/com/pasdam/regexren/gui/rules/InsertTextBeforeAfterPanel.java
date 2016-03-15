@@ -55,9 +55,6 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 	/** Create the panel */
 	public InsertTextBeforeAfterPanel(InsertTextBeforeAfterFactory ruleFactory) {
 		super(ruleFactory, TWO_ROW_PANEL_HEIGHT, BoxLayout.Y_AXIS);
-
-		// create event handler
-		this.eventHandler = new InternalEventHandler();
 		
 		// create first row
 		Box row1Panel = Box.createHorizontalBox();
@@ -72,7 +69,6 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 		
 		// create and add text to insert field to the first row
 		this.textToInsertField = new JTextField();
-		this.textToInsertField.getDocument().addDocumentListener(this.eventHandler);
 		row1Panel.add(this.textToInsertField);
 
 		// add first row to the panel
@@ -87,7 +83,6 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 
 		// create text to search field and add it to the second row
 		this.textToSearchField = new JTextField();
-		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
 		this.row2Panel.add(this.textToSearchField);
 		
 		// create spacer and add it to the second row
@@ -95,7 +90,6 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 		
 		// create regex checkbox and add it to the second row
 		this.regexCheckbox = new JCheckBox();
-		this.regexCheckbox.addItemListener(this.eventHandler);
 		this.row2Panel.add(this.regexCheckbox);
 		
 		// create spacer and add it to the second row
@@ -103,7 +97,6 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 		
 		// create match case checkbox and add it to the second row
 		this.matchCaseCheckbox = new JCheckBox();
-		this.matchCaseCheckbox.addItemListener(this.eventHandler);
 		this.row2Panel.add(this.matchCaseCheckbox);
 
 		// add second row to the panel
@@ -114,6 +107,13 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 		this.textToSearchField.setText(ruleFactory.getTextToSearch());
 		this.regexCheckbox.setSelected(ruleFactory.isRegex());
 		this.matchCaseCheckbox.setSelected(ruleFactory.isMatchCase());
+		
+		// create and set event handler
+		this.eventHandler = new InternalEventHandler();
+		this.matchCaseCheckbox.addItemListener(this.eventHandler);
+		this.regexCheckbox.addItemListener(this.eventHandler);
+		this.textToInsertField.getDocument().addDocumentListener(this.eventHandler);
+		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
 	}
 	
 	private void updateCombos() {

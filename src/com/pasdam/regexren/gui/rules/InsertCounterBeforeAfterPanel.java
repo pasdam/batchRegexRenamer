@@ -55,9 +55,6 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 	 */
 	public InsertCounterBeforeAfterPanel(InsertCounterBeforeAfterFactory ruleFactory) {
 		super(ruleFactory);
-		
-		// create event handler
-		this.eventHandler = new InternalEventHandler();
 
 		// create text to search field and add it to the panel
 		this.textToSearchField = new JTextField();
@@ -70,7 +67,6 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 
 		// create regex checkbox and add it to the panel
 		this.regexCheckbox = new JCheckBox();
-		this.regexCheckbox.addItemListener(this.eventHandler);
 		add(this.regexCheckbox);
 		
 		// create spacer and add it to the panel
@@ -78,13 +74,17 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 		
 		// create match case checkbox and add it to the panel
 		this.matchCaseCheckbox = new JCheckBox();
-		this.matchCaseCheckbox.addItemListener(this.eventHandler);
 		add(this.matchCaseCheckbox);
 		
 		// read initial values from rule factory
 		this.textToSearchField.setText(ruleFactory.getTextToSearch());
 		this.regexCheckbox.setSelected(ruleFactory.isRegex());
 		this.matchCaseCheckbox.setSelected(ruleFactory.isMatchCase());
+
+		// create and set event handler
+		this.eventHandler = new InternalEventHandler();
+		this.regexCheckbox.addItemListener(this.eventHandler);
+		this.matchCaseCheckbox.addItemListener(this.eventHandler);
 	}
 	
 	private void updateCombos() {

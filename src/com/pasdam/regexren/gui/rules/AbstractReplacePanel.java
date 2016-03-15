@@ -59,9 +59,6 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 	/** Create the panel */
 	public AbstractReplacePanel(ReplaceFactory ruleFactory) {
 		super(ruleFactory, TWO_ROW_PANEL_HEIGHT, BoxLayout.Y_AXIS);
-		
-		// create event handler
-		this.eventHandler = new InternalEventHandler();
 
 		// create first row box
 		Box row1Panel = Box.createHorizontalBox();
@@ -74,7 +71,6 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		
 		// create and add the replace text to the first row
 		this.textToReplaceText = new JTextField();
-		this.textToReplaceText.getDocument().addDocumentListener(this.eventHandler);
 		row1Panel.add(this.textToReplaceText);
 		
 		// create and add space to the first row
@@ -82,7 +78,6 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		
 		// create and add regex checkbox to the first row
 		this.regexCheckbox = new JCheckBox();
-		this.regexCheckbox.addItemListener(this.eventHandler);
 		row1Panel.add(this.regexCheckbox);
 		
 		// create and add space to the first row
@@ -90,7 +85,6 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		
 		// create and add match case checkbox to the first row
 		this.matchCaseCheckbox = new JCheckBox();
-		this.matchCaseCheckbox.addItemListener(this.eventHandler);
 		row1Panel.add(this.matchCaseCheckbox);
 
 		// add first row to the panel
@@ -112,7 +106,6 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		this.startSpinner.setPreferredSize(new Dimension(WIDGET_SPINNER_MIN_WIDTH, WIDGET_HEIGHT));
 		this.startSpinner.setMaximumSize(new Dimension(this.startSpinner.getPreferredSize()));
 		this.startSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
-		this.startSpinner.addChangeListener(this.eventHandler);
 		this.row2Panel.add(this.startSpinner);
 
 		// create and add space to the second row
@@ -130,7 +123,6 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		this.endSpinner.setPreferredSize(new Dimension(this.startSpinner.getPreferredSize()));
 		this.endSpinner.setMaximumSize(new Dimension(this.endSpinner.getPreferredSize()));
 		this.endSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
-		this.endSpinner.addChangeListener(this.eventHandler);
 		this.row2Panel.add(this.endSpinner);
 		
 		// create and add space to the second row
@@ -155,6 +147,14 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		this.regexCheckbox.setSelected(super.ruleFactory.isRegex());
 		this.startSpinner.setValue(super.ruleFactory.getStartIndex()+1);
 		this.textToReplaceText.setText(super.ruleFactory.getTextToReplace());
+		
+		// create and set event handler
+		this.eventHandler = new InternalEventHandler();
+		this.endSpinner.addChangeListener(this.eventHandler);
+		this.matchCaseCheckbox.addItemListener(this.eventHandler);
+		this.regexCheckbox.addItemListener(this.eventHandler);
+		this.startSpinner.addChangeListener(this.eventHandler);
+		this.textToReplaceText.getDocument().addDocumentListener(this.eventHandler);
 	}
 	
 	/**	Updates the target and operations comboboxes */

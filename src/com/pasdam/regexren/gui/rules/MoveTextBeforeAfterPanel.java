@@ -55,9 +55,6 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 	public MoveTextBeforeAfterPanel(MoveTextBeforeAfterFactory ruleFactory) {
 		// set rule's type
 		super(ruleFactory, TWO_ROW_PANEL_HEIGHT, BoxLayout.Y_AXIS);
-
-		// create event handler
-		this.eventHandler = new InternalEventHandler();
 		
 		// create first row and add it to the panel
 		Box row1Panel = Box.createHorizontalBox();
@@ -72,7 +69,6 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 		
 		// create text to move field and add to the first row
 		this.textToMoveField = new JTextField();
-		this.textToMoveField.getDocument().addDocumentListener(this.eventHandler);
 		row1Panel.add(this.textToMoveField);
 
 		// add the first row to the panel
@@ -87,7 +83,6 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 		
 		// create text to search and add to the second row
 		this.textToSearchField = new JTextField();
-		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
 		this.row2Panel.add(this.textToSearchField);
 		
 		// create spacer and add it to second row
@@ -95,12 +90,10 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 		
 		// create regex checkbox and add to the second row
 		this.regexCheckbox = new JCheckBox();
-		this.regexCheckbox.addItemListener(this.eventHandler);
 		this.row2Panel.add(this.regexCheckbox);
 		
 		// create match case checkbox and add to the second row
 		this.matchCaseCheckbox = new JCheckBox();
-		this.matchCaseCheckbox.addItemListener(this.eventHandler);
 		this.row2Panel.add(this.matchCaseCheckbox);
 		
 		// add the second row to the panel
@@ -111,6 +104,13 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 		this.textToSearchField.setText(ruleFactory.getTextToSearch());
 		this.regexCheckbox.setSelected(ruleFactory.isRegex());
 		this.matchCaseCheckbox.setSelected(ruleFactory.isMatchCase());
+		
+		// create and set event handler
+		this.eventHandler = new InternalEventHandler();
+		this.matchCaseCheckbox.addItemListener(this.eventHandler);
+		this.regexCheckbox.addItemListener(this.eventHandler);
+		this.textToMoveField.getDocument().addDocumentListener(this.eventHandler);
+		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
 	}
 	
 	private void updateCombos() {

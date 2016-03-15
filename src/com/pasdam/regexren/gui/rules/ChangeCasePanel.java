@@ -29,7 +29,7 @@ import com.pasdam.regexren.gui.RuleContentPanel;
  * @author paco
  * @version 0.1
  */
-public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> implements ActionListener, DocumentListener, ItemListener {
+public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> {
 
 	private static final long serialVersionUID = 5273872928673106679L;
 
@@ -47,6 +47,9 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> impleme
 	private JTextField separatorText;
 	private SteppedComboBox operationCmb;
 	private SteppedComboBox targetCmb;
+	
+	/** Handler of internal events */
+	private final InternalEventHandler eventHandler;
 	
 	/** Create the panel */
 	public ChangeCasePanel(ChangeCaseFactory ruleFactory) {
@@ -79,7 +82,6 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> impleme
 		// create and add the separator text
 		this.separatorText = new JTextField();
 		this.separatorText.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
-		this.separatorText.getDocument().addDocumentListener(this);
 		add(this.separatorText);
 
 		// add space
@@ -87,12 +89,16 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> impleme
 		
 		// create and add the regex checkbox
 		this.regexCheckbox = new JCheckBox();
-		this.regexCheckbox.addItemListener(this);
 		add(this.regexCheckbox);
 		
 		// set parameters from ruleFactory
 		this.separatorText.setText(ruleFactory.getSentenceSeparator());
 		this.regexCheckbox.setSelected(ruleFactory.isRegex());
+
+		// set values listener
+		this.eventHandler = new InternalEventHandler();
+		this.regexCheckbox.addItemListener(this.eventHandler);
+		this.separatorText.getDocument().addDocumentListener(this.eventHandler);
 	}
 	
 	/**	Updates the target and operations comboboxes */
@@ -105,7 +111,7 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> impleme
 		this.targetCmb = new SteppedComboBox(new DefaultComboBoxModel<String>(this.targetValues));
 		this.targetCmb.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
 		this.targetCmb.setMaximumSize(this.targetCmb.getPreferredSize());
-		this.targetCmb.addActionListener(this);
+		this.targetCmb.addActionListener(this.eventHandler);
 		this.targetCmb.setSelectedIndex(super.ruleFactory.getTarget());
 		add(targetCmb, 2);
 
@@ -116,7 +122,7 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> impleme
 		this.operationCmb = new SteppedComboBox(new DefaultComboBoxModel<String>(operationValues));
 		this.operationCmb.setPreferredSize(new Dimension(this.targetCmb.getPreferredSize()));
 		this.operationCmb.setMaximumSize(this.operationCmb.getPreferredSize());
-		this.operationCmb.addActionListener(this);
+		this.operationCmb.addActionListener(this.eventHandler);
 		this.operationCmb.setSelectedIndex(super.ruleFactory.getOperation());
 		add(operationCmb, 6);
 	}
@@ -140,75 +146,79 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> impleme
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		Object source = e.getSource();
-		if (source == this.targetCmb) {
-			super.ruleFactory.setTarget(this.targetCmb.getSelectedIndex());
-			
-		} else if (source == this.operationCmb) {
-			super.ruleFactory.setOperation(this.operationCmb.getSelectedIndex());
-			
-			if (this.operationCmb.getSelectedIndex() == ChangeCaseFactory.OPERATION_CAPITALIZE_SENTENCES) {
-				this.separatorLabel.setVisible(true);
-				this.separatorText .setVisible(true);
-				this.regexCheckbox .setVisible(true);
-				
-			} else {
-				this.separatorLabel.setVisible(false);
-				this.separatorText .setVisible(false);
-				this.regexCheckbox .setVisible(false);
-			}
-		
-		} else {
-			return;
-		}
-	}
-
-	@Override
-	public void changedUpdate(DocumentEvent event) {
-		try {
-			super.ruleFactory.setSentenceSeparator(this.separatorText.getText());
-			
-			// reset border
-			this.separatorText.setBorder(UIManager.getBorder("TextField.border"));
-			
-		} catch (Exception exception) {
-			this.separatorText.setBorder(BorderFactory.createLineBorder(Color.RED));
-			if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.changedUpdate> Invalid regex separator: " + this.separatorText.getText());
-		}
-	}
-
-	@Override
-	public void insertUpdate(DocumentEvent e) {
-		changedUpdate(e);
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent e) {
-		changedUpdate(e);
-	}
-
-	@Override
-	public void itemStateChanged(ItemEvent arg0) {
-		try {
-			super.ruleFactory.setRegex(this.regexCheckbox.isSelected());
-			
-			// reset border
-			this.separatorText.setBorder(UIManager.getBorder("TextField.border"));
-			
-		} catch (Exception exception) {
-			this.separatorText.setBorder(BorderFactory.createLineBorder(Color.RED));
-			if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.itemStateChanged> Invalid regex separator: " + this.separatorText.getText());
-		}
-	}
-
-	@Override
 	protected String getDescription() {
 		if (this.operationCmb != null && this.targetCmb != null) {
 			return this.operationCmb.getSelectedItem() + " [" + this.targetCmb.getSelectedItem()
 					+ (this.separatorText.isVisible() ? "]: " + this.separatorText.getText() : "]");
 		} else {
 			return "";
+		}
+	}
+	
+	/** Class that handles internal events */
+	private class InternalEventHandler implements ActionListener, DocumentListener, ItemListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Object source = e.getSource();
+			if (source == ChangeCasePanel.this.targetCmb) {
+				ChangeCasePanel.super.ruleFactory.setTarget(ChangeCasePanel.this.targetCmb.getSelectedIndex());
+				
+			} else if (source == ChangeCasePanel.this.operationCmb) {
+				ChangeCasePanel.super.ruleFactory.setOperation(ChangeCasePanel.this.operationCmb.getSelectedIndex());
+				
+				if (ChangeCasePanel.this.operationCmb.getSelectedIndex() == ChangeCaseFactory.OPERATION_CAPITALIZE_SENTENCES) {
+					ChangeCasePanel.this.separatorLabel.setVisible(true);
+					ChangeCasePanel.this.separatorText .setVisible(true);
+					ChangeCasePanel.this.regexCheckbox .setVisible(true);
+					
+				} else {
+					ChangeCasePanel.this.separatorLabel.setVisible(false);
+					ChangeCasePanel.this.separatorText .setVisible(false);
+					ChangeCasePanel.this.regexCheckbox .setVisible(false);
+				}
+			
+			} else {
+				return;
+			}
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent event) {
+			try {
+				ChangeCasePanel.super.ruleFactory.setSentenceSeparator(ChangeCasePanel.this.separatorText.getText());
+				
+				// reset border
+				ChangeCasePanel.this.separatorText.setBorder(UIManager.getBorder("TextField.border"));
+				
+			} catch (Exception exception) {
+				ChangeCasePanel.this.separatorText.setBorder(BorderFactory.createLineBorder(Color.RED));
+				if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.changedUpdate> Invalid regex separator: " + ChangeCasePanel.this.separatorText.getText());
+			}
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			changedUpdate(e);
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			changedUpdate(e);
+		}
+
+		@Override
+		public void itemStateChanged(ItemEvent arg0) {
+			try {
+				ChangeCasePanel.super.ruleFactory.setRegex(ChangeCasePanel.this.regexCheckbox.isSelected());
+				
+				// reset border
+				ChangeCasePanel.this.separatorText.setBorder(UIManager.getBorder("TextField.border"));
+				
+			} catch (Exception exception) {
+				ChangeCasePanel.this.separatorText.setBorder(BorderFactory.createLineBorder(Color.RED));
+				if (LogManager.ENABLED) LogManager.error("ChangeCasePanel.itemStateChanged> Invalid regex separator: " + ChangeCasePanel.this.separatorText.getText());
+			}
 		}
 	}
 }

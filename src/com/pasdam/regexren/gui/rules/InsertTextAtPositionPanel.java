@@ -66,9 +66,6 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 	/** Create the panel */
 	public InsertTextAtPositionPanel(InsertTextAtPositionFactory ruleFactory) {
 		super(ruleFactory, TWO_ROW_PANEL_HEIGHT, BoxLayout.Y_AXIS);
-
-		// create event handler
-		this.eventHandler = new InternalEventHandler();
 		
 		// create first row
 		Box row1Panel = Box.createHorizontalBox();
@@ -83,7 +80,6 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 		
 		// create text to insert field and add it to the panel
 		this.textToInsertField = new JTextField();
-		this.textToInsertField.getDocument().addDocumentListener(this.eventHandler);
 		row1Panel.add(this.textToInsertField);
 
 		// add first row to the panel
@@ -105,7 +101,6 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 		this.positionSpinner.setPreferredSize(new Dimension(new Dimension(WIDGET_SPINNER_MIN_WIDTH, WIDGET_HEIGHT)));
 		this.positionSpinner.setMaximumSize(new Dimension(this.positionSpinner.getPreferredSize()));
 		this.positionSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
-		this.positionSpinner.addChangeListener(this.eventHandler);
 		this.row2Panel.add(positionSpinner);
 		
 		// create spacer and add to the panel
@@ -137,6 +132,11 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 		// read initial values from rule factory
 		this.textToInsertField.setText(ruleFactory.getTextToInsert());
 		this.positionSpinner.setValue(ruleFactory.getPosition() + 1);
+
+		// create and set event handler
+		this.eventHandler = new InternalEventHandler();
+		this.positionSpinner.addChangeListener(this.eventHandler);
+		this.textToInsertField.getDocument().addDocumentListener(this.eventHandler);
 	}
 	
 	private void updateCombos() {
