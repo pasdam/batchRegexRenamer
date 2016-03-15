@@ -151,7 +151,7 @@ public class InsertCounterBeforeAfterFactory extends AbstractInsertCounterFactor
 	 *             if regex is true and the pattern isn't a valid regular
 	 *             expression
 	 */
-	private void checkConfiguration() throws NullPointerException, PatternSyntaxException {
+	protected void checkConfiguration() throws NullPointerException, PatternSyntaxException {
 		if (this.textToSearch == null || this.textToSearch.isEmpty()) {
 			super.setValid(false);
 			return;

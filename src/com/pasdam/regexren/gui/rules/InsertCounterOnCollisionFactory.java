@@ -25,6 +25,9 @@ public class InsertCounterOnCollisionFactory extends AbstractInsertCounterFactor
 		return getRule(super.startCount, super.padding);
 	}
 	
+	@Override
+	protected void checkConfiguration() throws RuntimeException {}
+	
 	/**
 	 * This method based on the parameters values return the right rule
 	 * 

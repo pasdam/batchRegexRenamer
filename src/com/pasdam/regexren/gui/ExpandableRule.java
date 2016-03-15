@@ -75,7 +75,7 @@ public class ExpandableRule extends ExpandableItem implements RuleFactoryListene
 		setContent(ruleContentPanel);
 		
 		// set itself as content listener
-		ruleContentPanel.getRuleFactory().setListener(this);
+		ruleContentPanel.getRuleFactory().addConfigurationListener(this);
 	}
 
 	@Override

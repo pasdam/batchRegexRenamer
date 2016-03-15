@@ -1,6 +1,8 @@
 package com.pasdam.regexren.gui.rules;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.model.RuleType;
@@ -32,7 +34,7 @@ public abstract class AbstractRuleFactory {
 	private boolean changed = true;
 
 	/** Listener to notify on rule configuration changes */
-	private RuleFactoryListener listener;
+	private final List<RuleFactoryListener> listeners = new ArrayList<RuleFactoryListener>();
 	
 	/**
 	 * Create a factory class for the specified rule's type
@@ -41,15 +43,17 @@ public abstract class AbstractRuleFactory {
 	 *            type of the rule of the factory
 	 */
 	public AbstractRuleFactory(RuleType type) {
-		this.type           = type;
+		this.type = type;
 	}
 
 	/**
 	 * Sets the listener to notify rule's configuration changes
-	 * @param listener the listener to notify rule's configuration changes
+	 * 
+	 * @param listener
+	 *            the listener to notify rule's configuration changes
 	 */
-	public void setListener(RuleFactoryListener listener) {
-		this.listener = listener;
+	public void addConfigurationListener(RuleFactoryListener listener) {
+		this.listeners.add(listener);
 	}
 	
 	/**
@@ -64,21 +68,24 @@ public abstract class AbstractRuleFactory {
 	/**
 	 * Returns the configured rule
 	 * 
-	 * @return the configured rule
+	 * @return the configured rule, or null if the configuration is invalid
 	 */
 	public Rule getRule() {
-		if (this.changed || (this.rule == null && valid)) {
-			this.rule = createConfiguredRule();
-			this.changed = false;
+		if (this.valid) {
+			if (this.changed || this.rule == null) {
+				this.rule = createConfiguredRule();
+				this.changed = false;
+			}
+			return this.rule;
 		}
-		return this.rule;
+		return null;
 	}
 	
 	/** Method that derived class must call to notify confiuration's changes */
 	protected void configurationChanged() {
 		this.changed = true;
-		if (this.listener != null) {
-			this.listener.configurationChanged(this.valid);
+		for (RuleFactoryListener listener : this.listeners) {
+			listener.configurationChanged(this.valid);
 		}
 	}
 	
@@ -162,6 +169,15 @@ public abstract class AbstractRuleFactory {
 		
 		return parameters;
 	}
+	
+	/**
+	 * Checks the configuration of the rule factory, throwing a
+	 * {@link RuntimeException} if some parameter's value is invalid
+	 * 
+	 * @throws RuntimeException
+	 *             if some parameters are invalid
+	 */
+	protected abstract void checkConfiguration() throws RuntimeException;
 
 	/**
 	 * Parses the array of array of parameter and configure the factory object
@@ -176,6 +192,7 @@ public abstract class AbstractRuleFactory {
 	public void parseParameters(String[][] parameters) throws IllegalArgumentException {
 		this.enabled = intToBool(Integer.parseInt(parameters[0][0]));
 		parseRuleSpecificParameters(parameters[1]);
+		checkConfiguration();
 	}
 	
 	/**

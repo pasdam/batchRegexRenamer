@@ -177,7 +177,7 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 * @throws InvalidParametersException
 	 *             if one ore more parameters are invalid
 	 */
-	private void checkConfiguration() throws InvalidParametersException {
+	protected void checkConfiguration() throws InvalidParametersException {
 		List<Integer> invalidParameters = new ArrayList<Integer>(PARAMETERS_COUNT);
 		
 		if (this.textToMove == null || this.textToMove.isEmpty()) {

@@ -20,6 +20,7 @@ import com.pasdam.regexren.gui.rules.InsertTextAtPositionFactory;
 import com.pasdam.regexren.gui.rules.InsertTextBeforeAfterFactory;
 import com.pasdam.regexren.gui.rules.MoveTextBeforeAfterFactory;
 import com.pasdam.regexren.gui.rules.ReplaceFactory;
+import com.pasdam.regexren.gui.rules.RuleFactoryListener;
 import com.pasdam.regexren.model.RuleType;
 
 /**
@@ -28,7 +29,7 @@ import com.pasdam.regexren.model.RuleType;
  * @author paco
  * @version 0.1
  */
-public class RulesManager extends ErrorListenerManager {
+public class RulesManager extends ErrorListenerManager implements RuleFactoryListener {
 	
 	/**	Parameters separator used to create script files */
 	private static final String PARAMETERS_SEPARATOR = ",";
@@ -76,6 +77,8 @@ public class RulesManager extends ErrorListenerManager {
 			for (RulesListener rulesListener : rulesListeners) {
 				rulesListener.ruleAdded(this.rulesList.size()-1, rule);
 			}
+			
+			rule.addConfigurationListener(this);
 		}
 	}
 	
@@ -119,6 +122,14 @@ public class RulesManager extends ErrorListenerManager {
 		}
 	}
 	
+	@Override
+	public void configurationChanged(boolean valid) {
+		if (valid) {
+			if (LogManager.ENABLED) LogManager.trace("RulesManager.configurationChanged> Rule configuration changed: updating files list");
+			ApplicationManager.getInstance().getFilesListManager().applyRules(false);
+		}
+	}
+	
 	/**
 	 * Open the specified script file
 	 * 
@@ -140,6 +151,8 @@ public class RulesManager extends ErrorListenerManager {
 
 				if (currentRule != null) {
 					fileRules.add(currentRule);
+					
+					currentRule.addConfigurationListener(this);
 				
 				} else {
 					errorOccurred = true;
@@ -167,6 +180,7 @@ public class RulesManager extends ErrorListenerManager {
 		} catch (Exception e) {
 			if (LogManager.ENABLED) LogManager.error("RulesManager.openScriptFile: " + e.getMessage());
 			notifyError("Error.RulesManager.loadScript");
+			e.printStackTrace();
 		}
 	}
 

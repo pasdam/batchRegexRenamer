@@ -1,5 +1,6 @@
 package com.pasdam.regexren.gui.rules;
 
+import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.model.FileModelItem;
 import com.pasdam.regexren.model.RuleType;
 
@@ -65,11 +66,7 @@ public class InsertTextAtPositionFactory extends AbstractRuleFactory {
 	public void setTextToInsert(String textToInsert) throws IllegalArgumentException {
 		this.textToInsert = textToInsert;
 		
-		boolean valid = this.textToInsert != null && this.textToInsert.length() > 0;
-		super.setValid(valid);
-		if (!valid) {
-			throw new IllegalArgumentException("Invalid parameter, textToInsert cannot be null or empty");
-		}
+		checkConfiguration();
 	}
 
 	/**
@@ -147,9 +144,18 @@ public class InsertTextAtPositionFactory extends AbstractRuleFactory {
 			this.position     = Integer.parseInt(parameters[PARAMETER_POSITION]);
 			this.fromBegin    = intToBool(Integer.parseInt(parameters[PARAMETER_FROM_BEGIN]));
 			this.target       = Integer.parseInt(parameters[PARAMETER_TARGET]);
-
+			
 		} else {
 			throw new IllegalArgumentException("Invalid parameter's array length: " + parameters.length);
+		}
+	}
+	
+	@Override
+	protected void checkConfiguration() throws IllegalArgumentException {
+		boolean valid = this.textToInsert != null && this.textToInsert.length() > 0;
+		super.setValid(valid);
+		if (!valid) {
+			throw new IllegalArgumentException("Invalid parameter, textToInsert cannot be null or empty");
 		}
 	}
 
@@ -180,6 +186,7 @@ public class InsertTextAtPositionFactory extends AbstractRuleFactory {
 	 *             if target is invalid
 	 */
 	public static Rule getRule(String textToInsert, int position, boolean fromBegin, int target) throws IllegalArgumentException {
+		if (LogManager.ENABLED) LogManager.trace(String.format("ReplaceFactory.getRule(textToInsert=%s, fromBegin=%b, position=%d, target=%d)", textToInsert, fromBegin, position, target));
 		switch (target) {
 			case TARGET_NAME:
 				return fromBegin

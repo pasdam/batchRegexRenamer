@@ -134,6 +134,9 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 			throw new IllegalArgumentException("Invalid parameter's array length: " + parameters.length);
 		}
 	}
+	
+	@Override
+	protected void checkConfiguration() throws RuntimeException {}
 
 	@Override
 	protected String[] getRuleSpecificParameters() {
