@@ -121,19 +121,27 @@ public class RulesPanel extends JScrollPane implements RulesListener, Localizabl
 	@Override
 	public void ruleRemoved(int index) {
 		this.content.remove(index);
-		
-		revalidate();
+
+		// force re-layout
+		validate();
 		repaint();
 	}
 
 	@Override
 	public void rulesChanged(List<AbstractRuleFactory> rulesList) {
 		this.content.removeAll();
-		for (int i = 0; i < rulesList.size(); i++) {
-			ruleAdded(i, rulesList.get(i));
-		}
 		
-		collapseAll();
+		if (rulesList.size() > 0) {
+			for (int i = 0; i < rulesList.size(); i++) {
+				ruleAdded(i, rulesList.get(i));
+			}
+			collapseAll();
+		}
+
+		// force re-layout: this is usefull when the list is cleared, since no
+		// #ruleAdd is called, so no repaint is performed
+		validate();
+		repaint();
 	}
 
 	@Override
