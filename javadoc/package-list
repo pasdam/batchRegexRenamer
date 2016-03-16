@@ -1,0 +1,5 @@
+com.pasdam.regexren.controller
+com.pasdam.regexren.gui
+com.pasdam.regexren.gui.rules
+com.pasdam.regexren.model
+com.pasdam.regexren.utils
