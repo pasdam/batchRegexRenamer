@@ -202,10 +202,10 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	 */
 	protected void checkConfiguration() throws PatternSyntaxException, NullPointerException {
 		if (this.regex) {
-			setValid(false);
+			super.setValid(false);
 			Pattern.compile(this.sentenceSeparator);
 		}
-		setValid(true);
+		super.setValid(true);
 	}
 	
 	@Override
