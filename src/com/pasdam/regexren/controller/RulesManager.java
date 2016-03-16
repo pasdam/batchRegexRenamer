@@ -79,20 +79,30 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 			}
 			
 			rule.addConfigurationListener(this);
+			
+			configurationChanged(true);
 		}
 	}
 	
 	/** Remove rules that are selected (enabled) */
 	public void removeSelected() {
+		boolean removed = false;
+		
 		for (int i = this.rulesList.size()-1; i >= 0; i--) {
 			if (this.rulesList.get(i).isEnabled()) {
 				this.rulesList.remove(i);
+				
+				removed = true;
 				
 				// notify listeners
 				for (RulesListener rulesListener : rulesListeners) {
 					rulesListener.ruleRemoved(i);;
 				}
 			}
+		}
+		
+		if (removed) {
+			configurationChanged(true);
 		}
 	}
 	
@@ -107,7 +117,9 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 	 *             if the index is out of range (index < 0 || index >= size())
 	 */
 	public AbstractRuleFactory remove(int index) throws IndexOutOfBoundsException {
-		return this.rulesList.remove(index);
+		AbstractRuleFactory rule = this.rulesList.remove(index);
+		configurationChanged(true);
+		return rule;
 	}
 	
 	/**
@@ -263,6 +275,8 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 	public void clear() {
 		this.rulesList.clear();
 		
+		configurationChanged(true);
+		
 		// notify listeners
 		for (RulesListener rulesListener : rulesListeners) {
 			rulesListener.rulesChanged(this.rulesList);
@@ -276,43 +290,41 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 	 *            script file to save
 	 */
 	public boolean saveToFile(File file) {
-		if (this.rulesList.size() > 0) {
-			BufferedWriter writer;
-			try {
-				writer = new BufferedWriter(new FileWriter(file));
+		BufferedWriter writer;
+		try {
+			writer = new BufferedWriter(new FileWriter(file));
+			
+			String[][] parameters;
+			StringBuilder builder = new StringBuilder();
+			for (AbstractRuleFactory rule: this.rulesList) {
+				parameters = rule.getParameters();
 				
-				String[][] parameters;
-				StringBuilder builder = new StringBuilder();
-				for (AbstractRuleFactory rule: this.rulesList) {
-					parameters = rule.getParameters();
-					
-					// build csv line
-					builder.append(rule.getType().getId() + PARAMETERS_SEPARATOR + parameters[0][0]); // append id and enabled
-					for (String parameter: parameters[1]) {
-						builder.append(PARAMETERS_SEPARATOR + (parameter != null ? parameter : ""));
-					}
-					if (LogManager.ENABLED) LogManager.trace("RulesManager.save: saving rule [" + builder.toString() + "]");
-
-					builder.append("\n");
-					
-					// write line to file
-					writer.write(builder.toString());
-					
-					// clear buffer
-					builder.setLength(0);
+				// build csv line
+				builder.append(rule.getType().getId() + PARAMETERS_SEPARATOR + parameters[0][0]); // append id and enabled
+				for (String parameter: parameters[1]) {
+					builder.append(PARAMETERS_SEPARATOR + (parameter != null ? parameter : ""));
 				}
-				writer.flush();
-				writer.close();
+				if (LogManager.ENABLED) LogManager.trace("RulesManager.save: saving rule [" + builder.toString() + "]");
+
+				builder.append("\n");
 				
-				// save last script
-				ApplicationManager.getInstance().getPreferenceManager().setPreviousScriptFile(file);
+				// write line to file
+				writer.write(builder.toString());
 				
-				return true;
-				
-			} catch (IOException e) {
-				if (LogManager.ENABLED) LogManager.error("RulesManager.save: " + e.getMessage());
-				notifyError("Error.RulesManager.saveScript");
+				// clear buffer
+				builder.setLength(0);
 			}
+			writer.flush();
+			writer.close();
+			
+			// save last script
+			ApplicationManager.getInstance().getPreferenceManager().setPreviousScriptFile(file);
+			
+			return true;
+			
+		} catch (IOException e) {
+			if (LogManager.ENABLED) LogManager.error("RulesManager.save: " + e.getMessage());
+			notifyError("Error.RulesManager.saveScript");
 		}
 		
 		return false;
