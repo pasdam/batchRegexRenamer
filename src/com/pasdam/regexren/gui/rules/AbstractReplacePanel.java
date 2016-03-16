@@ -167,9 +167,8 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		this.targetCombobox = new SteppedComboBox(new DefaultComboBoxModel<String>(this.targetValues));
 		this.targetCombobox.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
 		this.targetCombobox.setMaximumSize(new Dimension(this.targetCombobox.getPreferredSize()));
-		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
 		this.targetCombobox.addActionListener(this.eventHandler);
-		this.targetCombobox.setBorder(UIManager.getBorder("ComboBox.editorBorder"));
+		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
 		this.row2Panel.add(this.targetCombobox, this.row2Panel.getComponentCount()-1);
 	}
 

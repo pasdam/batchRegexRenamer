@@ -111,8 +111,8 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> {
 		this.targetCmb = new SteppedComboBox(new DefaultComboBoxModel<String>(this.targetValues));
 		this.targetCmb.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
 		this.targetCmb.setMaximumSize(this.targetCmb.getPreferredSize());
-		this.targetCmb.addActionListener(this.eventHandler);
 		this.targetCmb.setSelectedIndex(super.ruleFactory.getTarget());
+		this.targetCmb.addActionListener(this.eventHandler);
 		add(targetCmb, 2);
 
 		// remove previous operation combobox and create a new one
@@ -122,8 +122,8 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> {
 		this.operationCmb = new SteppedComboBox(new DefaultComboBoxModel<String>(operationValues));
 		this.operationCmb.setPreferredSize(new Dimension(this.targetCmb.getPreferredSize()));
 		this.operationCmb.setMaximumSize(this.operationCmb.getPreferredSize());
-		this.operationCmb.addActionListener(this.eventHandler);
 		this.operationCmb.setSelectedIndex(super.ruleFactory.getOperation());
+		this.operationCmb.addActionListener(this.eventHandler);
 		add(operationCmb, 6);
 	}
 	

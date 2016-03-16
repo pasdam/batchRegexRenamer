@@ -116,7 +116,6 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 			remove(this.targetCombobox);
 		}
 		this.targetCombobox = new SteppedComboBox(new DefaultComboBoxModel<String>(this.targetValues));
-		this.targetCombobox.setInheritsPopupMenu(true);
 		this.targetCombobox.setPreferredSize(new Dimension(this.fromCombobox.getPreferredSize()));
 		this.targetCombobox.setMaximumSize(new Dimension(this.targetCombobox.getPreferredSize()));
 		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
