@@ -200,6 +200,7 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	 * @throws NullPointerException
 	 *             if regex is true and the sentence separator is null
 	 */
+	@Override
 	protected void checkConfiguration() throws PatternSyntaxException, NullPointerException {
 		if (this.regex) {
 			super.setValid(false);

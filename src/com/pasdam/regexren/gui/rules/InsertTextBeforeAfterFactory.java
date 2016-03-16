@@ -198,6 +198,7 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	 * @throws InvalidParametersException
 	 *             if one ore more parameters are invalid
 	 */
+	@Override
 	protected void checkConfiguration() throws InvalidParametersException {
 		List<Integer> invalidParameters = new ArrayList<Integer>(PARAMETERS_COUNT);
 
