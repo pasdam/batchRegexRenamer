@@ -106,6 +106,7 @@ public abstract class AbstractRuleFactory {
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+		configurationChanged();
 	}
 
 	/**
