@@ -68,8 +68,6 @@ public class FilesListManager implements PropertyChangeListener<File>, FiltersLi
 				FileModelItem fileData;
 				File newFile;
 
-				// TODO: check for invalid rules
-
 				// reset rules state
 				for (AbstractRuleFactory ruleFactory : rules) {
 					if (ruleFactory.isEnabled() && ruleFactory.isValid()) {
@@ -112,7 +110,7 @@ public class FilesListManager implements PropertyChangeListener<File>, FiltersLi
 				boolean undoAvailable = this.fileRenamersList.get(0).undoAvailable();
 
 				// notify changes
-				for (FilesListListener filesListListener : listeners) {
+				for (FilesListListener filesListListener : this.listeners) {
 					filesListListener.filesListChanged(this.filesDataList, undoAvailable);
 				}
 			} 
