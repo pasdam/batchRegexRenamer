@@ -107,13 +107,19 @@ public class FilesListManager implements PropertyChangeListener<File>, FiltersLi
 					}
 				}
 				
-				boolean undoAvailable = this.fileRenamersList.get(0).undoAvailable();
-
-				// notify changes
-				for (FilesListListener filesListListener : this.listeners) {
-					filesListListener.filesListChanged(this.filesDataList, undoAvailable);
+			} else {
+				// reset files list
+				for (FileModelItem fileData : this.filesDataList) {
+					fileData.reset();
 				}
-			} 
+			}
+			
+			boolean undoAvailable = this.fileRenamersList.get(0).undoAvailable();
+			
+			// notify changes
+			for (FilesListListener filesListListener : this.listeners) {
+				filesListListener.filesListChanged(this.filesDataList, undoAvailable);
+			}
 		}
 	}
 
