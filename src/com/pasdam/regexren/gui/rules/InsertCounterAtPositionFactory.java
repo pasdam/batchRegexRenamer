@@ -115,8 +115,8 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 				if (this.target != target) {
 					this.target = target;
 					super.configurationChanged();
-					break;
 				}
+				break;
 
 			default:
 				throw new IllegalArgumentException("Invalid target: " + target);
