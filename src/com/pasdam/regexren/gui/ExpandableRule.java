@@ -97,6 +97,8 @@ public class ExpandableRule extends ExpandableItem implements RuleFactoryListene
 		if (toolTip != null && toolTip.length() > 0) {
 			this.validLabel.setToolTipText(localeManager.getString(STRING_KEY_INVALID_PARAMETERS));
 		}
+		this.ruleContentPanel.localeChanged(localeManager);
+		this.titleLabel.setText(this.ruleContentPanel.getDescription());
 	}
 
 	@Override
