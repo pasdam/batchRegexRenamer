@@ -58,7 +58,6 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 
 		// create text to search field and add it to the panel
 		this.textToSearchField = new JTextField();
-		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
 		this.textToSearchField.setColumns(10);
 		add(this.textToSearchField);
 		
@@ -83,8 +82,9 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 
 		// create and set event handler
 		this.eventHandler = new InternalEventHandler();
-		this.regexCheckbox.addItemListener(this.eventHandler);
 		this.matchCaseCheckbox.addItemListener(this.eventHandler);
+		this.regexCheckbox.addItemListener(this.eventHandler);
+		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
 	}
 	
 	private void updateCombos() {
