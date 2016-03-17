@@ -19,13 +19,13 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	/** Used to specify that the filter replace all occurrences in the name */
 	public static final int TARGET_NAME_ALL        = 0;
 	/** Used to specify that the filter replace first occurrence in the name */
-	public static final int TARGET_NAME_FIRST      = TARGET_NAME_ALL + 1;
+	public static final int TARGET_NAME_FIRST      = TARGET_NAME_ALL        + 1;
 	/** Used to specify that the filter replace last occurrence in the name */
-	public static final int TARGET_NAME_LAST       = TARGET_NAME_FIRST + 1;
+	public static final int TARGET_NAME_LAST       = TARGET_NAME_FIRST      + 1;
 	/** Used to specify that the filter replace all occurrences in the extension */
-	public static final int TARGET_EXTENSION_ALL   = TARGET_NAME_LAST + 1;
+	public static final int TARGET_EXTENSION_ALL   = TARGET_NAME_LAST       + 1;
 	/** Used to specify that the filter replace first occurrence in the extension */
-	public static final int TARGET_EXTENSION_FIRST = TARGET_EXTENSION_ALL + 1;
+	public static final int TARGET_EXTENSION_FIRST = TARGET_EXTENSION_ALL   + 1;
 	/** Used to specify that the filter replace last occurrence in the extension */
 	public static final int TARGET_EXTENSION_LAST  = TARGET_EXTENSION_FIRST + 1;
 	
@@ -36,7 +36,7 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	/** Index of the "target" parameter */
 	private static final int PARAMETER_TARGET          = PARAMETER_TEXT_TO_INSERT  + 1;
 	/** Index of the "start_index" parameter */
-	private static final int PARAMETER_START_INDEX     = PARAMETER_TARGET       	  + 1;
+	private static final int PARAMETER_START_INDEX     = PARAMETER_TARGET          + 1;
 	/** Index of the "end_index" parameter */
 	private static final int PARAMETER_END_INDEX       = PARAMETER_START_INDEX     + 1;
 	/** Index of the "match_case" parameter */

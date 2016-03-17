@@ -26,13 +26,13 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	}
 
 	/** Used to move the first occurrence of input text before the first occurrence of the specified pattern*/
-	public static final int POSITION_BEFORE    = 0;
+	public static final int POSITION_BEFORE = 0;
 	/** Used to move the first occurrence of input text after the first occurrence of the specified pattern*/
-	public static final int POSITION_AFTER = POSITION_BEFORE + 1;
+	public static final int POSITION_AFTER  = POSITION_BEFORE + 1;
 	/** Used to move the input text at begin */
-	public static final int POSITION_BEGIN = POSITION_AFTER  + 1;
+	public static final int POSITION_BEGIN  = POSITION_AFTER  + 1;
 	/** Used to move the input text at end */
-	public static final int POSITION_END   = POSITION_BEGIN  + 1;
+	public static final int POSITION_END    = POSITION_BEGIN  + 1;
 	
 	/** Index of the "textToMove" parameter */
 	public static final int PARAMETER_TEXT_TO_MOVE   = 0;
