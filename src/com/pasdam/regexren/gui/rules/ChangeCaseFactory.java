@@ -16,29 +16,29 @@ import com.pasdam.regexren.model.RuleType;
 public class ChangeCaseFactory extends AbstractRuleFactory {
 	
 	/** Used to specify that the filter must modify only file name */
-	public static final int TARGET_NAME = 0;
+	public static final int TARGET_NAME      = 0;
 	/** Used to specify that the filter must modify only file extension */
 	public static final int TARGET_EXTENSION = 1;
 	
 	/** Operation constraint: change to lowercase */
-	public static final int OPERATION_TO_LOWERCASE = 0;
-	/** Operation constraint: change to uppercase */
-	public static final int OPERATION_TO_UPPERCASE = 1;
-	/** Operation constraint: capitalize words */
-	public static final int OPERATION_CAPITALIZE_WORDS = 2;
-	/** Operation constraint: capitalize sentences */
+	public static final int OPERATION_TO_LOWERCASE         = 0;
+	/** Operation constraint                               : change to uppercase */
+	public static final int OPERATION_TO_UPPERCASE         = 1;
+	/** Operation constraint                               : capitalize words */
+	public static final int OPERATION_CAPITALIZE_WORDS     = 2;
+	/** Operation constraint                               : capitalize sentences */
 	public static final int OPERATION_CAPITALIZE_SENTENCES = 3;
 	
 	/** Index of the "target" parameter */
 	private static final int PARAMETER_TARGET    = 0;
 	/** Index of the "operation" parameter */
-	private static final int PARAMETER_OPERATION = PARAMETER_TARGET + 1;
+	private static final int PARAMETER_OPERATION = PARAMETER_TARGET    + 1;
 	/** Index of the "separator" parameter */
 	private static final int PARAMETER_SEPARATOR = PARAMETER_OPERATION + 1;
 	/** Index of the "regex" parameter */
 	private static final int PARAMETER_REGEX     = PARAMETER_SEPARATOR + 1;
 	/** Indicates how many parameters this component has */
-	private static final int PARAMETERS_COUNT    = PARAMETER_REGEX + 1;
+	private static final int PARAMETERS_COUNT    = PARAMETER_REGEX     + 1;
 	
 	/**	Pattern used to extract words */
 	private static final Pattern PATTERN_WORD = Pattern.compile("\\w+");
@@ -80,8 +80,8 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 				if (this.target != target) {
 					this.target = target;
 					checkConfiguration();
-					return;
 				}
+				return;
 
 			default:
 				setValid(false);
@@ -124,8 +124,8 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 				if (this.operation != operation) {
 					this.operation = operation;
 					checkConfiguration();
-					return;
 				}
+				return;
 
 			default:
 				setValid(false);
