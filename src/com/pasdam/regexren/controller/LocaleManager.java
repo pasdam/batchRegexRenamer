@@ -22,6 +22,9 @@ public class LocaleManager {
 	/** List of localizable components */
 	private List<Localizable> localizableComponents = new ArrayList<Localizable>();
 	
+	/** Current locale */
+	private Locale locale;
+	
 	/**
 	 * Sets the interface language to currentLocale
 	 * 
@@ -29,14 +32,26 @@ public class LocaleManager {
 	 *            - language to load
 	 */
 	public void setLocale(Locale locale){
-		Locale.setDefault(locale);
-    	this.localeBundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME, locale);
-
-    	// notify changes
-    	for (Localizable localizable : localizableComponents) {
-			localizable.localeChanged(this);
+		if (this.locale != locale  || (this.locale != null && !this.locale.equals(locale))) {
+			if (LogManager.ENABLED) LogManager.trace("LocaleManager.setLocale> Setting locale: " + locale);
+			this.locale = locale;
+			Locale.setDefault(this.locale);
+			this.localeBundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME, this.locale);
+			// notify changes
+			for (Localizable localizable : localizableComponents) {
+				localizable.localeChanged(this);
+			} 
 		}
     }
+	
+	/**
+	 * Returns the current locale
+	 * 
+	 * @return the current locale
+	 */
+	public Locale getLocale() {
+		return this.locale;
+	}
 	
 	/**
 	 * Add a component that needs to be notified when the locale changes
