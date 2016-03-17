@@ -62,8 +62,10 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 	 *            from end
 	 */
 	public void setFromBegin(boolean fromBegin) {
-		this.fromBegin = fromBegin;
-		super.configurationChanged();
+		if (this.fromBegin != fromBegin) {
+			this.fromBegin = fromBegin;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -82,8 +84,10 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 	 *            index at which insert the counter
 	 */
 	public void setPosition(int position) {
-		this.position = position;
-		super.configurationChanged();
+		if (this.position != position) {
+			this.position = position;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -108,10 +112,12 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 		switch (target) {
 			case OF_NAME:
 			case OF_EXTENSION:
-				this.target = target;
-				super.configurationChanged();
-				break;
-	
+				if (this.target != target) {
+					this.target = target;
+					super.configurationChanged();
+					break;
+				}
+
 			default:
 				throw new IllegalArgumentException("Invalid target: " + target);
 		}

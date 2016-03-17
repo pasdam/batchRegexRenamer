@@ -77,10 +77,12 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 		switch (target) {
 			case TARGET_NAME:
 			case TARGET_EXTENSION:
-				this.target = target;
-				checkConfiguration();
-				return;
-	
+				if (this.target != target) {
+					this.target = target;
+					checkConfiguration();
+					return;
+				}
+
 			default:
 				setValid(false);
 				throw new IllegalArgumentException("Invalid target: " + target);
@@ -119,10 +121,12 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 			case OPERATION_TO_UPPERCASE:
 			case OPERATION_CAPITALIZE_WORDS:
 			case OPERATION_CAPITALIZE_SENTENCES:
-				this.operation = operation;
-				checkConfiguration();
-				return;
-	
+				if (this.operation != operation) {
+					this.operation = operation;
+					checkConfiguration();
+					return;
+				}
+
 			default:
 				setValid(false);
 				throw new IllegalArgumentException("Invalid operation: " + operation);
@@ -150,9 +154,11 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	 *             if regex is true and the sentence separator is null
 	 */
 	public void setSentenceSeparator(String sentenceSeparator) throws PatternSyntaxException, NullPointerException {
-		this.sentenceSeparator = sentenceSeparator;
-		super.configurationChanged();
-		checkConfiguration();
+		if (this.sentenceSeparator != sentenceSeparator  || (this.sentenceSeparator != null && !this.sentenceSeparator.equals(sentenceSeparator))) {
+			this.sentenceSeparator = sentenceSeparator;
+			super.configurationChanged();
+			checkConfiguration();
+		}
 	}
 	
 	/**
@@ -177,9 +183,11 @@ public class ChangeCaseFactory extends AbstractRuleFactory {
 	 *             if regex is true and the sentence separator is null
 	 */
 	public void setRegex(boolean regex) throws PatternSyntaxException, NullPointerException {
-		this.regex = regex;
-		super.configurationChanged();
-		checkConfiguration();
+		if (this.regex != regex) {
+			this.regex = regex;
+			super.configurationChanged();
+			checkConfiguration();
+		}
 	}
 	
 	/**

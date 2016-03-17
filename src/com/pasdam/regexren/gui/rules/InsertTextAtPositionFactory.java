@@ -64,9 +64,10 @@ public class InsertTextAtPositionFactory extends AbstractRuleFactory {
 	 *             if <i>textToInsert</i> is null or empty
 	 */
 	public void setTextToInsert(String textToInsert) throws IllegalArgumentException {
-		this.textToInsert = textToInsert;
-		
-		checkConfiguration();
+		if (this.textToInsert != textToInsert  || (this.textToInsert != null && !this.textToInsert.equals(textToInsert))) {
+			this.textToInsert = textToInsert;
+			checkConfiguration();
+		}
 	}
 
 	/**
@@ -85,8 +86,10 @@ public class InsertTextAtPositionFactory extends AbstractRuleFactory {
 	 *            the position at which insert text
 	 */
 	public void setPosition(int position) {
-		this.position = position;
-		super.configurationChanged();
+		if (this.position != position) {
+			this.position = position;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -108,8 +111,10 @@ public class InsertTextAtPositionFactory extends AbstractRuleFactory {
 	 *            from end
 	 */
 	public void setFromBegin(boolean fromBegin) {
-		this.fromBegin = fromBegin;
-		super.configurationChanged();
+		if (this.fromBegin != fromBegin) {
+			this.fromBegin = fromBegin;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -128,8 +133,10 @@ public class InsertTextAtPositionFactory extends AbstractRuleFactory {
 	 *            target of the operation (name/extension)
 	 */
 	public void setTarget(int target) {
-		this.target = target;
-		super.configurationChanged();
+		if (this.target != target) {
+			this.target = target;
+			super.configurationChanged();
+		}
 	}
 
 	@Override

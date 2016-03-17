@@ -99,8 +99,10 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	 *             if one ore more parameters are invalid
 	 */
 	public void setTextToInsert(String textToInsert) throws InvalidParametersException {
-		this.textToInsert = textToInsert;
-		checkConfiguration();
+		if (this.textToInsert != textToInsert  || (this.textToInsert != null && !this.textToInsert.equals(textToInsert))) {
+			this.textToInsert = textToInsert;
+			checkConfiguration();
+		}
 	}
 
 	/**
@@ -120,8 +122,10 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	 *            operation type
 	 */
 	public void setBeforeAfterType(int type) {
-		this.beforeAfterType = type;
-		super.configurationChanged();
+		if (this.beforeAfterType != type) {
+			this.beforeAfterType = type;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -142,8 +146,10 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	 *             if one ore more parameters are invalid
 	 */
 	public void setTextToSearch(String textToSearch) throws InvalidParametersException {
-		this.textToSearch = textToSearch;
-		checkConfiguration();
+		if (this.textToSearch != textToSearch  || (this.textToSearch != null && !this.textToSearch.equals(textToSearch))) {
+			this.textToSearch = textToSearch;
+			checkConfiguration();
+		}
 	}
 
 	/**
@@ -162,8 +168,10 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	 *            if true the pattern is case sensitive
 	 */
 	public void setMatchCase(boolean matchCase) {
-		this.matchCase = matchCase;
-		super.configurationChanged();
+		if (this.matchCase != matchCase) {
+			this.matchCase = matchCase;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -188,8 +196,10 @@ public class InsertTextBeforeAfterFactory extends AbstractRuleFactory {
 	 *             if one ore more parameters are invalid
 	 */
 	public void setRegex(boolean regex) throws InvalidParametersException {
-		this.regex = regex;
-		checkConfiguration();
+		if (this.regex != regex) {
+			this.regex = regex;
+			checkConfiguration();
+		}
 	}
 
 	/**

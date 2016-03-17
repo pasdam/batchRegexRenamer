@@ -108,8 +108,10 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 *            otherwise
 	 */
 	public void setMatchCase(boolean matchCase) {
-		this.matchCase = matchCase;
-		super.configurationChanged();
+		if (this.matchCase != matchCase) {
+			this.matchCase = matchCase;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -136,9 +138,10 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 *             if regex is true and the sentence separator is null
 	 */
 	public void setRegex(boolean regex) throws PatternSyntaxException, NullPointerException {
-		this.regex = regex;
-		super.configurationChanged();
-		checkConfiguration();
+		if (this.regex != regex) {
+			this.regex = regex;
+			checkConfiguration();
+		}
 	}
 
 	/**
@@ -159,8 +162,10 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 *            greater then text length means no limit
 	 */
 	public void setEndIndex(int endIndex) {
-		this.endIndex = endIndex;
-		super.configurationChanged();
+		if (this.endIndex != endIndex) {
+			this.endIndex = endIndex;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -180,8 +185,10 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 *            replace operation
 	 */
 	public void setStartIndex(int startIndex) {
-		this.startIndex = startIndex;
-		super.configurationChanged();
+		if (this.startIndex != startIndex) {
+			this.startIndex = startIndex;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -200,8 +207,10 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 *            the target of the operation
 	 */
 	public void setTarget(int target) {
-		this.target = target;
-		super.configurationChanged();
+		if (this.target != target) {
+			this.target = target;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -220,8 +229,10 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 *            text to insert
 	 */
 	public void setTextToInsert(String textToInsert) {
-		this.textToInsert = textToInsert;
-		super.configurationChanged();
+		if (this.textToInsert != textToInsert  || (this.textToInsert != null && !this.textToInsert.equals(textToInsert))) {
+			this.textToInsert = textToInsert;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -245,9 +256,10 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	 *             if regex is true and the sentence separator is null
 	 */
 	public void setTextToReplace(String textToReplace) throws PatternSyntaxException, NullPointerException {
-		this.textToReplace = textToReplace;
-		super.configurationChanged();
-		checkConfiguration();
+		if (this.textToReplace != textToReplace  || (this.textToReplace != null && !this.textToReplace.equals(textToReplace))) {
+			this.textToReplace = textToReplace;
+			checkConfiguration();
+		}
 	}
 	
 	/**

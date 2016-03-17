@@ -64,8 +64,10 @@ public class InsertCounterBeforeAfterFactory extends AbstractInsertCounterFactor
 	 *            pattern, if false it is inserted after
 	 */
 	public void setBeforePattern(boolean beforePattern) {
-		this.beforePattern = beforePattern;
-		super.configurationChanged();
+		if (this.beforePattern != beforePattern) {
+			this.beforePattern = beforePattern;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -89,8 +91,10 @@ public class InsertCounterBeforeAfterFactory extends AbstractInsertCounterFactor
 	 *             expression
 	 */
 	public void setTextToSearch(String textToSearch) throws NullPointerException, PatternSyntaxException {
-		this.textToSearch = textToSearch;
-		checkConfiguration();
+		if (this.textToSearch != textToSearch  || (this.textToSearch != null && !this.textToSearch.equals(textToSearch))) {
+			this.textToSearch = textToSearch;
+			checkConfiguration();
+		}
 	}
 
 	/**
@@ -109,8 +113,10 @@ public class InsertCounterBeforeAfterFactory extends AbstractInsertCounterFactor
 	 *            if true the pattern is case sensitive
 	 */
 	public void setMatchCase(boolean matchCase) {
-		this.matchCase = matchCase;
-		super.configurationChanged();
+		if (this.matchCase != matchCase) {
+			this.matchCase = matchCase;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -138,8 +144,10 @@ public class InsertCounterBeforeAfterFactory extends AbstractInsertCounterFactor
 	 *             expression
 	 */
 	public void setRegex(boolean regex) throws NullPointerException, PatternSyntaxException {
-		this.regex = regex;
-		checkConfiguration();
+		if (this.regex != regex) {
+			this.regex = regex;
+			checkConfiguration();
+		}
 	}
 	
 	/**

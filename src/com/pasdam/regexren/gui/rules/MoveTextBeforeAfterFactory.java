@@ -80,8 +80,10 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 *             if one ore more parameters are invalid
 	 */
 	public void setTextToMove(String textToMove) throws InvalidParametersException {
-		this.textToMove = textToMove;
-		checkConfiguration();
+		if (this.textToMove != textToMove  || (this.textToMove != null && !this.textToMove.equals(textToMove))) {
+			this.textToMove = textToMove;
+			checkConfiguration();
+		}
 	}
 
 	/**
@@ -100,8 +102,11 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 *            the position where move the text
 	 */
 	public void setPosition(int position) {
-		this.position = position > 0 ? position : 0;
-		super.configurationChanged();
+		int newValue = position > 0 ? position : 0;
+		if (this.position != newValue) {
+			this.position = newValue;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -122,8 +127,10 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 *             if one ore more parameters are invalid
 	 */
 	public void setTextToSearch(String textToSearch) throws InvalidParametersException {
-		this.textToSearch = textToSearch;
-		checkConfiguration();
+		if (this.textToSearch != textToSearch  || (this.textToSearch != null && !this.textToSearch.equals(textToSearch))) {
+			this.textToSearch = textToSearch;
+			checkConfiguration();
+		}
 	}
 
 	/**
@@ -147,8 +154,10 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 *             if one ore more parameters are invalid
 	 */
 	public void setRegex(boolean regex) throws InvalidParametersException {
-		this.regex = regex;
-		checkConfiguration();
+		if (this.regex != regex) {
+			this.regex = regex;
+			checkConfiguration();
+		}
 	}
 
 	/**
@@ -167,8 +176,10 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 *            true if the pattern is case sensitive, false otherwise
 	 */
 	public void setMatchCase(boolean matchCase) {
-		this.matchCase = matchCase;
-		super.configurationChanged();
+		if (this.matchCase != matchCase) {
+			this.matchCase = matchCase;
+			super.configurationChanged();
+		}
 	}
 	
 	/**

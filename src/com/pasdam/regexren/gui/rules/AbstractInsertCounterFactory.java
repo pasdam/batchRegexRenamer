@@ -46,8 +46,11 @@ abstract class AbstractInsertCounterFactory extends AbstractRuleFactory {
 	 *            indicates the number of padding digits to use
 	 */
 	public void setPadding(int padding) {
-		this.padding = padding > 1 ? padding : 1;
-		super.configurationChanged();
+		int newValue = padding > 1 ? padding : 1;
+		if (this.padding != newValue) {
+			this.padding = newValue;
+			super.configurationChanged();
+		}
 	}
 
 	/**
@@ -66,8 +69,10 @@ abstract class AbstractInsertCounterFactory extends AbstractRuleFactory {
 	 *            starting value of the counter
 	 */
 	public void setStartCount(int startCount) {
-		this.startCount = startCount;
-		super.configurationChanged();
+		if (this.startCount != startCount) {
+			this.startCount = startCount;
+			super.configurationChanged();
+		}
 	}
 
 	@Override
