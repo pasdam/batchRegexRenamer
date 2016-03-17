@@ -181,6 +181,8 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 					rulesListener.rulesChanged(this.rulesList);
 				}
 				
+				configurationChanged(true);
+				
 				// save last script
 				ApplicationManager.getInstance().getPreferenceManager().setPreviousScriptFile(file);
 			
