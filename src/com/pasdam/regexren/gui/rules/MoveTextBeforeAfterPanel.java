@@ -203,18 +203,15 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 		public void itemStateChanged(ItemEvent event) {
 			Object source = event.getSource();
 			if (source == MoveTextBeforeAfterPanel.this.regexCheckbox) {
+				// reset border
+				MoveTextBeforeAfterPanel.this.textToMoveField.setBorder(UIManager.getBorder("TextField.border"));
+				MoveTextBeforeAfterPanel.this.textToSearchField.setBorder(UIManager.getBorder("TextField.border"));
+
 				try {
 					MoveTextBeforeAfterPanel.this.getRuleFactory().setRegex(
 							MoveTextBeforeAfterPanel.this.regexCheckbox.isSelected());
-
-					// reset border
-					MoveTextBeforeAfterPanel.this.textToMoveField.setBorder(UIManager.getBorder("TextField.border"));
-					MoveTextBeforeAfterPanel.this.textToSearchField.setBorder(UIManager.getBorder("TextField.border"));
 						
 				} catch (InvalidParametersException exception) {
-					// reset border
-					MoveTextBeforeAfterPanel.this.textToMoveField.setBorder(UIManager.getBorder("TextField.border"));
-					MoveTextBeforeAfterPanel.this.textToSearchField.setBorder(UIManager.getBorder("TextField.border"));
 					// highlight invalid
 					for (Integer id : exception.getInvalidParameter()) {
 						switch (id) {
@@ -241,12 +238,36 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			int selectedIndex = MoveTextBeforeAfterPanel.this.positionCombobox.getSelectedIndex();
-			
-			MoveTextBeforeAfterPanel.this.textToSearchField.setVisible(selectedIndex == MoveTextBeforeAfterFactory.POSITION_AFTER
-																	|| selectedIndex == MoveTextBeforeAfterFactory.POSITION_BEFORE);
-			
-			MoveTextBeforeAfterPanel.this.getRuleFactory().setPosition(selectedIndex);
+			// reset border
+			MoveTextBeforeAfterPanel.this.textToMoveField.setBorder(UIManager.getBorder("TextField.border"));
+			MoveTextBeforeAfterPanel.this.textToSearchField.setBorder(UIManager.getBorder("TextField.border"));
+
+			try {
+				int selectedIndex = MoveTextBeforeAfterPanel.this.positionCombobox.getSelectedIndex();
+				
+				MoveTextBeforeAfterPanel.this.textToSearchField.setVisible(selectedIndex == MoveTextBeforeAfterFactory.POSITION_AFTER
+																		|| selectedIndex == MoveTextBeforeAfterFactory.POSITION_BEFORE);
+				
+				MoveTextBeforeAfterPanel.this.getRuleFactory().setPosition(selectedIndex);
+				
+			} catch (InvalidParametersException exception) {
+				// highlight invalid
+				for (Integer id : exception.getInvalidParameter()) {
+					switch (id) {
+						case MoveTextBeforeAfterFactory.PARAMETER_TEXT_TO_MOVE:
+							MoveTextBeforeAfterPanel.this.textToMoveField.setBorder(BorderFactory.createLineBorder(Color.RED));
+							break;
+						
+						case MoveTextBeforeAfterFactory.PARAMETER_TEXT_TO_SEARCH:
+							MoveTextBeforeAfterPanel.this.textToSearchField.setBorder(BorderFactory.createLineBorder(Color.RED));
+							break;
+	
+						default:
+							break;
+					}
+				}
+				if (LogManager.ENABLED) LogManager.error("InsertTextBeforeAfterPanel.InternalEventHandler.actionPerformed> " + exception.getMessage());
+			}
 		}
 	}
 }

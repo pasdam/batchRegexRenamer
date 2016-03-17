@@ -100,12 +100,14 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 * 
 	 * @param position
 	 *            the position where move the text
+	 * @throws InvalidParametersException
+	 *             if one ore more parameters are invalid
 	 */
-	public void setPosition(int position) {
+	public void setPosition(int position) throws InvalidParametersException {
 		int newValue = position > 0 ? position : 0;
 		if (this.position != newValue) {
 			this.position = newValue;
-			super.configurationChanged();
+			checkConfiguration();
 		}
 	}
 
@@ -203,15 +205,17 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 			}
 		}
 		
-		if (this.textToSearch == null || this.textToSearch.isEmpty()) {
-			invalidParameters.add(PARAMETER_TEXT_TO_SEARCH);
-
-		} else if (this.regex) {
-			try {
-				Pattern.compile(this.textToSearch);
-			} catch (Exception exception) {
+		if (this.position == POSITION_AFTER || this.position == POSITION_BEFORE) {
+			if (this.textToSearch == null || this.textToSearch.isEmpty()) {
 				invalidParameters.add(PARAMETER_TEXT_TO_SEARCH);
-			}
+
+			} else if (this.regex) {
+				try {
+					Pattern.compile(this.textToSearch);
+				} catch (Exception exception) {
+					invalidParameters.add(PARAMETER_TEXT_TO_SEARCH);
+				}
+			} 
 		}
 		
 		if (invalidParameters.size() > 0) {
@@ -279,27 +283,31 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 */
 	public static Rule getRule(String textToMove, int position, String textToSearch, boolean regex, boolean matchCase) throws IllegalArgumentException {
 		if (textToMove != null && !textToMove.isEmpty()) {
-			if (textToSearch != null && !textToSearch.isEmpty()) {
-				switch (position) {
-					case POSITION_BEFORE:
+			switch (position) {
+				case POSITION_BEFORE:
+					if (textToSearch != null && !textToSearch.isEmpty()) {
 						return new MoveBefore(textToMove, textToSearch, regex, matchCase);
-					
-					case POSITION_AFTER:
+					} else {
+						throw new IllegalArgumentException("Invalid textToSearch parameter, it can't be null or empty.");
+					}
+				
+				case POSITION_AFTER:
+					if (textToSearch != null && !textToSearch.isEmpty()) {
 						return new MoveAfter(textToMove, textToSearch, regex, matchCase);
-					
-					case POSITION_BEGIN:
-						return new MoveAtBeginning(textToMove, regex, matchCase);
-					
-					case POSITION_END:
-						return new MoveAtEnding(textToMove, regex, matchCase);
-					
-					default:
-						throw new IllegalArgumentException("Invalid position value: " + position + ". Use the class static fields to set this parameter.");
-				}
-
-			} else {
-				throw new IllegalArgumentException("Invalid textToSearch parameter, it can't be null or empty.");
+					} else {
+						throw new IllegalArgumentException("Invalid textToSearch parameter, it can't be null or empty.");
+					}
+				
+				case POSITION_BEGIN:
+					return new MoveAtBeginning(textToMove, regex, matchCase);
+				
+				case POSITION_END:
+					return new MoveAtEnding(textToMove, regex, matchCase);
+				
+				default:
+					throw new IllegalArgumentException("Invalid position value: " + position + ". Use the class static fields to set this parameter.");
 			}
+
 		} else {
 			throw new IllegalArgumentException("Invalid textToMove parameter, it can't be null or empty");
 		}
@@ -371,11 +379,13 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 		@Override
 		public FileModelItem apply(FileModelItem fileModelItem) {
 			Matcher matcherToMove = super.patternToMove.matcher(fileModelItem.getName());
-			Matcher matcherToSearch = super.patternToSearch.matcher(matcherToMove.replaceFirst(""));
+			String textWithoutMove = matcherToMove.replaceFirst("");
+			Matcher matcherToSearch = super.patternToSearch.matcher(textWithoutMove);
+			matcherToMove.reset();
 			if (matcherToSearch.find() && matcherToMove.find()) {
-				fileModelItem.setName(fileModelItem.getName().substring(0, matcherToSearch.start())
+				fileModelItem.setName(textWithoutMove.substring(0, matcherToSearch.start())
 									+ matcherToMove.group()
-									+ fileModelItem.getName().substring(matcherToSearch.start()));
+									+ textWithoutMove.substring(matcherToSearch.start()));
 			}
 			return fileModelItem;
 		}
@@ -392,12 +402,13 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 		@Override
 		public FileModelItem apply(FileModelItem fileModelItem) {
 			Matcher matcherToMove = super.patternToMove.matcher(fileModelItem.getName());
-			final String name = matcherToMove.replaceFirst("");
-			Matcher matcherToSearch = super.patternToSearch.matcher(name);
+			final String textWithoutMove = matcherToMove.replaceFirst("");
+			Matcher matcherToSearch = super.patternToSearch.matcher(textWithoutMove);
+			matcherToMove.reset();
 			if (matcherToSearch.find() && matcherToMove.find()) {
-				fileModelItem.setName(fileModelItem.getName().substring(0, matcherToSearch.end())
+				fileModelItem.setName(textWithoutMove.substring(0, matcherToSearch.end())
 									+ matcherToMove.group()
-									+ fileModelItem.getName().substring(matcherToSearch.end()));
+									+ textWithoutMove.substring(matcherToSearch.end()));
 			}
 			return fileModelItem;
 		}
