@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -41,11 +42,11 @@ public class RulesToolBar extends JToolBar implements Localizable,
 	private static final String IMAGES_PATH_PREFIX = "images" + File.separator;
 	
 	// Buttons IDs
-	private static final int ID_DELETE       = 0;
-	private static final int ID_PREVIEW      = 1;
-	private static final int ID_APPLY        = 2;
-	private static final int ID_UNDO         = 3;
-	private static final int ID_SETTINGS     = 4;
+	private static final int ID_DELETE   = 0;
+	private static final int ID_PREVIEW  = 1;
+	private static final int ID_APPLY    = 2;
+	private static final int ID_UNDO     = 3;
+	private static final int ID_SETTINGS = 4;
 	
 	// UI components
 	private final AddRuleMenu addRuleMenu;
@@ -112,9 +113,6 @@ public class RulesToolBar extends JToolBar implements Localizable,
 		this.settingsButton.addMouseListener(this);
 		add(this.settingsButton);
 		
-		// TODO: add support for settings
-		this.settingsButton.setVisible(false);
-
 		// add separator
 		add(Box.createHorizontalStrut(10));
 		separator = new JSeparator();
@@ -223,17 +221,11 @@ public class RulesToolBar extends JToolBar implements Localizable,
 				ApplicationManager.getInstance().getFilesListManager().undoRename();
 				break;
 			
-//		case ID_SETTINGS:
-//			try {
-//				try {
-//					SettingDialog dialog = new SettingDialog();
-//					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//					dialog.setVisible(true);
-//				} catch (Exception e1) {
-//					e1.printStackTrace();
-//				}
-//			} catch (Exception e2) {e2.printStackTrace();}
-//			break;
+			case ID_SETTINGS:
+				SettingDialog dialog = new SettingDialog();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+				break;
 		}
 	}
 
