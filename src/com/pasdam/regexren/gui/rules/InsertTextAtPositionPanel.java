@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import com.pasdam.gui.swing.widgets.SteppedComboBox;
+import com.pasdam.gui.swing.widgets.WideComboBox;
 import com.pasdam.regexren.controller.LocaleManager;
 import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.gui.RuleContentPanel;
@@ -47,9 +47,8 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 	private JLabel fromLabel;
 	private JLabel targetLabel;
 	private JSpinner positionSpinner;
-	private SteppedComboBox fromCombobox;
-	private SteppedComboBox targetCombobox;
-	private Box row2Panel;
+	private WideComboBox fromCombobox;
+	private WideComboBox targetCombobox;
 	
 	/** Array of "From" combobox values */
 	private final String[] fromValues = new String[2];
@@ -86,93 +85,88 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 		add(row1Panel);
 
 		// create first row
-		this.row2Panel = Box.createHorizontalBox();
-		this.row2Panel.setBorder(UIManager.getBorder("ComboBox.editorBorder"));
+		Box row2Panel = Box.createHorizontalBox();
+		row2Panel.setBorder(UIManager.getBorder("ComboBox.editorBorder"));
 		
 		// create position label and add to the panel
 		this.positionLabel = new JLabel();
-		this.row2Panel.add(positionLabel);
+		row2Panel.add(positionLabel);
 		
 		// create spacer and add to the panel
-		this.row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
+		row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
 		
 		// create position spinner and add to the panel
 		this.positionSpinner = new JSpinner();
 		this.positionSpinner.setPreferredSize(new Dimension(new Dimension(WIDGET_SPINNER_MIN_WIDTH, WIDGET_HEIGHT)));
 		this.positionSpinner.setMaximumSize(new Dimension(this.positionSpinner.getPreferredSize()));
 		this.positionSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
-		this.row2Panel.add(positionSpinner);
+		row2Panel.add(positionSpinner);
 		
 		// create spacer and add to the panel
-		this.row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_LONG));
+		row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_LONG));
 		
 		// create from label and add to the panel
 		this.fromLabel = new JLabel();
-		this.row2Panel.add(fromLabel);
+		row2Panel.add(fromLabel);
 		
 		// create spacer and add to the panel
-		this.row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
+		row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
+		
+		// create and add the from combobox to the second row
+		this.fromCombobox = new WideComboBox();
+		this.fromCombobox.setMaximumSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
+		row2Panel.add(this.fromCombobox);
 		
 		// create spacer and add to the panel
-		this.row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_LONG));
+		row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_LONG));
 		
 		// create target label and add to the panel
 		this.targetLabel = new JLabel();
-		this.row2Panel.add(targetLabel);
+		row2Panel.add(targetLabel);
 		
 		// create spacer and add to the panel
-		this.row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
+		row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
 		
+		// create and add the target combobox to the second row
+		this.targetCombobox = new WideComboBox();
+		this.targetCombobox.setMaximumSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
+		row2Panel.add(this.targetCombobox);
+
 		// create spacer and add to the panel
-		this.row2Panel.add(Box.createHorizontalGlue());
+		row2Panel.add(Box.createHorizontalGlue());
 
 		// add second row to the panel
-		add(this.row2Panel);
+		add(row2Panel);
 		
 		// read initial values from rule factory
-		this.textToInsertField.setText(ruleFactory.getTextToInsert());
 		this.positionSpinner.setValue(ruleFactory.getPosition() + 1);
+		this.textToInsertField.setText(ruleFactory.getTextToInsert());
 
 		// create and set event handler
 		this.eventHandler = new InternalEventHandler();
-		this.positionSpinner.addChangeListener(this.eventHandler);
-		this.textToInsertField.getDocument().addDocumentListener(this.eventHandler);
-	}
-	
-	private void updateCombos() {
-		if (this.fromCombobox != null) {
-			remove(this.fromCombobox);
-		}
-		this.fromCombobox = new SteppedComboBox(new DefaultComboBoxModel<String>(this.fromValues));
-		this.fromCombobox.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
-		this.fromCombobox.setMaximumSize(new Dimension(this.fromCombobox.getPreferredSize()));
-		this.fromCombobox.setSelectedIndex(super.ruleFactory.isFromBegin() ? FROM_BEGIN : FROM_END);
 		this.fromCombobox.addActionListener(this.eventHandler);
-		this.row2Panel.add(this.fromCombobox, 6);
-		
-		if (this.targetCombobox != null) {
-			remove(this.targetCombobox);
-		}
-		this.targetCombobox = new SteppedComboBox(new DefaultComboBoxModel<String>(this.targetValues));
-		this.targetCombobox.setPreferredSize(new Dimension(this.fromCombobox.getPreferredSize()));
-		this.targetCombobox.setMaximumSize(new Dimension(this.targetCombobox.getPreferredSize()));
-		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
+		this.positionSpinner.addChangeListener(this.eventHandler);
 		this.targetCombobox.addActionListener(this.eventHandler);
-		this.row2Panel.add(this.targetCombobox, this.row2Panel.getComponentCount()-1);
+		this.textToInsertField.getDocument().addDocumentListener(this.eventHandler);
 	}
 	
 	@Override
 	public void localeChanged(LocaleManager localeManager) {
-		this.description            = localeManager.getString("Rule.insertTextPosition.description");
+		this.description = localeManager.getString("Rule.insertTextPosition.description");
+		
+		this.fromLabel.setText(localeManager.getString("Rule.from"));
+		this.positionLabel.setText(localeManager.getString("Rule.position"));
+		this.targetLabel.setText(localeManager.getString("Rule.of"));
+		this.textToInsertLabel.setText(localeManager.getString("Rule.text"));
+		
 		this.fromValues[FROM_BEGIN] = localeManager.getString("Rule.begin");
 		this.fromValues[FROM_END]   = localeManager.getString("Rule.end");
 		this.targetValues[InsertTextAtPositionFactory.TARGET_NAME]      = localeManager.getString("Rule.name");
 		this.targetValues[InsertTextAtPositionFactory.TARGET_EXTENSION] = localeManager.getString("Rule.extension");
-		this.textToInsertLabel.setText(localeManager.getString("Rule.text"));
-		this.positionLabel.setText(localeManager.getString("Rule.position"));
-		this.fromLabel.setText(localeManager.getString("Rule.from"));
-		this.targetLabel.setText(localeManager.getString("Rule.of"));
-		updateCombos();
+		this.fromCombobox.setModel(new DefaultComboBoxModel<String>(this.fromValues));
+		this.fromCombobox.setSelectedIndex(super.ruleFactory.isFromBegin() ? FROM_BEGIN : FROM_END);
+		this.targetCombobox.setModel(new DefaultComboBoxModel<String>(this.targetValues));
+		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
 	}
 
 	@Override

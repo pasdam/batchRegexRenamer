@@ -22,7 +22,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import com.pasdam.gui.swing.widgets.SteppedComboBox;
+import com.pasdam.gui.swing.widgets.WideComboBox;
 import com.pasdam.regexren.controller.LocaleManager;
 import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.gui.RuleContentPanel;
@@ -48,7 +48,7 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 	private JTextField textToReplaceText;
 	protected Box row2Panel;
 	protected JLabel textToReplaceLabel;
-	protected SteppedComboBox targetCombobox;
+	protected WideComboBox targetCombobox;
 	
 	/** Array of targets combobox's items */
 	private final String[] targetValues  = new String[6];
@@ -90,7 +90,6 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		// add first row to the panel
 		add(row1Panel);
 		
-		// create second row box
 		this.row2Panel = Box.createHorizontalBox();
 		this.row2Panel.setBorder(UIManager.getBorder("ComboBox.editorBorder"));
 		
@@ -135,6 +134,10 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		// create and add space to the second row
 		this.row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
 		
+		// create and add target combobox to the second row
+		this.targetCombobox = new WideComboBox();
+		this.targetCombobox.setMaximumSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
+		
 		// create and add space to the second row
 		this.row2Panel.add(Box.createHorizontalGlue());
 		
@@ -154,40 +157,29 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		this.matchCaseCheckbox.addItemListener(this.eventHandler);
 		this.regexCheckbox.addItemListener(this.eventHandler);
 		this.startSpinner.addChangeListener(this.eventHandler);
-		this.textToReplaceText.getDocument().addDocumentListener(this.eventHandler);
-	}
-	
-	/**	Updates the target and operations comboboxes */
-	private void updateCombos() {
-		// remove previous target combobox and create a new one
-		// TODO: update model instead of recreate the view
-		if (this.targetCombobox != null) {
-			this.row2Panel.remove(this.targetCombobox);
-		}
-		this.targetCombobox = new SteppedComboBox(new DefaultComboBoxModel<String>(this.targetValues));
-		this.targetCombobox.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
-		this.targetCombobox.setMaximumSize(new Dimension(this.targetCombobox.getPreferredSize()));
 		this.targetCombobox.addActionListener(this.eventHandler);
-		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
-		this.row2Panel.add(this.targetCombobox, this.row2Panel.getComponentCount()-1);
+		this.textToReplaceText.getDocument().addDocumentListener(this.eventHandler);
 	}
 
 	@Override
 	public void localeChanged(LocaleManager localeManager) {
+		this.endLabel.setText(localeManager.getString("Rule.to"));
+		this.matchCaseCheckbox.setText(localeManager.getString("Rule.matchCase"));
+		this.matchCaseCheckbox.setToolTipText(localeManager.getString("Rule.matchCase.tooltip"));
 		this.regexCheckbox.setText(localeManager.getString("Rule.regex"));
 		this.regexCheckbox.setToolTipText(localeManager.getString("Rule.regex.tooltip"));
-		this.matchCaseCheckbox.setToolTipText(localeManager.getString("Rule.matchCase.tooltip"));
-		this.matchCaseCheckbox.setText(localeManager.getString("Rule.matchCase"));
 		this.startLabel.setText(localeManager.getString("Rule.from"));
-		this.endLabel.setText(localeManager.getString("Rule.to"));
+		this.targetLabel.setText(localeManager.getString("Rule.of"));
+		
+		// update comboboxes
 		this.targetValues[ReplaceFactory.TARGET_NAME_ALL] = localeManager.getString("Rule.nameAll");
 		this.targetValues[ReplaceFactory.TARGET_NAME_FIRST] = localeManager.getString("Rule.nameFirst");
 		this.targetValues[ReplaceFactory.TARGET_NAME_LAST] = localeManager.getString("Rule.nameLast");
 		this.targetValues[ReplaceFactory.TARGET_EXTENSION_ALL] = localeManager.getString("Rule.extensionAll");
 		this.targetValues[ReplaceFactory.TARGET_EXTENSION_FIRST] = localeManager.getString("Rule.extensionFirst");
 		this.targetValues[ReplaceFactory.TARGET_EXTENSION_LAST] = localeManager.getString("Rule.extensionLast");
-		this.targetLabel.setText(localeManager.getString("Rule.of"));
-		updateCombos();
+		this.targetCombobox.setModel(new DefaultComboBoxModel<String>(this.targetValues));
+		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
 	}
 
 	/** Class that handles internal events */

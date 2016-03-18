@@ -16,7 +16,7 @@ import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import com.pasdam.gui.swing.widgets.SteppedComboBox;
+import com.pasdam.gui.swing.widgets.WideComboBox;
 import com.pasdam.regexren.controller.LocaleManager;
 import com.pasdam.regexren.controller.LogManager;
 
@@ -39,7 +39,7 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 	private JCheckBox matchCaseCheckbox;
 	private JCheckBox regexCheckbox;
 	private JTextField textToSearchField;
-	private SteppedComboBox beforeAfterCombobox;
+	private WideComboBox beforeAfterCombobox;
 	
 	/** Array of "Before/After" combobox values */
 	private final String[] beforeAfter = new String[2];
@@ -55,6 +55,14 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 	 */
 	public InsertCounterBeforeAfterPanel(InsertCounterBeforeAfterFactory ruleFactory) {
 		super(ruleFactory);
+		
+		// create beforeAfter combobox and add it to the panel
+		this.beforeAfterCombobox = new WideComboBox();
+		this.beforeAfterCombobox.setMaximumSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
+		add(this.beforeAfterCombobox);
+		
+		// create spacer and add it to the panel
+		add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
 
 		// create text to search field and add it to the panel
 		this.textToSearchField = new JTextField();
@@ -76,42 +84,34 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 		add(this.matchCaseCheckbox);
 		
 		// read initial values from rule factory
-		this.textToSearchField.setText(ruleFactory.getTextToSearch());
-		this.regexCheckbox.setSelected(ruleFactory.isRegex());
 		this.matchCaseCheckbox.setSelected(ruleFactory.isMatchCase());
+		this.regexCheckbox.setSelected(ruleFactory.isRegex());
+		this.textToSearchField.setText(ruleFactory.getTextToSearch());
 
 		// create and set event handler
 		this.eventHandler = new InternalEventHandler();
+		this.beforeAfterCombobox.addActionListener(this.eventHandler);
 		this.matchCaseCheckbox.addItemListener(this.eventHandler);
 		this.regexCheckbox.addItemListener(this.eventHandler);
 		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
-	}
-	
-	private void updateCombos() {
-		if (this.beforeAfterCombobox != null) {
-			remove(this.beforeAfterCombobox);
-		}
-		this.beforeAfterCombobox = new SteppedComboBox(new DefaultComboBoxModel<String>(beforeAfter));
-		this.beforeAfterCombobox.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
-		this.beforeAfterCombobox.setMaximumSize(new Dimension(this.beforeAfterCombobox.getPreferredSize()));
-		this.beforeAfterCombobox.setSelectedIndex(super.getRuleFactory().isBeforePattern() ? BEFORE : AFTER);
-		this.beforeAfterCombobox.addActionListener(this.eventHandler);
-		add(this.beforeAfterCombobox, 8);
 	}
 	
 	@Override
 	public void localeChanged(LocaleManager localeManager) {
 		super.localeChanged(localeManager);
 		
-		this.regexCheckbox.setText(localeManager.getString("Rule.regex"));
-		this.regexCheckbox.setToolTipText(localeManager.getString("Rule.regex.tooltip"));
+		this.description = localeManager.getString("Rule.insertCounterPattern.description");
+		
 		this.matchCaseCheckbox.setText(localeManager.getString("Rule.matchCase"));
 		this.matchCaseCheckbox.setToolTipText(localeManager.getString("Rule.matchCase.tooltip"));
+		this.regexCheckbox.setText(localeManager.getString("Rule.regex"));
+		this.regexCheckbox.setToolTipText(localeManager.getString("Rule.regex.tooltip"));
 
-		this.description    = localeManager.getString("Rule.insertCounterPattern.description");
-		this.beforeAfter[0] = localeManager.getString("Rule.before");
-		this.beforeAfter[1] = localeManager.getString("Rule.after");
-		updateCombos();
+		// update comboboxes
+		this.beforeAfter[BEFORE] = localeManager.getString("Rule.before");
+		this.beforeAfter[AFTER]  = localeManager.getString("Rule.after");
+		this.beforeAfterCombobox.setModel(new DefaultComboBoxModel<String>(this.beforeAfter));
+		this.beforeAfterCombobox.setSelectedIndex(super.getRuleFactory().isBeforePattern() ? BEFORE : AFTER);
 	}
 
 	@Override

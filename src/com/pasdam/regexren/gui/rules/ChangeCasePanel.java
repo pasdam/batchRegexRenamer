@@ -18,7 +18,7 @@ import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import com.pasdam.gui.swing.widgets.SteppedComboBox;
+import com.pasdam.gui.swing.widgets.WideComboBox;
 import com.pasdam.regexren.controller.LocaleManager;
 import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.gui.RuleContentPanel;
@@ -45,8 +45,8 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> {
 	private JLabel separatorLabel;
 	private JLabel targetLabel;
 	private JTextField separatorText;
-	private SteppedComboBox operationCmb;
-	private SteppedComboBox targetCmb;
+	private WideComboBox operationCombobox;
+	private WideComboBox targetCombobox;
 	
 	/** Handler of internal events */
 	private final InternalEventHandler eventHandler;
@@ -60,16 +60,30 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> {
 		this.targetLabel.setAlignmentX(CENTER_ALIGNMENT);
 		add(this.targetLabel);
 		
-		// add spaces (between them will be added the targets combobox)
+		// add space
 		add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
+
+		// create and add target combobox to the panel
+		this.targetCombobox = new WideComboBox();
+		this.targetCombobox.setMaximumSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
+		add(targetCombobox);
+		
+		// add space
 		add(Box.createHorizontalStrut(FIXED_SPACE_LONG));
 		
 		// create and add the operation label
 		this.operationLabel = new JLabel();
 		add(this.operationLabel);
 		
-		// add spaces (between them will be added the operations combobox)
+		// add space
 		add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
+		
+		// create and add operation combobox to the panel
+		this.operationCombobox = new WideComboBox();
+		this.operationCombobox.setMaximumSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
+		add(operationCombobox);
+		
+		// add space
 		add(Box.createHorizontalStrut(FIXED_SPACE_LONG));
 		
 		// create and add the separator label
@@ -92,39 +106,15 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> {
 		add(this.regexCheckbox);
 		
 		// set parameters from ruleFactory
-		this.separatorText.setText(ruleFactory.getSentenceSeparator());
 		this.regexCheckbox.setSelected(ruleFactory.isRegex());
+		this.separatorText.setText(ruleFactory.getSentenceSeparator());
 
 		// set values listener
 		this.eventHandler = new InternalEventHandler();
+		this.operationCombobox.addActionListener(this.eventHandler);
 		this.regexCheckbox.addItemListener(this.eventHandler);
 		this.separatorText.getDocument().addDocumentListener(this.eventHandler);
-	}
-	
-	/**	Updates the target and operations comboboxes */
-	private void updateCombos() {
-		// remove previous target combobox and create a new one
-		// TODO: update model instead of recreate the view
-		if (this.targetCmb != null) {
-			remove(this.targetCmb);
-		}
-		this.targetCmb = new SteppedComboBox(new DefaultComboBoxModel<String>(this.targetValues));
-		this.targetCmb.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
-		this.targetCmb.setMaximumSize(this.targetCmb.getPreferredSize());
-		this.targetCmb.setSelectedIndex(super.ruleFactory.getTarget());
-		this.targetCmb.addActionListener(this.eventHandler);
-		add(targetCmb, 2);
-
-		// remove previous operation combobox and create a new one
-		if (operationCmb != null) {
-			remove(operationCmb);
-		}
-		this.operationCmb = new SteppedComboBox(new DefaultComboBoxModel<String>(operationValues));
-		this.operationCmb.setPreferredSize(new Dimension(this.targetCmb.getPreferredSize()));
-		this.operationCmb.setMaximumSize(this.operationCmb.getPreferredSize());
-		this.operationCmb.setSelectedIndex(super.ruleFactory.getOperation());
-		this.operationCmb.addActionListener(this.eventHandler);
-		add(operationCmb, 6);
+		this.targetCombobox.addActionListener(this.eventHandler);
 	}
 	
 	@Override
@@ -142,16 +132,35 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> {
 		this.operationValues[ChangeCaseFactory.OPERATION_CAPITALIZE_WORDS]     = localeManager.getString("Rule.capitalizeWords");
 		this.operationValues[ChangeCaseFactory.OPERATION_CAPITALIZE_SENTENCES] = localeManager.getString("Rule.capitalizeSentences");
 		
-		updateCombos();
+		// update comboboxes
+		this.targetCombobox.setModel(new DefaultComboBoxModel<String>(this.targetValues));
+		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
+		this.operationCombobox.setModel(new DefaultComboBoxModel<String>(this.operationValues));
+		this.operationCombobox.setSelectedIndex(super.ruleFactory.getOperation());
+		updateComponentsVisibility();
 	}
 
 	@Override
 	protected String getDescription() {
-		if (this.operationCmb != null && this.targetCmb != null) {
-			return this.operationCmb.getSelectedItem() + " [" + this.targetCmb.getSelectedItem()
+		if (this.operationCombobox != null && this.targetCombobox != null) {
+			return this.operationCombobox.getSelectedItem() + " [" + this.targetCombobox.getSelectedItem()
 					+ (this.separatorText.isVisible() ? "]: " + this.separatorText.getText() : "]");
 		} else {
 			return "";
+		}
+	}
+	
+	/** Update visibility of components when operation value changes */
+	private void updateComponentsVisibility() {
+		if (this.operationCombobox.getSelectedIndex() == ChangeCaseFactory.OPERATION_CAPITALIZE_SENTENCES) {
+			this.separatorLabel.setVisible(true);
+			this.separatorText .setVisible(true);
+			this.regexCheckbox .setVisible(true);
+			
+		} else {
+			this.separatorLabel.setVisible(false);
+			this.separatorText .setVisible(false);
+			this.regexCheckbox .setVisible(false);
 		}
 	}
 	
@@ -161,22 +170,13 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object source = e.getSource();
-			if (source == ChangeCasePanel.this.targetCmb) {
-				ChangeCasePanel.super.ruleFactory.setTarget(ChangeCasePanel.this.targetCmb.getSelectedIndex());
+			if (source == ChangeCasePanel.this.targetCombobox) {
+				ChangeCasePanel.super.ruleFactory.setTarget(ChangeCasePanel.this.targetCombobox.getSelectedIndex());
 				
-			} else if (source == ChangeCasePanel.this.operationCmb) {
-				ChangeCasePanel.super.ruleFactory.setOperation(ChangeCasePanel.this.operationCmb.getSelectedIndex());
+			} else if (source == ChangeCasePanel.this.operationCombobox) {
+				ChangeCasePanel.super.ruleFactory.setOperation(ChangeCasePanel.this.operationCombobox.getSelectedIndex());
 				
-				if (ChangeCasePanel.this.operationCmb.getSelectedIndex() == ChangeCaseFactory.OPERATION_CAPITALIZE_SENTENCES) {
-					ChangeCasePanel.this.separatorLabel.setVisible(true);
-					ChangeCasePanel.this.separatorText .setVisible(true);
-					ChangeCasePanel.this.regexCheckbox .setVisible(true);
-					
-				} else {
-					ChangeCasePanel.this.separatorLabel.setVisible(false);
-					ChangeCasePanel.this.separatorText .setVisible(false);
-					ChangeCasePanel.this.regexCheckbox .setVisible(false);
-				}
+				ChangeCasePanel.this.updateComponentsVisibility();
 			
 			} else {
 				return;

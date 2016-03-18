@@ -12,7 +12,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.pasdam.gui.swing.widgets.SteppedComboBox;
+import com.pasdam.gui.swing.widgets.WideComboBox;
 import com.pasdam.regexren.controller.LocaleManager;
 
 /**
@@ -36,8 +36,8 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 	private JLabel positionLabel;
 	private JLabel targetLabel;
 	private JSpinner positionSpinner;
-	private SteppedComboBox fromCombobox;
-	private SteppedComboBox targetCombobox;
+	private WideComboBox fromCombobox;
+	private WideComboBox targetCombobox;
 	
 	/** Array of "From" combobox values */
 	private final String[] fromValues = new String[2];
@@ -79,6 +79,11 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 		// create spacer and add to the panel
 		add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
 		
+		// create and add from combobox to the panel
+		this.fromCombobox = new WideComboBox();
+		this.fromCombobox.setMaximumSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
+		add(this.fromCombobox);
+		
 		// create spacer and add to the panel
 		add(Box.createHorizontalStrut(FIXED_SPACE_LONG));
 		
@@ -89,6 +94,11 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 		// create spacer and add to the panel
 		add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
 		
+		// create and add from combobox to the panel
+		this.targetCombobox = new WideComboBox();
+		this.targetCombobox.setMaximumSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
+		add(this.targetCombobox);
+		
 		// create and add to the panel
 		add(Box.createHorizontalGlue());
 		
@@ -97,47 +107,30 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 		
 		// create and set event handler
 		this.eventHandler = new InternalEventHandler();
-		this.positionSpinner.addChangeListener(this.eventHandler);
-	}
-	
-	/**	Updates the target and operations comboboxes */
-	private void updateCombos() {
-		if (this.fromCombobox != null) {
-			remove(this.fromCombobox);
-		}
-		this.fromCombobox = new SteppedComboBox(new DefaultComboBoxModel<String>(this.fromValues));
-		this.fromCombobox.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
-		this.fromCombobox.setMaximumSize(new Dimension(this.fromCombobox.getPreferredSize()));
-		this.fromCombobox.setSelectedIndex(super.ruleFactory.isFromBegin() ? FROM_BEGIN : FROM_END);
 		this.fromCombobox.addActionListener(this.eventHandler);
-		add(this.fromCombobox, 14);
-		
-		if (this.targetCombobox != null) {
-			remove(this.targetCombobox);
-		}
-		this.targetCombobox = new SteppedComboBox(new DefaultComboBoxModel<String>(this.targetValues));
-		this.targetCombobox.setPreferredSize(new Dimension(this.fromCombobox.getPreferredSize()));
-		this.targetCombobox.setMaximumSize(new Dimension(this.targetCombobox.getPreferredSize()));
-		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
+		this.positionSpinner.addChangeListener(this.eventHandler);
 		this.targetCombobox.addActionListener(this.eventHandler);
-		add(this.targetCombobox, 18);
 	}
 	
 	@Override
 	public void localeChanged(LocaleManager localeManager) {
 		super.localeChanged(localeManager);
 		
-		this.description                                               = localeManager.getString("Rule.insertCounterPosition.description");
+		this.description = localeManager.getString("Rule.insertCounterPosition.description");
+		
+		this.fromLabel    .setText(localeManager.getString("Rule.from"));
+		this.positionLabel.setText(localeManager.getString("Rule.position"));
+		this.targetLabel  .setText(localeManager.getString("Rule.of"));
+		
+		// update comboboxes
 		this.fromValues[FROM_BEGIN]                                    = localeManager.getString("Rule.begin");
 		this.fromValues[FROM_END]                                      = localeManager.getString("Rule.end");
 		this.targetValues[InsertCounterAtPositionFactory.OF_NAME]      = localeManager.getString("Rule.name");
 		this.targetValues[InsertCounterAtPositionFactory.OF_EXTENSION] = localeManager.getString("Rule.extension");	
-		
-		this.positionLabel    .setText(localeManager.getString("Rule.position"));
-		this.fromLabel        .setText(localeManager.getString("Rule.from"));
-		this.targetLabel      .setText(localeManager.getString("Rule.of"));
-		
-		updateCombos();
+		this.fromCombobox.setModel(new DefaultComboBoxModel<String>(this.fromValues));
+		this.fromCombobox.setSelectedIndex(super.ruleFactory.isFromBegin() ? FROM_BEGIN : FROM_END);
+		this.targetCombobox.setModel(new DefaultComboBoxModel<String>(this.targetValues));
+		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
 	}
 
 	@Override

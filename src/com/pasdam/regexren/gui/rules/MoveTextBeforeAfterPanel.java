@@ -19,7 +19,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
-import com.pasdam.gui.swing.widgets.SteppedComboBox;
+import com.pasdam.gui.swing.widgets.WideComboBox;
 import com.pasdam.regexren.controller.LocaleManager;
 import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.gui.RuleContentPanel;
@@ -35,13 +35,12 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 	private static final long serialVersionUID = 1393856890092322820L;
 
 	// UI components
-	private Box row2Panel;
 	private JCheckBox matchCaseCheckbox;
 	private JCheckBox regexCheckbox;
 	private JLabel textToMoveLabel;
 	private JTextField textToMoveField;
 	private JTextField textToSearchField;
-	private SteppedComboBox positionCombobox;
+	private WideComboBox positionCombobox;
 
 	/** Array of "Position" combobox values */
 	private final String[] positionValues = new String[4];
@@ -75,69 +74,66 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 		add(row1Panel);
 		
 		// create second row and add it to the panel
-		this.row2Panel = Box.createHorizontalBox();
-		this.row2Panel.setBorder(UIManager.getBorder("ComboBox.editorBorder"));
+		Box row2Panel = Box.createHorizontalBox();
+		row2Panel.setBorder(UIManager.getBorder("ComboBox.editorBorder"));
+		
+		// create position combobox and add to the second row
+		this.positionCombobox = new WideComboBox(new DefaultComboBoxModel<String>(this.positionValues));
+		this.positionCombobox.setMaximumSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
+		row2Panel.add(this.positionCombobox, 0);
 		
 		// create spacer and add it to second row
-		this.row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
+		row2Panel.add(Box.createHorizontalStrut(FIXED_SPACE_SHORT));
 		
 		// create text to search and add to the second row
 		this.textToSearchField = new JTextField();
-		this.row2Panel.add(this.textToSearchField);
+		row2Panel.add(this.textToSearchField);
 		
 		// create spacer and add it to second row
-		this.row2Panel.add(Box.createHorizontalGlue());
+		row2Panel.add(Box.createHorizontalGlue());
 		
 		// create regex checkbox and add to the second row
 		this.regexCheckbox = new JCheckBox();
-		this.row2Panel.add(this.regexCheckbox);
+		row2Panel.add(this.regexCheckbox);
 		
 		// create match case checkbox and add to the second row
 		this.matchCaseCheckbox = new JCheckBox();
-		this.row2Panel.add(this.matchCaseCheckbox);
+		row2Panel.add(this.matchCaseCheckbox);
 		
 		// add the second row to the panel
-		add(this.row2Panel);
+		add(row2Panel);
 		
 		// read initial values from rule factory
+		this.matchCaseCheckbox.setSelected(ruleFactory.isMatchCase());
+		this.regexCheckbox.setSelected(ruleFactory.isRegex());
 		this.textToMoveField.setText(ruleFactory.getTextToMove());
 		this.textToSearchField.setText(ruleFactory.getTextToSearch());
-		this.regexCheckbox.setSelected(ruleFactory.isRegex());
-		this.matchCaseCheckbox.setSelected(ruleFactory.isMatchCase());
 		
 		// create and set event handler
 		this.eventHandler = new InternalEventHandler();
 		this.matchCaseCheckbox.addItemListener(this.eventHandler);
+		this.positionCombobox.addActionListener(this.eventHandler);
 		this.regexCheckbox.addItemListener(this.eventHandler);
 		this.textToMoveField.getDocument().addDocumentListener(this.eventHandler);
 		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
-	}
-	
-	private void updateCombos() {
-		if (this.positionCombobox != null) {
-			this.row2Panel.remove(this.positionCombobox);
-		}
-		this.positionCombobox = new SteppedComboBox(new DefaultComboBoxModel<String>(this.positionValues));
-		this.positionCombobox.setPreferredSize(new Dimension(WIDGET_TEXT_MIN_WIDTH, WIDGET_HEIGHT));
-		this.positionCombobox.setMaximumSize(new Dimension(this.positionCombobox.getPreferredSize()));
-		this.positionCombobox.setSelectedIndex(super.ruleFactory.getPosition());
-		this.positionCombobox.addActionListener(this.eventHandler);
-		this.row2Panel.add(this.positionCombobox, 0);
 	}
 
 	@Override
 	public void localeChanged(LocaleManager localeManager) {
 		this.description = localeManager.getString("Rule.moveText.description");
+
+		this.matchCaseCheckbox.setText(localeManager.getString("Rule.matchCase"));
+		this.matchCaseCheckbox.setToolTipText(localeManager.getString("Rule.matchCase.tooltip"));
+		this.regexCheckbox.setText(localeManager.getString("Rule.regex"));
+		this.regexCheckbox.setToolTipText(localeManager.getString("Rule.regex.tooltip"));
+		this.textToMoveLabel.setText(localeManager.getString("Rule.move"));
+		
 		this.positionValues[MoveTextBeforeAfterFactory.POSITION_BEFORE] = localeManager.getString("Rule.before");
 		this.positionValues[MoveTextBeforeAfterFactory.POSITION_AFTER]  = localeManager.getString("Rule.after");
 		this.positionValues[MoveTextBeforeAfterFactory.POSITION_BEGIN]  = localeManager.getString("Rule.begin");
 		this.positionValues[MoveTextBeforeAfterFactory.POSITION_END]    = localeManager.getString("Rule.end");
-		this.textToMoveLabel.setText(localeManager.getString("Rule.move"));
-		this.regexCheckbox.setText(localeManager.getString("Rule.regex"));
-		this.regexCheckbox.setToolTipText(localeManager.getString("Rule.regex.tooltip"));
-		this.matchCaseCheckbox.setText(localeManager.getString("Rule.matchCase"));
-		this.matchCaseCheckbox.setToolTipText(localeManager.getString("Rule.matchCase.tooltip"));
-		updateCombos();
+		this.positionCombobox.setModel(new DefaultComboBoxModel<String>(this.positionValues));
+		this.positionCombobox.setSelectedIndex(super.ruleFactory.getPosition());
 	}
 
 	@Override
