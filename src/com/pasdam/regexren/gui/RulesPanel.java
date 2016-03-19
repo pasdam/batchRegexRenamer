@@ -107,8 +107,9 @@ public class RulesPanel extends JScrollPane implements RulesListener, Localizabl
 		}
 
 		// add rule panel
-		ruleContentPanel.localeChanged(ApplicationManager.getInstance().getLocaleManager());
-		this.content.add(new ExpandableRule(ruleContentPanel));
+		ExpandableRule expandableRule = new ExpandableRule(ruleContentPanel);
+		expandableRule.localeChanged(ApplicationManager.getInstance().getLocaleManager());
+		this.content.add(expandableRule, index);
 		
 		// force re-layout
 		validate();
@@ -120,6 +121,7 @@ public class RulesPanel extends JScrollPane implements RulesListener, Localizabl
 
 	@Override
 	public void ruleRemoved(int index) {
+		if (LogManager.ENABLED) LogManager.trace("RulesPanel.ruleRemoved> Removing rule at index " + index);
 		this.content.remove(index);
 
 		// force re-layout
@@ -142,12 +144,6 @@ public class RulesPanel extends JScrollPane implements RulesListener, Localizabl
 		// #ruleAdd is called, so no repaint is performed
 		validate();
 		repaint();
-	}
-
-	@Override
-	public void ruleMoved(int oldPosition, int newPosition, AbstractRuleFactory rule) {
-		// TODO Missing implementation
-		if (LogManager.ENABLED) LogManager.warning("RulesPanel.ruleMoved> Missing implementation");
 	}
 
 	@Override

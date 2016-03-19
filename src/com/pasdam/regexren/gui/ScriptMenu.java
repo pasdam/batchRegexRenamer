@@ -153,8 +153,4 @@ class ScriptMenu extends JPopupMenu implements ActionListener, Localizable, Rule
 			this.saveItem.setEnabled(false);
 		}
 	}
-
-	/** Event ignored */
-	@Override
-	public void ruleMoved(int oldPosition, int newPosition, AbstractRuleFactory rule) {}
 }

@@ -62,6 +62,19 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 	}
 	
 	/**
+	 * Returns the index of the first occurrence of the specified element in
+	 * this list, or -1 if this list does not contain the element
+	 * 
+	 * @param ruleFactory
+	 *            element to search for
+	 * @return the index of the first occurrence of the specified element in
+	 *         this list, or -1 if this list does not contain the element
+	 */
+	public int indexOf(AbstractRuleFactory ruleFactory) {
+		return this.rulesList.indexOf(ruleFactory);
+	}
+	
+	/**
 	 * Add a rule to the list
 	 * 
 	 * @param rule
@@ -74,7 +87,7 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 			this.rulesList.add(rule);
 			
 			// notify listeners
-			for (RulesListener rulesListener : rulesListeners) {
+			for (RulesListener rulesListener : this.rulesListeners) {
 				rulesListener.ruleAdded(this.rulesList.size()-1, rule);
 			}
 			
@@ -95,8 +108,8 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 				removed = true;
 				
 				// notify listeners
-				for (RulesListener rulesListener : rulesListeners) {
-					rulesListener.ruleRemoved(i);;
+				for (RulesListener rulesListener : this.rulesListeners) {
+					rulesListener.ruleRemoved(i);
 				}
 			}
 		}
@@ -118,8 +131,57 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 	 */
 	public AbstractRuleFactory remove(int index) throws IndexOutOfBoundsException {
 		AbstractRuleFactory rule = this.rulesList.remove(index);
+		
 		configurationChanged(true);
+		
+		// notify listeners
+		for (RulesListener rulesListener : this.rulesListeners) {
+			rulesListener.ruleRemoved(index);
+		}
+		
 		return rule;
+	}
+	
+	/**
+	 * Removes the element at the specified position in this list and returns
+	 * it.
+	 * 
+	 * @param rule
+	 *            rule factory to remove
+	 * @return the removed element
+	 */
+	public AbstractRuleFactory remove(AbstractRuleFactory rule) {
+		int index = this.rulesList.indexOf(rule);
+		if (index >= 0) {
+			return remove(index);
+		}
+		return null;
+	}
+	
+	/**
+	 * Move the rule at position <i>from</i> to position <i>to</i>
+	 * 
+	 * @param from
+	 *            index of the rule to move
+	 * @param to
+	 *            new position of the rule
+	 * @throws IndexOutOfBoundsException
+	 *             if parameters are not valid
+	 */
+	public void move(int from, int to) throws IndexOutOfBoundsException {
+		if (LogManager.ENABLED) LogManager.trace("RulesManager.move> Move rule from " + from + " to " + to);
+
+		// move rule
+		AbstractRuleFactory ruleFactory = this.rulesList.remove(from);
+		this.rulesList.add(to, ruleFactory);
+		
+		configurationChanged(true);
+		
+		// notify listeners
+		for (RulesListener rulesListener : this.rulesListeners) {
+			rulesListener.ruleRemoved(from);
+			rulesListener.ruleAdded(to, ruleFactory);
+		}
 	}
 	
 	/**
@@ -177,7 +239,7 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 				// commit changes
 				this.rulesList = fileRules;
 				// notify listeners
-				for (RulesListener rulesListener : rulesListeners) {
+				for (RulesListener rulesListener : this.rulesListeners) {
 					rulesListener.rulesChanged(this.rulesList);
 				}
 				
@@ -360,17 +422,5 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 		 *            the list of all created rules
 		 */
 		public void rulesChanged(List<AbstractRuleFactory> rulesList);
-		
-		/**
-		 * Indicates that a rule has changed position in the list
-		 * 
-		 * @param oldPosition
-		 *            old position in the list
-		 * @param newPosition
-		 *            new position
-		 * @param rule
-		 *            rule moved
-		 */
-		public void ruleMoved(int oldPosition, int newPosition, AbstractRuleFactory rule);
 	}
 }

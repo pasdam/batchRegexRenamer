@@ -197,10 +197,6 @@ public class RulesToolBar extends JToolBar implements Localizable,
 		setRulesAvailable(rulesList.size() > 0);
 	}
 
-	/** Do nothing */
-	@Override
-	public void ruleMoved(int oldPosition, int newPosition, AbstractRuleFactory rule) {}
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int componentID = new Integer(((Component) e.getSource()).getName());
