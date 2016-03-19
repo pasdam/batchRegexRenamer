@@ -1,16 +1,19 @@
 package com.pasdam.regexren.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileFilter;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -144,8 +147,13 @@ public class CurrentFolderToolbar extends JToolBar implements Localizable {
 				CurrentFolderToolbar.this.ignoreFolderChange = true;
 				ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder(file);
 				CurrentFolderToolbar.this.ignoreFolderChange = false;
+				
+				// reset border
+				CurrentFolderToolbar.this.folderPathText.setBorder(UIManager.getBorder("TextField.border"));
+				
+			} else {
+				CurrentFolderToolbar.this.folderPathText.setBorder(BorderFactory.createLineBorder(Color.RED));
 			}
-			// TODO: else case, notify user (i.e. change highlight text field)
 	    }
 
 		/** Text field handler method */
