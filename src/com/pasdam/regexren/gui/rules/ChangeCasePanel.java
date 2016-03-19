@@ -48,9 +48,6 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> {
 	private WideComboBox operationCombobox;
 	private WideComboBox targetCombobox;
 	
-	/** Handler of internal events */
-	private final InternalEventHandler eventHandler;
-	
 	/** Create the panel */
 	public ChangeCasePanel(ChangeCaseFactory ruleFactory) {
 		super(ruleFactory, ONE_ROW_PANEL_HEIGHT, BoxLayout.X_AXIS);
@@ -110,11 +107,11 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> {
 		this.separatorText.setText(ruleFactory.getSentenceSeparator());
 
 		// set values listener
-		this.eventHandler = new InternalEventHandler();
-		this.operationCombobox.addActionListener(this.eventHandler);
-		this.regexCheckbox.addItemListener(this.eventHandler);
-		this.separatorText.getDocument().addDocumentListener(this.eventHandler);
-		this.targetCombobox.addActionListener(this.eventHandler);
+		InternalEventHandler eventHandler = new InternalEventHandler();
+		this.operationCombobox.addActionListener(eventHandler);
+		this.regexCheckbox.addItemListener(eventHandler);
+		this.separatorText.getDocument().addDocumentListener(eventHandler);
+		this.targetCombobox.addActionListener(eventHandler);
 	}
 	
 	@Override
@@ -135,8 +132,10 @@ public class ChangeCasePanel extends RuleContentPanel<ChangeCaseFactory> {
 		// update comboboxes
 		this.targetCombobox.setModel(new DefaultComboBoxModel<String>(this.targetValues));
 		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
+		this.targetCombobox.setToolTipText(this.targetCombobox.getSelectedItem().toString());
 		this.operationCombobox.setModel(new DefaultComboBoxModel<String>(this.operationValues));
 		this.operationCombobox.setSelectedIndex(super.ruleFactory.getOperation());
+		this.operationCombobox.setToolTipText(this.operationCombobox.getSelectedItem().toString());
 		updateComponentsVisibility();
 	}
 

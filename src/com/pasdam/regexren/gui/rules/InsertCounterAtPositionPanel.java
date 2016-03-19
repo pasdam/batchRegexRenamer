@@ -45,9 +45,6 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 	/** Array of "Target" combobox values */
 	private final String[] targetValues = new String[2];
 	
-	/** Handler of internal events */
-	private final InternalEventHandler eventHandler;
-	
 	/**	Description pattern */
 	private String description;
 
@@ -106,10 +103,10 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 		this.positionSpinner.setValue(super.ruleFactory.getPosition() + 1);
 		
 		// create and set event handler
-		this.eventHandler = new InternalEventHandler();
-		this.fromCombobox.addActionListener(this.eventHandler);
-		this.positionSpinner.addChangeListener(this.eventHandler);
-		this.targetCombobox.addActionListener(this.eventHandler);
+		InternalEventHandler eventHandler = new InternalEventHandler();
+		this.fromCombobox.addActionListener(eventHandler);
+		this.positionSpinner.addChangeListener(eventHandler);
+		this.targetCombobox.addActionListener(eventHandler);
 	}
 	
 	@Override
@@ -129,8 +126,10 @@ public class InsertCounterAtPositionPanel extends AbstractInsertCounterPanel<Ins
 		this.targetValues[InsertCounterAtPositionFactory.OF_EXTENSION] = localeManager.getString("Rule.extension");	
 		this.fromCombobox.setModel(new DefaultComboBoxModel<String>(this.fromValues));
 		this.fromCombobox.setSelectedIndex(super.ruleFactory.isFromBegin() ? FROM_BEGIN : FROM_END);
+		this.fromCombobox.setToolTipText(this.fromCombobox.getSelectedItem().toString());
 		this.targetCombobox.setModel(new DefaultComboBoxModel<String>(this.targetValues));
 		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
+		this.targetCombobox.setToolTipText(this.targetCombobox.getSelectedItem().toString());
 	}
 
 	@Override

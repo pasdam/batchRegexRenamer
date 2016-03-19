@@ -56,9 +56,6 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 	/** Array of "Target" combobox values */
 	private final String[] targetValues   = new String[2];
 
-	/** Handler of internal events */
-	private final InternalEventHandler eventHandler;
-	
 	/**	Description pattern */
 	private String description;
 
@@ -143,11 +140,11 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 		this.textToInsertField.setText(ruleFactory.getTextToInsert());
 
 		// create and set event handler
-		this.eventHandler = new InternalEventHandler();
-		this.fromCombobox.addActionListener(this.eventHandler);
-		this.positionSpinner.addChangeListener(this.eventHandler);
-		this.targetCombobox.addActionListener(this.eventHandler);
-		this.textToInsertField.getDocument().addDocumentListener(this.eventHandler);
+		InternalEventHandler eventHandler = new InternalEventHandler();
+		this.fromCombobox.addActionListener(eventHandler);
+		this.positionSpinner.addChangeListener(eventHandler);
+		this.targetCombobox.addActionListener(eventHandler);
+		this.textToInsertField.getDocument().addDocumentListener(eventHandler);
 	}
 	
 	@Override
@@ -165,8 +162,10 @@ public class InsertTextAtPositionPanel extends RuleContentPanel<InsertTextAtPosi
 		this.targetValues[InsertTextAtPositionFactory.TARGET_EXTENSION] = localeManager.getString("Rule.extension");
 		this.fromCombobox.setModel(new DefaultComboBoxModel<String>(this.fromValues));
 		this.fromCombobox.setSelectedIndex(super.ruleFactory.isFromBegin() ? FROM_BEGIN : FROM_END);
+		this.fromCombobox.setToolTipText(this.fromCombobox.getSelectedItem().toString());
 		this.targetCombobox.setModel(new DefaultComboBoxModel<String>(this.targetValues));
 		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
+		this.targetCombobox.setToolTipText(this.targetCombobox.getSelectedItem().toString());
 	}
 
 	@Override

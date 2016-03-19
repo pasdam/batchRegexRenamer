@@ -42,17 +42,12 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 	private WideComboBox beforeAfterCombobox;
 	
 	/** Array of "Before/After" combobox values */
-	private final String[] beforeAfter = new String[2];
-	
-	/** Handler of internal events */
-	private final InternalEventHandler eventHandler;
+	private final String[] beforeAfterValues = new String[2];
 	
 	/**	Description pattern */
 	private String description;
 
-	/**
-	 * Create the panel.
-	 */
+	/** Create the panel */
 	public InsertCounterBeforeAfterPanel(InsertCounterBeforeAfterFactory ruleFactory) {
 		super(ruleFactory);
 		
@@ -89,11 +84,11 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 		this.textToSearchField.setText(ruleFactory.getTextToSearch());
 
 		// create and set event handler
-		this.eventHandler = new InternalEventHandler();
-		this.beforeAfterCombobox.addActionListener(this.eventHandler);
-		this.matchCaseCheckbox.addItemListener(this.eventHandler);
-		this.regexCheckbox.addItemListener(this.eventHandler);
-		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
+		InternalEventHandler eventHandler = new InternalEventHandler();
+		this.beforeAfterCombobox.addActionListener(eventHandler);
+		this.matchCaseCheckbox.addItemListener(eventHandler);
+		this.regexCheckbox.addItemListener(eventHandler);
+		this.textToSearchField.getDocument().addDocumentListener(eventHandler);
 	}
 	
 	@Override
@@ -108,10 +103,11 @@ public class InsertCounterBeforeAfterPanel extends AbstractInsertCounterPanel<In
 		this.regexCheckbox.setToolTipText(localeManager.getString("Rule.regex.tooltip"));
 
 		// update comboboxes
-		this.beforeAfter[BEFORE] = localeManager.getString("Rule.before");
-		this.beforeAfter[AFTER]  = localeManager.getString("Rule.after");
-		this.beforeAfterCombobox.setModel(new DefaultComboBoxModel<String>(this.beforeAfter));
+		this.beforeAfterValues[BEFORE] = localeManager.getString("Rule.before");
+		this.beforeAfterValues[AFTER]  = localeManager.getString("Rule.after");
+		this.beforeAfterCombobox.setModel(new DefaultComboBoxModel<String>(this.beforeAfterValues));
 		this.beforeAfterCombobox.setSelectedIndex(super.getRuleFactory().isBeforePattern() ? BEFORE : AFTER);
+		this.beforeAfterCombobox.setToolTipText(this.beforeAfterCombobox.getSelectedItem().toString());
 	}
 
 	@Override

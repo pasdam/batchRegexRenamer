@@ -45,9 +45,6 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 	/** Array of "Position" combobox values */
 	private final String[] positionValues = new String[4];
 
-	/** Handler of internal events */
-	private final InternalEventHandler eventHandler;
-	
 	/**	Description pattern */
 	private String description;
 
@@ -110,12 +107,12 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 		this.textToSearchField.setText(ruleFactory.getTextToSearch());
 		
 		// create and set event handler
-		this.eventHandler = new InternalEventHandler();
-		this.matchCaseCheckbox.addItemListener(this.eventHandler);
-		this.positionCombobox.addActionListener(this.eventHandler);
-		this.regexCheckbox.addItemListener(this.eventHandler);
-		this.textToMoveField.getDocument().addDocumentListener(this.eventHandler);
-		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
+		InternalEventHandler eventHandler = new InternalEventHandler();
+		this.matchCaseCheckbox.addItemListener(eventHandler);
+		this.positionCombobox.addActionListener(eventHandler);
+		this.regexCheckbox.addItemListener(eventHandler);
+		this.textToMoveField.getDocument().addDocumentListener(eventHandler);
+		this.textToSearchField.getDocument().addDocumentListener(eventHandler);
 	}
 
 	@Override
@@ -134,6 +131,7 @@ public class MoveTextBeforeAfterPanel extends RuleContentPanel<MoveTextBeforeAft
 		this.positionValues[MoveTextBeforeAfterFactory.POSITION_END]    = localeManager.getString("Rule.end");
 		this.positionCombobox.setModel(new DefaultComboBoxModel<String>(this.positionValues));
 		this.positionCombobox.setSelectedIndex(super.ruleFactory.getPosition());
+		this.positionCombobox.setToolTipText(this.positionCombobox.getSelectedItem().toString());
 	}
 
 	@Override

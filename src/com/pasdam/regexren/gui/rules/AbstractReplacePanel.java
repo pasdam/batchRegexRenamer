@@ -53,9 +53,6 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 	/** Array of targets combobox's items */
 	private final String[] targetValues  = new String[6];
 
-	/** Handler of internal events */
-	private final InternalEventHandler eventHandler;
-
 	/** Create the panel */
 	public AbstractReplacePanel(ReplaceFactory ruleFactory) {
 		super(ruleFactory, TWO_ROW_PANEL_HEIGHT, BoxLayout.Y_AXIS);
@@ -152,13 +149,13 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		this.textToReplaceText.setText(super.ruleFactory.getTextToReplace());
 		
 		// create and set event handler
-		this.eventHandler = new InternalEventHandler();
-		this.endSpinner.addChangeListener(this.eventHandler);
-		this.matchCaseCheckbox.addItemListener(this.eventHandler);
-		this.regexCheckbox.addItemListener(this.eventHandler);
-		this.startSpinner.addChangeListener(this.eventHandler);
-		this.targetCombobox.addActionListener(this.eventHandler);
-		this.textToReplaceText.getDocument().addDocumentListener(this.eventHandler);
+		InternalEventHandler eventHandler = new InternalEventHandler();
+		this.endSpinner.addChangeListener(eventHandler);
+		this.matchCaseCheckbox.addItemListener(eventHandler);
+		this.regexCheckbox.addItemListener(eventHandler);
+		this.startSpinner.addChangeListener(eventHandler);
+		this.targetCombobox.addActionListener(eventHandler);
+		this.textToReplaceText.getDocument().addDocumentListener(eventHandler);
 	}
 
 	@Override
@@ -180,6 +177,7 @@ abstract class AbstractReplacePanel extends RuleContentPanel<ReplaceFactory> {
 		this.targetValues[ReplaceFactory.TARGET_EXTENSION_LAST] = localeManager.getString("Rule.extensionLast");
 		this.targetCombobox.setModel(new DefaultComboBoxModel<String>(this.targetValues));
 		this.targetCombobox.setSelectedIndex(super.ruleFactory.getTarget());
+		this.targetCombobox.setToolTipText(this.targetCombobox.getSelectedItem().toString());
 	}
 
 	/** Class that handles internal events */

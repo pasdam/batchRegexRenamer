@@ -45,9 +45,6 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 	/** Array of "From" combobox values */
 	private final String[] beforeAfterValues = new String[6];
 
-	/** Handler of internal events */
-	private final InternalEventHandler eventHandler;
-	
 	/**	Description pattern */
 	private String description;
 
@@ -113,12 +110,12 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 		this.textToSearchField.setText(ruleFactory.getTextToSearch());
 		
 		// create and set event handler
-		this.eventHandler = new InternalEventHandler();
-		this.beforeAfterCombobox.addActionListener(this.eventHandler);
-		this.matchCaseCheckbox.addItemListener(this.eventHandler);
-		this.regexCheckbox.addItemListener(this.eventHandler);
-		this.textToInsertField.getDocument().addDocumentListener(this.eventHandler);
-		this.textToSearchField.getDocument().addDocumentListener(this.eventHandler);
+		InternalEventHandler eventHandler = new InternalEventHandler();
+		this.beforeAfterCombobox.addActionListener(eventHandler);
+		this.matchCaseCheckbox.addItemListener(eventHandler);
+		this.regexCheckbox.addItemListener(eventHandler);
+		this.textToInsertField.getDocument().addDocumentListener(eventHandler);
+		this.textToSearchField.getDocument().addDocumentListener(eventHandler);
 	}
 
 	@Override
@@ -140,6 +137,7 @@ public class InsertTextBeforeAfterPanel extends RuleContentPanel<InsertTextBefor
 		this.beforeAfterValues[InsertTextBeforeAfterFactory.AFTER_LAST]   = localeManager.getString("Rule.beforeAfter.afterLast");
 		this.beforeAfterCombobox.setModel(new DefaultComboBoxModel<String>(this.beforeAfterValues));
 		this.beforeAfterCombobox.setSelectedIndex(super.ruleFactory.getBeforeAfterType());
+		this.beforeAfterCombobox.setToolTipText(this.beforeAfterCombobox.getSelectedItem().toString());
 	}
 	
 	@Override
