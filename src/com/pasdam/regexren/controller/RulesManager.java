@@ -184,6 +184,42 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 		}
 	}
 	
+	/** Move the selected rules up of one position */
+	public void moveUpSelected() {
+		int size = this.rulesList.size();
+		if (size >= 2) {
+			// move the second rule
+			if (this.rulesList.get(1).isEnabled() && !this.rulesList.get(0).isEnabled()) {
+				move(1, 0);
+			}
+			
+			// move rules from the 3rd position
+			for (int i = 2; i < size; i++) {
+				if (this.rulesList.get(i).isEnabled()) {
+					move(i, i-1);
+				}
+			}
+		}
+	}
+	
+	/** Move the selected rules down of one position */
+	public void moveDownSelected() {
+		int size = this.rulesList.size();
+		if (size >= 2) {
+			// move the second-last rule
+			if (this.rulesList.get(size-2).isEnabled() && !this.rulesList.get(size-1).isEnabled()) {
+				move(size-2, size-1);
+			}
+
+			// move other rules
+			for (int i = size - 3; i >= 0; i--) {
+				if (this.rulesList.get(i).isEnabled()) {
+					move(i, i + 1);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Add the specified rules list's listener
 	 * 

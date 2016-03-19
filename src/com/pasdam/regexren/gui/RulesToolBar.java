@@ -42,17 +42,21 @@ public class RulesToolBar extends JToolBar implements Localizable,
 	private static final String IMAGES_PATH_PREFIX = "images" + File.separator;
 	
 	// Buttons IDs
-	private static final int ID_DELETE   = 0;
-	private static final int ID_PREVIEW  = 1;
-	private static final int ID_APPLY    = 2;
-	private static final int ID_UNDO     = 3;
-	private static final int ID_SETTINGS = 4;
+	private static final int ID_DELETE    = 0;
+	private static final int ID_MOVE_UP   = ID_DELETE    + 1;
+	private static final int ID_MOVE_DOWN = ID_MOVE_UP   + 1;
+	private static final int ID_SETTINGS  = ID_MOVE_DOWN + 1;
+	private static final int ID_PREVIEW   = ID_SETTINGS  + 1;
+	private static final int ID_APPLY     = ID_PREVIEW   + 1;
+	private static final int ID_UNDO      = ID_APPLY     + 1;
 	
 	// UI components
 	private final AddRuleMenu addRuleMenu;
 	private final JButton addButton;
 	private final JButton applyButton;
 	private final JButton deleteButton;
+	private final JButton moveDownButton;
+	private final JButton moveUpButton;
 	private final JButton previewButton;
 	private final JButton scriptButton;
 	private final JButton settingsButton;
@@ -95,6 +99,20 @@ public class RulesToolBar extends JToolBar implements Localizable,
 		this.addButton = new PopupMenuButton(this.addRuleMenu);
 		this.addButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "add.png"));
 		add(this.addButton);
+		
+		// add move up button
+		moveUpButton = new JButton();
+		moveUpButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "up.png"));
+		moveUpButton.setName(""+ID_MOVE_UP);
+		moveUpButton.addMouseListener(this);
+		add(moveUpButton);
+
+		// add move down button
+		moveDownButton = new JButton();
+		moveDownButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "down.png"));
+		moveDownButton.setName(""+ID_MOVE_DOWN);
+		moveDownButton.addMouseListener(this);
+		add(moveDownButton);
 
 		// add delete button
 		this.deleteButton = new JButton();
@@ -204,6 +222,20 @@ public class RulesToolBar extends JToolBar implements Localizable,
 			case ID_DELETE:
 				ApplicationManager.getInstance().getRulesManager().removeSelected();
 				break;
+
+			case ID_MOVE_UP:
+				ApplicationManager.getInstance().getRulesManager().moveUpSelected();
+				break;
+			
+			case ID_MOVE_DOWN:
+				ApplicationManager.getInstance().getRulesManager().moveDownSelected();
+				break;
+			
+			case ID_SETTINGS:
+				SettingDialog dialog = new SettingDialog();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+				break;
 			
 			case ID_PREVIEW:
 				ApplicationManager.getInstance().getFilesListManager().applyRules(false);
@@ -215,12 +247,6 @@ public class RulesToolBar extends JToolBar implements Localizable,
 			
 			case ID_UNDO:
 				ApplicationManager.getInstance().getFilesListManager().undoRename();
-				break;
-			
-			case ID_SETTINGS:
-				SettingDialog dialog = new SettingDialog();
-				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				dialog.setVisible(true);
 				break;
 		}
 	}
