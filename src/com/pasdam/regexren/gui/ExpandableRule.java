@@ -10,7 +10,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
 import com.pasdam.gui.swing.panel.ExpandableItem;
-import com.pasdam.regexren.controller.ApplicationManager;
 import com.pasdam.regexren.controller.LocaleManager;
 import com.pasdam.regexren.controller.LocaleManager.Localizable;
 import com.pasdam.regexren.gui.rules.RuleFactoryListener;
@@ -32,10 +31,13 @@ public class ExpandableRule extends ExpandableItem implements RuleFactoryListene
 	public JLabel titleLabel;
 	public JLabel validLabel;
 	private JCheckBox selectCheckbox;
-	// private RuleMenu menu;
+	private RuleMenu menu;
 	
 	/** The rule factory related to the contained panel */
 	private RuleContentPanel<?> ruleContentPanel;
+	
+	/** Tooltip to show for invalid rules  */
+	private String tooltipInvalid;
 	
 	/** Create the panel */
 	public ExpandableRule(RuleContentPanel<?> ruleContentPanel) {
@@ -65,19 +67,16 @@ public class ExpandableRule extends ExpandableItem implements RuleFactoryListene
 		setTitleComponent(titlePanel);
 		
 		// add context menu
-		// menu = new RuleMenu(this);
-		// titlePanel.add(menu);
+		this.menu = new RuleMenu(this.ruleContentPanel.getRuleFactory());
+		setContextMenu(this.menu);
 		
-		// read initial rule's data
-		configurationChanged(ruleContentPanel.getRuleFactory().isValid());
-
 		// add rule's content
 		setContent(ruleContentPanel);
 		
 		// set itself as content listener
 		ruleContentPanel.getRuleFactory().addConfigurationListener(this);
 	}
-
+	
 	@Override
 	public void configurationChanged(boolean valid) {
 		this.titleLabel.setText(this.ruleContentPanel.getDescription());
@@ -87,17 +86,19 @@ public class ExpandableRule extends ExpandableItem implements RuleFactoryListene
 		
 		} else {
 			this.validLabel.setIcon(new ImageIcon("images" + File.separator + "red_button.png"));
-			this.validLabel.setToolTipText(ApplicationManager.getInstance().getLocaleManager().getString(STRING_KEY_INVALID_PARAMETERS));
+			this.validLabel.setToolTipText(this.tooltipInvalid);
 		}
 	}
 
 	@Override
 	public void localeChanged(LocaleManager localeManager) {
-		String toolTip = this.validLabel.getToolTipText();
-		if (toolTip != null && toolTip.length() > 0) {
-			this.validLabel.setToolTipText(localeManager.getString(STRING_KEY_INVALID_PARAMETERS));
-		}
 		this.ruleContentPanel.localeChanged(localeManager);
+		this.menu.localeChanged(localeManager);
+
+		this.tooltipInvalid = localeManager.getString(STRING_KEY_INVALID_PARAMETERS);
+		this.validLabel.setToolTipText(this.ruleContentPanel.getRuleFactory().isValid()
+				? ""
+				: this.tooltipInvalid);
 		this.titleLabel.setText(this.ruleContentPanel.getDescription());
 	}
 
