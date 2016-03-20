@@ -234,10 +234,8 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 	
 	@Override
 	public void configurationChanged(boolean valid) {
-		if (valid) {
-			if (LogManager.ENABLED) LogManager.trace("RulesManager.configurationChanged> Rule configuration changed: updating files list");
-			ApplicationManager.getInstance().getFilesListManager().applyRules(false);
-		}
+		if (LogManager.ENABLED) LogManager.trace("RulesManager.configurationChanged> Rule configuration changed: updating files list");
+		ApplicationManager.getInstance().getFilesListManager().applyRules(false);
 	}
 	
 	/**
