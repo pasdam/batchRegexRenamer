@@ -1,12 +1,20 @@
 package com.pasdam.regexren.gui;
 
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import com.pasdam.gui.swing.dragAndDropPanels.DragAndDropTransferHandler;
 import com.pasdam.regexren.controller.ApplicationManager;
 import com.pasdam.regexren.controller.LocaleManager;
 import com.pasdam.regexren.controller.LocaleManager.Localizable;
@@ -36,19 +44,27 @@ public class RulesPanel extends JScrollPane implements RulesListener, Localizabl
 
 	private static final long serialVersionUID = -6600541345376059836L;
 	
+	/** Cursor used to indicate a droppable area */
+	private static final Cursor CURSOR_DROPPABLE     = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+	/** Cursor used to indicate a not droppable area */
+	private static final Cursor CURSOR_NOT_DROPPABLE = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+	
 	// UI components
 	private final JPanel content;
 
 	/** Create the panel */
 	public RulesPanel() {
-		// set content
+		// create and set content
 		this.content = new JPanel();
 		this.content.setLayout(new BoxLayout(this.content, BoxLayout.Y_AXIS));
+		this.content.setTransferHandler(new DragAndDropTransferHandler());
+		this.content.setDropTarget(new DropTarget(this.content, new InternalEventHandler()));
 		setViewportView(this.content);
 		
 		// register itself as rules listener
 		RulesManager rulesManager = ApplicationManager.getInstance().getRulesManager();
 		rulesManager.addRulesListener(this);
+		// load rules
 		rulesChanged(rulesManager.getRulesList());
 	}
 
@@ -63,8 +79,9 @@ public class RulesPanel extends JScrollPane implements RulesListener, Localizabl
 	@Override
 	public void ruleAdded(int index, AbstractRuleFactory addedRule) {
 		if (LogManager.ENABLED) LogManager.trace("RulesPanel.ruleAdded> Adding rule (at index " + index + "): " + addedRule.getType());
-		RuleContentPanel<?> ruleContentPanel;
 		
+		RuleContentPanel<?> ruleContentPanel;
+
 		switch (addedRule.getType()) {
 			case INSERT_TEXT_AT_POSITION:
 				ruleContentPanel = new InsertTextAtPositionPanel((InsertTextAtPositionFactory) addedRule);
@@ -152,5 +169,59 @@ public class RulesPanel extends JScrollPane implements RulesListener, Localizabl
 		for (Component component : components) {
 			((ExpandableRule) component).localeChanged(localeManager);
 		}
+	}
+
+	/**	Class that handles internal events */
+	private class InternalEventHandler implements DropTargetListener {
+
+		@Override
+		public void dragExit(DropTargetEvent event) {
+			RulesPanel.this.setCursor(CURSOR_NOT_DROPPABLE);
+		}
+
+		@Override
+		public void dragOver(DropTargetDragEvent event) {
+			if (!RulesPanel.this.getCursor().equals(CURSOR_DROPPABLE)) {
+				RulesPanel.this.setCursor(CURSOR_DROPPABLE);
+	        }
+		}
+
+		@Override
+		public void drop(DropTargetDropEvent event) {
+			// reset cursor
+			RulesPanel.this.setCursor(Cursor.getDefaultCursor());
+			
+			try {
+				// evaluate the index position where move the rule
+				int to = -1;
+				int y = event.getLocation().y;
+				for (Component component : RulesPanel.this.content.getComponents()) {
+					if (component.getY() > y) {
+						break;
+					} else {
+						to++;
+					}
+				}
+				
+				AbstractRuleFactory droppedRule = ((AbstractRuleFactory) event.getTransferable().getTransferData(new DataFlavor(ExpandableRule.MIME_TYPE_RULE_FACTORY)));
+				RulesManager rulesManager = ApplicationManager.getInstance().getRulesManager();
+				int from = rulesManager.indexOf(droppedRule);
+
+				if (to >= 0 && to != from) {
+					rulesManager.move(from, to);
+				}
+				
+			} catch (Exception exception) {
+				exception.printStackTrace();
+			}
+		}
+		
+		/** Event ignored */
+		@Override
+		public void dragEnter(DropTargetDragEvent event) {}
+
+		/** Event ignored */
+		@Override
+		public void dropActionChanged(DropTargetDragEvent event) {}
 	}
 }
