@@ -8,12 +8,13 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import com.pasdam.regexren.controller.ApplicationManager;
 import com.pasdam.regexren.controller.LocaleManager;
-import com.pasdam.regexren.controller.RulesManager;
 import com.pasdam.regexren.controller.LocaleManager.Localizable;
+import com.pasdam.regexren.controller.RulesManager;
 import com.pasdam.regexren.controller.RulesManager.RulesListener;
 import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
 import com.pasdam.regexren.utils.BrrFileFilter;
@@ -98,7 +99,18 @@ class ScriptMenu extends JPopupMenu implements ActionListener, Localizable, Rule
 							file = new File(file.getAbsolutePath() + "." + BrrFileFilter.BRR_EXTENSION);
 						}
 						
-						// TODO: check if file already exists, and ask to overwrite
+						// check if file already exists, and ask to overwrite
+						if (file.exists()) {
+							LocaleManager localeManager = ApplicationManager.getInstance().getLocaleManager();
+							int response = JOptionPane.showConfirmDialog(
+								    this,
+								    localeManager.getString("Alert.overwrite.message"),
+								    localeManager.getString("Alert.overwrite.title"),
+								    JOptionPane.YES_NO_OPTION);
+							if (response == 1) { // NO
+								return;
+							}
+						}
 						
 						ApplicationManager.getInstance().getRulesManager().saveToFile(file);
 					}
