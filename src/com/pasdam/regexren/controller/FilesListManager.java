@@ -194,7 +194,7 @@ public class FilesListManager implements PropertyChangeListener<File>, FiltersLi
 		}
 		
 		// notify changes
-		for (FilesListListener filesListListener : listeners) {
+		for (FilesListListener filesListListener : this.listeners) {
 			filesListListener.filesListChanged(this.filesDataList, false);
 		}
 	}

@@ -99,7 +99,7 @@ public class MainWindow extends JFrame {
 		// create and add the table containing files/folders list
 		this.table = new FilesTable();
 		this.currentFolderToolbar.setCheckItemsListener(this.table);
-		leftPanel.add(new JScrollPane(this.table));
+		leftPanel.add(this.table);
 		
 		// add left panel
 		leftRightSplitter.setRightComponent(leftPanel);

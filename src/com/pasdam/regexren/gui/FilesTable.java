@@ -2,7 +2,11 @@ package com.pasdam.regexren.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.SystemColor;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -10,12 +14,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileSystemView;
@@ -35,33 +44,43 @@ import com.pasdam.regexren.model.FileModelItem;
  * @author paco
  * @version 0.1
  */
-public class FilesTable extends JLayeredPane implements CheckItemsListener,
+public class FilesTable extends JPanel implements CheckItemsListener,
 												  FilesListListener,
 												  Localizable {
 	
 	private static final long serialVersionUID = 8039532837481259761L;
+	
+	/** Margin of the statistics label used to activate the floatable behavior */
+	private static final int STATISTICS_LABEL_MARGIN = 20;
 
+	// UI components
+	private final Box filesNumberBox;
+	private final JLabel filesNumberLabel;
+	private final JScrollPane scrollPane;
 	private final JTable table;
 	private final FilesTableModel model;
-//	private final JLabel filesNumberLabel;
 	
 	/** Initialize the element */
 	public FilesTable() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new GridLayout(1, 1));
+		
+		JLayeredPane layeredPane = new JLayeredPane();
+		add(layeredPane);
 		
 		// create table and set model
 		this.table = new JTable();
 		this.model = new FilesTableModel();
 		this.table.setModel(this.model);
-		add(this.table);
+		this.scrollPane = new JScrollPane(this.table);
+		layeredPane.add(this.scrollPane, new Integer(1), -1);
 		
-//		Box statusBar = Box.createHorizontalBox();
-//		filesNumberLabel = new JLabel();
-//		filesNumberLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
-//		filesNumberLabel.setText("TEST");
-//		statusBar.add(filesNumberLabel);
-//		statusBar.add(Box.createHorizontalGlue());
-//		add(statusBar, JLayeredPane.PALETTE_LAYER);
+		// create and add files number label and panel
+		this.filesNumberLabel = new JLabel();
+		this.filesNumberLabel.setOpaque(true);
+		this.filesNumberLabel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		this.filesNumberBox = Box.createHorizontalBox();
+		this.filesNumberBox.add(this.filesNumberLabel);
+		layeredPane.add(this.filesNumberBox, new Integer(2), -1);
 		
 		// set table properties
 		this.table.setShowGrid(false);
@@ -80,7 +99,11 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 		column.setMaxWidth(20);
 		
 		// set internal event handler
-		this.table.addMouseListener(new InternalEventHandler());
+		InternalEventHandler eventHandler = new InternalEventHandler();
+		this.table.addMouseListener(eventHandler);
+		this.filesNumberLabel.addMouseListener(eventHandler);
+		this.filesNumberBox.addMouseListener(eventHandler);
+		addComponentListener(eventHandler);
 		
 		// register as files list's listener
 		ApplicationManager.getInstance().getFilesListManager().addFilesListListener(this);
@@ -100,7 +123,7 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 	public void localeChanged(LocaleManager localeManager) {
     	this.table.getColumnModel().getColumn(1).setHeaderValue(localeManager.getString("FilesTable.column1.title"));
     	this.table.getColumnModel().getColumn(2).setHeaderValue(localeManager.getString("FilesTable.column2.title"));
-//    	this.filesNumberLabel.setToolTipText(localeManager.getString("RulesPanel.filesNumber.toolTipText"));
+    	this.filesNumberLabel.setToolTipText(localeManager.getString("RulesPanel.filesNumber.toolTipText"));
 	}
 
 	@Override
@@ -108,15 +131,15 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 		int[] selectedIndices;
 		switch (type) {
 			case ALL:
-				for (int i = 0; i < model.getRowCount(); i++) {
-					model.setValueAt(new Boolean(check), i, 0);
+				for (int i = 0; i < this.model.getRowCount(); i++) {
+					this.model.setValueAt(new Boolean(check), i, 0);
 				}
 				break;
 				
 			case SELECTION:
 				selectedIndices = this.table.getSelectedRows();
 				for (int index: selectedIndices) {
-					model.setValueAt(new Boolean(check), index, 0);
+					this.model.setValueAt(new Boolean(check), index, 0);
 				}
 				break;
 				
@@ -130,10 +153,38 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 		}
 	}
 	
+	/** Updates the label with files count */
+	private void updateFileStatistics() {
+		this.filesNumberLabel.setText(this.model.getCheckedCount() + "/" + this.model.getRowCount());
+		updateStatisticsBoxPosition(false);
+	}
+	
+	/**	Update the position of the statistics box */
+	private void updateStatisticsBoxPosition(boolean invert) {
+		Dimension labelSize = this.filesNumberLabel.getPreferredSize();
+		Dimension boxSize = this.filesNumberBox.getSize();
+		
+		// set the size of the container accordingly to the label and a margin
+		// to enable the floatable behavior also out of the label box
+		this.filesNumberBox.setSize(new Dimension(labelSize.width + STATISTICS_LABEL_MARGIN, labelSize.height + STATISTICS_LABEL_MARGIN));
+		
+		// evaluate the position of the container
+		boolean left = invert ? this.filesNumberBox.getX() > 0 : this.filesNumberBox.getX() == 0;
+
+		// update positions
+		JScrollBar verticalScrollBar = this.scrollPane.getVerticalScrollBar();
+		int scrollBarWidth = verticalScrollBar.isVisible() ? verticalScrollBar.getWidth() : 0;
+		this.filesNumberLabel.setLocation(left ? 0 : boxSize.width - labelSize.width, boxSize.height - labelSize.height);
+		this.filesNumberBox.setLocation(left ? 0 : getWidth() - boxSize.width - scrollBarWidth, getHeight() - boxSize.height);
+	}
+	
 	/** Custom table model */
 	private class FilesTableModel extends DefaultTableModel implements TableModelListener {
 		
 		private static final long serialVersionUID = 4016175757089191008L;
+
+		/** Indicates how many files are checked */
+		private int checkedCount = 0;
 		
 		/** Creates a model with tree untitled columns and 0 rows */
 		public FilesTableModel() {
@@ -141,18 +192,21 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 			
 			addTableModelListener(this);
 		}
-			
+
+		/** Column types */
 		@SuppressWarnings("rawtypes")
 		private final Class[] columnTypes = new Class[] {
 			Boolean.class,	// 0) check column
 			String.class,	// 1) current name
 			String.class	// 2) new name
 		};
+		
+		/** Map of duplicated file names indexes */
 		private final Map<Integer, Object> duplicateNameIndexes = new HashMap<Integer, Object>();
 		
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public Class getColumnClass(int columnIndex) {
-			return columnTypes[columnIndex];
+			return this.columnTypes[columnIndex];
 		}
 		
 		@Override
@@ -165,6 +219,7 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 			for (int i = getRowCount()-1; i >= 0; i--) {
 				removeRow(i);
 			}
+			this.checkedCount = 0;
 		}
 		
 		/**
@@ -185,8 +240,8 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 				fileData = list.get(i);
 				newName = fileData.getNewFullName();
 				if (names.containsKey(newName)) {
-					duplicateNameIndexes.put(names.get(newName), null);
-					duplicateNameIndexes.put(i, null);
+					this.duplicateNameIndexes.put(names.get(newName), null);
+					this.duplicateNameIndexes.put(i, null);
 				} else {
 					names.put(newName, i);
 				}
@@ -197,6 +252,17 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 						fileData.getFile(),
 						newName
 				});
+				
+				if (fileData.isChecked()) {
+					this.checkedCount++;
+				}
+			}
+		}
+		
+		@Override
+		public void setValueAt(Object aValue, int row, int column) {
+			if (!FilesTable.this.model.getValueAt(row, column).equals(aValue)) {
+				super.setValueAt(aValue, row, column);
 			}
 		}
 		
@@ -205,12 +271,40 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 			int row = e.getFirstRow();
 			int column = e.getColumn();
 			if (row >= 0 && column == 0) {
-				ApplicationManager.getInstance().getFilesListManager().setChecked(row, (Boolean) FilesTable.this.model.getValueAt(row, column));
+				Boolean checked = (Boolean) FilesTable.this.model.getValueAt(row, column);
+				
+				// update model
+				ApplicationManager.getInstance().getFilesListManager().setChecked(row, checked);
+				
+				// update checked count
+				if (checked) {
+					this.checkedCount++;
+				} else {
+					this.checkedCount--;
+				}
+				
+				FilesTable.this.updateFileStatistics();
 			}
 		}
 		
+		/**
+		 * Returns true if the filename at the specified row is duplicated
+		 * 
+		 * @param row
+		 *            index of the filename to check
+		 * @return true if the filename at the specified row is duplicated
+		 */
 		public boolean isDuplicated(int row) {
 			return this.duplicateNameIndexes.containsKey(row);
+		}
+		
+		/**
+		 * Returns the number of checked files
+		 * 
+		 * @return the number of checked files
+		 */
+		public int getCheckedCount() {
+			return this.checkedCount;
 		}
 	}
 
@@ -254,9 +348,11 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 					}
 				}
 					
-				label.setBackground((row % 2) == 0
-						? SystemColor.controlLtHighlight
-						: SystemColor.control);
+				if (isSelected) {
+					label.setBackground(SystemColor.controlShadow);
+				} else {
+					label.setBackground((row % 2) == 0 ? SystemColor.controlLtHighlight : SystemColor.control);
+				}
 			}
 			return label;
     	}
@@ -287,6 +383,8 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 				FilesTable.this.model.clear();
 				// add new elements to the model
 				FilesTable.this.model.addFilesData(list);
+				// update statistics label
+				FilesTable.this.updateFileStatistics();
 			
 			} else {
 				FileModelItem file;
@@ -302,31 +400,55 @@ public class FilesTable extends JLayeredPane implements CheckItemsListener,
 	}
 	
 	/** Class that handles internal events */
-	private class InternalEventHandler implements MouseListener {
+	private class InternalEventHandler implements ComponentListener, MouseListener {
 
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			if (e.getClickCount() == 2) {
-				int row = FilesTable.this.table.rowAtPoint(e.getPoint());
+		public void mouseClicked(MouseEvent event) {
+			if (event.getSource() == FilesTable.this.table && event.getClickCount() == 2) {
+				int row = FilesTable.this.table.rowAtPoint(event.getPoint());
 				File folder = ApplicationManager.getInstance().getFilesListManager().getCurrentFile(row);
 				ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder(folder);
 			}
 		}
 
-		/** Event ignored */
 		@Override
-		public void mouseEntered(MouseEvent arg0) {}
+		public void mouseEntered(MouseEvent event) {
+			if (event.getSource() != FilesTable.this.table) {
+				FilesTable.this.updateStatisticsBoxPosition(true);
+			}
+		}
 		
 		/** Event ignored */
 		@Override
-		public void mouseExited(MouseEvent arg0) {}
+		public void mouseExited(MouseEvent event) {}
 		
 		/** Event ignored */
 		@Override
-		public void mousePressed(MouseEvent arg0) {}
+		public void mousePressed(MouseEvent event) {}
 		
 		/** Event ignored */
 		@Override
-		public void mouseReleased(MouseEvent arg0) {}
+		public void mouseReleased(MouseEvent event) {}
+
+		/** Event ignored */
+		@Override
+		public void componentHidden(ComponentEvent event) {}
+
+		/** Event ignored */
+		@Override
+		public void componentMoved(ComponentEvent event) {}
+
+		@Override
+		public void componentResized(ComponentEvent event) {
+			// update components size
+			Dimension componentSize = event.getComponent().getSize();
+			FilesTable.this.scrollPane.setSize(componentSize);
+			FilesTable.this.table.setSize(componentSize);
+			FilesTable.this.updateStatisticsBoxPosition(false);
+		}
+
+		/** Event ignored */
+		@Override
+		public void componentShown(ComponentEvent event) {}
 	}
 }
