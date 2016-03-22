@@ -8,9 +8,15 @@ import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.model.RuleType;
 
 /**
+ * 
  * <p>
- * Derived classes must call {@link #setValid(boolean)} whenever their content
- * change, in order to notify if the configuration is valid or not.
+ * Derived class must call {@link #configurationChanged()} whenever their
+ * content changes
+ * </p>
+ * <p>
+ * Derived classes can call {@link #setValid(boolean)} to notify if the
+ * configuration is valid or not. Such method implicitly call
+ * {@link #configurationChanged()}.
  * </p>
  * 
  * @author paco

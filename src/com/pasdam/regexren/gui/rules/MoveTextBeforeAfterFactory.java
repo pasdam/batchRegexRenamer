@@ -273,9 +273,6 @@ public class MoveTextBeforeAfterFactory extends AbstractRuleFactory {
 	 * @param matchCase
 	 *            - if true textToSearch is case sensitive; used only if regex
 	 *            is false
-	 * @param occurrence
-	 *            - which occurrence of textToSearch; use
-	 *            MoveTextBeforeAfterPanel constraints to set this
 	 * @return the right rule, based on input parameters
 	 * @throws IllegalArgumentException
 	 *             if <i>textToSearch</i> or <i>textToMove</i> are null or

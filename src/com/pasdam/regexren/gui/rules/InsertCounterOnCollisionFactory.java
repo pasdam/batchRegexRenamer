@@ -35,12 +35,6 @@ public class InsertCounterOnCollisionFactory extends AbstractInsertCounterFactor
 	 *            - counter starting value
 	 * @param padding
 	 *            - length of the string inserted, insert 1 for no padding
-	 * @param position
-	 *            - position at which insert text
-	 * @param fromBeginOrEnd
-	 *            - indicates whether position start from begin or from end
-	 * @param target
-	 *            - indicates the filename part to modify (name/extension)
 	 * @return the right rule, based on input parameters
 	 */
 	public static Rule getRule(int startCount, int padding) {

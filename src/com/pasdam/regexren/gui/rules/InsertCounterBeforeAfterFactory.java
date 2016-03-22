@@ -215,7 +215,7 @@ public class InsertCounterBeforeAfterFactory extends AbstractInsertCounterFactor
 	 *            - counter starting value
 	 * @param padding
 	 *            - length of the string inserted, insert 0 for no padding
-	 * @param beforeAfter
+	 * @param beforePattern
 	 *            - indicates where to insert counter's value, true to insert it
 	 *            before the pattern, false to insert after
 	 * @param textToSearch

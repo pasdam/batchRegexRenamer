@@ -4,15 +4,19 @@ import com.pasdam.regexren.model.FileModelItem;
 
 /**
  * All rules must implements this interface
- * @author Paco
- * @version 1.0
+ * 
+ * @author paco
+ * @version 0.1
  */
 public interface Rule {
 
 	/**
-	 * This methid apply the rule to the filename
-	 * @param fileRenamer - the FileRenamer containing file to transform
-	 * @return the input fileRenamer with updated values, usefull when use more rules in pipe
+	 * This method apply the rule to the filename
+	 * 
+	 * @param file
+	 *            - the {@link FileModelItem} containing file to rename
+	 * @return the input file with updated values, useful when use more
+	 *         rules in pipe
 	 */
 	public FileModelItem apply(FileModelItem file);
 	

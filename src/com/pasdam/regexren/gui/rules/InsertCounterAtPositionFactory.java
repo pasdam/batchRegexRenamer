@@ -163,7 +163,7 @@ public class InsertCounterAtPositionFactory extends AbstractInsertCounterFactory
 	 *            - length of the string inserted, insert 1 for no padding
 	 * @param position
 	 *            - position at which insert text
-	 * @param fromBeginOrEnd
+	 * @param fromBegin
 	 *            - indicates whether position start from begin or from end
 	 * @param target
 	 *            - indicates the filename part to modify (name/extension)

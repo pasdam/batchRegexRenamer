@@ -201,7 +201,10 @@ public class ReplaceFactory extends AbstractRuleFactory {
 	}
 
 	/**
-	 * Sets the target of the operation ({@link #TARGET_NAME}, {@link #TARGET_EXTENSION})
+	 * Sets the target of the operation ({@link #TARGET_NAME_ALL},
+	 * {@link #TARGET_NAME_FIRST}, {@link #TARGET_NAME_LAST},
+	 * {@link #TARGET_EXTENSION_ALL}, {@link #TARGET_EXTENSION_FIRST},
+	 * {@link #TARGET_EXTENSION_LAST})
 	 * 
 	 * @param target
 	 *            the target of the operation

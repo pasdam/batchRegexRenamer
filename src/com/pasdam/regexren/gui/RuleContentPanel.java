@@ -13,10 +13,6 @@ import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
  * <p>
  * All rule panels must extends this class.
  * </p>
- * <p>
- * Derived class must call {@link #configurationChanged()} whenever their
- * content changes
- * </p>
  * 
  * @author paco
  * @version 0.1

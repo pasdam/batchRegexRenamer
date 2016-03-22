@@ -284,7 +284,7 @@ public class PreferenceManager {
 	 * Sets the last used script file, if the option "Remember last script" is
 	 * true
 	 * 
-	 * @param last
+	 * @param file
 	 *            script file used
 	 */
 	public void setPreviousScriptFile(File file) {

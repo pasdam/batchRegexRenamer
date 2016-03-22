@@ -173,7 +173,7 @@ public class FilterManager {
 		/**
 		 * Notify that the filter is changed
 		 * 
-		 * @param filter
+		 * @param filterType
 		 *            id of the new filter to use
 		 * @param showHidden
 		 *            indicates whether the filter should accept hidden files
