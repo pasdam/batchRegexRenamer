@@ -78,10 +78,11 @@ public class FilesTable extends JPanel implements CheckItemsListener,
 		this.filesNumberLabel = new JLabel();
 		this.filesNumberLabel.setOpaque(true);
 		this.filesNumberLabel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		this.filesNumberLabel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		this.filesNumberBox = Box.createHorizontalBox();
 		this.filesNumberBox.add(this.filesNumberLabel);
 		layeredPane.add(this.filesNumberBox, new Integer(2), -1);
-		
+
 		// set table properties
 		this.table.setShowGrid(false);
 		this.table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -159,7 +160,14 @@ public class FilesTable extends JPanel implements CheckItemsListener,
 		updateStatisticsBoxPosition(false);
 	}
 	
-	/**	Update the position of the statistics box */
+	/**
+	 * Update the position of the statistics box
+	 * 
+	 * @param invert
+	 *            if true invert the position of the label (if it is at left, it
+	 *            will be moved to right, and viceversa; if false the label will
+	 *            remain at the same position
+	 */
 	private void updateStatisticsBoxPosition(boolean invert) {
 		Dimension labelSize = this.filesNumberLabel.getPreferredSize();
 		Dimension boxSize = this.filesNumberBox.getSize();
@@ -174,7 +182,7 @@ public class FilesTable extends JPanel implements CheckItemsListener,
 		// update positions
 		JScrollBar verticalScrollBar = this.scrollPane.getVerticalScrollBar();
 		int scrollBarWidth = verticalScrollBar.isVisible() ? verticalScrollBar.getWidth() : 0;
-		this.filesNumberLabel.setLocation(left ? 0 : boxSize.width - labelSize.width, boxSize.height - labelSize.height);
+		this.filesNumberLabel.setLocation(left ? 0 : STATISTICS_LABEL_MARGIN, STATISTICS_LABEL_MARGIN);
 		this.filesNumberBox.setLocation(left ? 0 : getWidth() - boxSize.width - scrollBarWidth, getHeight() - boxSize.height);
 	}
 	
@@ -406,8 +414,10 @@ public class FilesTable extends JPanel implements CheckItemsListener,
 		public void mouseClicked(MouseEvent event) {
 			if (event.getSource() == FilesTable.this.table && event.getClickCount() == 2) {
 				int row = FilesTable.this.table.rowAtPoint(event.getPoint());
-				File folder = ApplicationManager.getInstance().getFilesListManager().getCurrentFile(row);
-				ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder(folder);
+				File file = ApplicationManager.getInstance().getFilesListManager().getCurrentFile(row);
+				if (file.isDirectory()) {
+					ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder(file);
+				}
 			}
 		}
 
