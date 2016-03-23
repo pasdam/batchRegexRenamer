@@ -62,7 +62,7 @@ public class PreferenceManager {
 			}
 		
 		} else {
-			ApplicationManager.getInstance().getLocaleManager().setLocale(Locale.getDefault());
+			ApplicationManager.getInstance().getLocaleManager().setLocale(Locale.ENGLISH);
 		}
 
 		// load and notify file filtering settings
@@ -174,6 +174,7 @@ public class PreferenceManager {
 		if (!rememberPreviousFilter) {
 			// remove previous filter info
 			prefs.remove(PREFS_PREVIOUS_FILTER);
+			prefs.remove(PREFS_SHOW_HIDDEN);
 		}
 	}
 	
