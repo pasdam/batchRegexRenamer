@@ -198,8 +198,15 @@ public abstract class AbstractRuleFactory {
 	 */
 	public void parseParameters(String[][] parameters) throws IllegalArgumentException {
 		this.enabled = intToBool(Integer.parseInt(parameters[0][0]));
+		
 		parseRuleSpecificParameters(parameters[1]);
-		checkConfiguration();
+		
+		try {
+			checkConfiguration();
+			
+		} catch (RuntimeException exception) {
+			if (LogManager.ENABLED) LogManager.info("AbstractRuleFactory.parseParameters: " + exception.getMessage());
+		}
 	}
 	
 	/**
