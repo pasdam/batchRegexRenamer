@@ -86,6 +86,8 @@ public class MainWindow extends JFrame {
 		
 		// create and add folder tree
 		this.folderTree = new FolderTreeWithSelectionHandler();
+		FolderTreeMenu folderTreeMenu = new FolderTreeMenu();
+		this.folderTree.setContextMenu(folderTreeMenu);
 		leftRightSplitter.setLeftComponent(new JScrollPane(this.folderTree));
 		
 		// create left panel
@@ -134,6 +136,7 @@ public class MainWindow extends JFrame {
 		localeManager.addLocalizableComponent(this.rulesPanel);
 		localeManager.addLocalizableComponent(this.toolBar);
 		localeManager.addLocalizableComponent(this.table);
+		localeManager.addLocalizableComponent(folderTreeMenu);
 		
 		// set errors handler
 		ApplicationManager.getInstance().getRulesManager().setErrorListener(internalEventsHandler);

@@ -52,9 +52,10 @@ public class FilesTable extends JPanel implements CheckItemsListener,
 	
 	/** Margin of the statistics label used to activate the floatable behavior */
 	private static final int STATISTICS_LABEL_MARGIN = 20;
-
+	
 	// UI components
 	private final Box filesNumberBox;
+	private final FilesTableMenu contextMenu;
 	private final JLabel filesNumberLabel;
 	private final JScrollPane scrollPane;
 	private final JTable table;
@@ -83,6 +84,10 @@ public class FilesTable extends JPanel implements CheckItemsListener,
 		this.filesNumberBox.add(this.filesNumberLabel);
 		layeredPane.add(this.filesNumberBox, new Integer(2), -1);
 
+		// create and add context menu
+		this.contextMenu = new FilesTableMenu();
+		this.table.add(this.contextMenu);
+		
 		// set table properties
 		this.table.setShowGrid(false);
 		this.table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -125,6 +130,7 @@ public class FilesTable extends JPanel implements CheckItemsListener,
     	this.table.getColumnModel().getColumn(1).setHeaderValue(localeManager.getString("FilesTable.column1.title"));
     	this.table.getColumnModel().getColumn(2).setHeaderValue(localeManager.getString("FilesTable.column2.title"));
     	this.filesNumberLabel.setToolTipText(localeManager.getString("RulesPanel.filesNumber.toolTipText"));
+    	this.contextMenu.localeChanged(localeManager);
 	}
 
 	@Override
@@ -416,7 +422,7 @@ public class FilesTable extends JPanel implements CheckItemsListener,
 				int row = FilesTable.this.table.rowAtPoint(event.getPoint());
 				File file = ApplicationManager.getInstance().getFilesListManager().getCurrentFile(row);
 				if (file.isDirectory()) {
-					ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder(file);
+					ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder(file, false);
 				}
 			}
 		}
@@ -434,11 +440,22 @@ public class FilesTable extends JPanel implements CheckItemsListener,
 		
 		/** Event ignored */
 		@Override
-		public void mousePressed(MouseEvent event) {}
+		public void mousePressed(MouseEvent event) {
+			mouseReleased(event);
+		}
 		
 		/** Event ignored */
 		@Override
-		public void mouseReleased(MouseEvent event) {}
+		public void mouseReleased(MouseEvent event) {
+			if (event.getSource() == FilesTable.this.table && event.isPopupTrigger()) {
+				// show context menu
+				if (FilesTable.this.contextMenu != null) {
+					int row = FilesTable.this.table.rowAtPoint(event.getPoint());
+					File file = ApplicationManager.getInstance().getFilesListManager().getCurrentFile(row);
+					FilesTable.this.contextMenu.show(file, FilesTable.this, event.getX(), event.getY());
+				}
+			}
+		}
 
 		/** Event ignored */
 		@Override
