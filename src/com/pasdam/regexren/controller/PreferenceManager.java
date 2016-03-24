@@ -116,8 +116,8 @@ public class PreferenceManager {
 	 * @param previousFolder
 	 *            the path of the last folder opened
 	 */
-	public void setPreviousFolder(File previousFolder) {
-		if (!previousFolder.equals(this.previousFolder)) {
+	public void setPreviousFolder(File previousFolder, boolean forceRefresh) {
+		if (forceRefresh || !previousFolder.equals(this.previousFolder)) {
 			// store locally
 			this.previousFolder = previousFolder;
 			if (getRememberPreviousFolder()) {

@@ -35,7 +35,7 @@ public class FolderTreeWithSelectionHandler extends FolderTree implements TreeSe
 		// selection.
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) getLastSelectedPathComponent();
 		if (node != null) {
-			ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder((File) node.getUserObject());
+			ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder((File) node.getUserObject(), false);
 		}
 	}
 }

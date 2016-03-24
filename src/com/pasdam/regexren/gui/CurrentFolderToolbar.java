@@ -136,7 +136,7 @@ public class CurrentFolderToolbar extends JToolBar implements Localizable {
 		/** "Parent folder" button mouse handler method */
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder(CurrentFolderToolbar.this.currentFolder.getParentFile());
+			ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder(CurrentFolderToolbar.this.currentFolder.getParentFile(), false);
 		}
 
 		/** Text field handler method */
@@ -145,7 +145,7 @@ public class CurrentFolderToolbar extends JToolBar implements Localizable {
 			File file = new File(CurrentFolderToolbar.this.folderPathText.getText());
 			if (file.isDirectory() && file.exists()) {
 				CurrentFolderToolbar.this.ignoreFolderChange = true;
-				ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder(file);
+				ApplicationManager.getInstance().getPreferenceManager().setPreviousFolder(file, false);
 				CurrentFolderToolbar.this.ignoreFolderChange = false;
 				
 				// reset border
