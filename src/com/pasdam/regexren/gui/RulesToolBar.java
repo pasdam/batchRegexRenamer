@@ -31,10 +31,10 @@ import com.pasdam.regexren.model.FileModelItem;
  * @author paco
  * @version 0.1
  */
-public class RulesToolBar extends JToolBar implements Localizable,
-													  MouseListener,
-													  RulesListener,
-													  FilesListListener {
+class RulesToolBar extends JToolBar implements Localizable,
+											   MouseListener,
+											   RulesListener,
+											   FilesListListener {
 
 	private static final long serialVersionUID = -3461213981982443383L;
 

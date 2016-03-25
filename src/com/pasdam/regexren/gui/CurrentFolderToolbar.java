@@ -28,7 +28,7 @@ import com.pasdam.regexren.controller.LogManager;
  * @author paco
  * @version 1.0
  */
-public class CurrentFolderToolbar extends JToolBar implements Localizable {
+class CurrentFolderToolbar extends JToolBar implements Localizable {
 
 	private static final long serialVersionUID = 4958325718329266773L;
 

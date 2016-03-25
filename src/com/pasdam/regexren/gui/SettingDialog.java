@@ -28,7 +28,7 @@ import com.pasdam.regexren.controller.PreferenceManager;
  * @author paco
  * @version 0.1
  */
-public class SettingDialog extends JDialog implements ActionListener {
+class SettingDialog extends JDialog implements ActionListener {
 	
 	private static final long serialVersionUID = -1246396265114536942L;
 

@@ -18,7 +18,7 @@ import com.pasdam.regexren.gui.rules.AbstractRuleFactory;
  * @author paco
  * @version 0.1
  */
-public class RuleMenu extends JPopupMenu implements Localizable {
+class RuleMenu extends JPopupMenu implements Localizable {
 	
 	private static final long serialVersionUID = -8735384067484992307L;
 

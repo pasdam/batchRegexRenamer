@@ -22,8 +22,15 @@ import com.pasdam.regexren.controller.LogManager;
 import com.pasdam.regexren.controller.PreferenceManager;
 import com.pasdam.utils.PropertyChangeListener;
 
-@SuppressWarnings("serial")
+/**
+ * Main application frame
+ * 
+ * @author paco
+ * @version 0.1
+ */
 public class MainWindow extends JFrame {
+
+	private static final long serialVersionUID = -1346466663938712571L;
 
 	// UI components
 	private FolderTreeWithSelectionHandler folderTree;

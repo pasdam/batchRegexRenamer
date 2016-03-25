@@ -37,7 +37,7 @@ import com.pasdam.regexren.gui.rules.RuleFactoryListener;
  * @author paco
  * @version 0.1
  */
-public class ExpandableRule extends ExpandableItem implements Localizable, Transferable {
+class ExpandableRule extends ExpandableItem implements Localizable, Transferable {
 	
 	/**	MIME type that indicates an {@link AbstractRuleFactory} */
 	public static final String MIME_TYPE_RULE_FACTORY = DataFlavor.javaJVMLocalObjectMimeType + ";class=com.pasdam.regexren.gui.rules.AbstractRuleFactory";

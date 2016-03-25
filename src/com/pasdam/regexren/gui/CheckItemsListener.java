@@ -7,7 +7,7 @@ package com.pasdam.regexren.gui;
  * @author paco
  * @version 0.1
  */
-public interface CheckItemsListener {
+interface CheckItemsListener {
 	
 	/**
 	 * Indicates the target of the check action

@@ -40,7 +40,13 @@ import com.pasdam.regexren.gui.rules.RemovePanel;
 import com.pasdam.regexren.gui.rules.ReplaceFactory;
 import com.pasdam.regexren.gui.rules.ReplacePanel;
 
-public class RulesPanel extends JScrollPane implements RulesListener, Localizable {
+/**
+ * Panel that contains the list of created rules
+ * 
+ * @author paco
+ * @version 0.1
+ */
+class RulesPanel extends JScrollPane implements RulesListener, Localizable {
 
 	private static final long serialVersionUID = -6600541345376059836L;
 	

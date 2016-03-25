@@ -14,7 +14,7 @@ import javax.swing.JPopupMenu;
  * @author paco
  * @version 0.1
  */
-public class PopupMenuButton extends JButton {
+class PopupMenuButton extends JButton {
 
 	private static final long serialVersionUID = 2279657569485225227L;
 	

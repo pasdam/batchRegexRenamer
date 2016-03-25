@@ -19,7 +19,7 @@ import com.pasdam.regexren.controller.ApplicationManager;
  * @author paco
  * @version 0.1
  */
-public class FolderTreeWithSelectionHandler extends FolderTree implements TreeSelectionListener {
+class FolderTreeWithSelectionHandler extends FolderTree implements TreeSelectionListener {
 
 	private static final long serialVersionUID = 7280891736231114189L;
 	

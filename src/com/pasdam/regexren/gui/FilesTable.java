@@ -44,9 +44,9 @@ import com.pasdam.regexren.model.FileModelItem;
  * @author paco
  * @version 0.1
  */
-public class FilesTable extends JPanel implements CheckItemsListener,
-												  FilesListListener,
-												  Localizable {
+class FilesTable extends JPanel implements CheckItemsListener,
+										   FilesListListener,
+										   Localizable {
 	
 	private static final long serialVersionUID = 8039532837481259761L;
 	
