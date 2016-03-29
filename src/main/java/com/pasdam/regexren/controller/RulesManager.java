@@ -290,7 +290,6 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 		} catch (Exception e) {
 			if (LogManager.ENABLED) LogManager.error("RulesManager.openScriptFile: " + e.getMessage());
 			notifyError("Error.RulesManager.loadScript");
-			e.printStackTrace();
 		}
 	}
 
