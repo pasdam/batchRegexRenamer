@@ -1,6 +1,7 @@
 package com.pasdam.regexren.gui.rules;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -12,7 +13,14 @@ import com.pasdam.test.TestFileReader;
 
 public class TestReplaceFactory {
 	
-	private static final String TEST_FOLDER = "testData" + File.separator + "regexren" + File.separator + "gui" + File.separator + "rules";
+	private static final String TEST_FOLDER = "src" + File.separator 
+											+ "test" + File.separator
+											+ "resources" + File.separator
+											+ "com" + File.separator
+											+ "pasdam" + File.separator
+											+ "regexren" + File.separator
+											+ "gui" + File.separator
+											+ "rules";
 	private static final String TEST_FILE = TEST_FOLDER + File.separator + "replace.tst";
 
 	@Test
@@ -42,6 +50,7 @@ public class TestReplaceFactory {
 			
 		} catch (Exception exception) {
 			exception.printStackTrace();
+			fail(exception.getMessage());
 		}
 	}
 }
