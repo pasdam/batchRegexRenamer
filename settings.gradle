@@ -1,0 +1,5 @@
+rootProject.buildFileName = 'batchRegexRenamer.gradle'
+
+include 'pLib'
+project(':pLib').projectDir = new File(settingsDir, "../pLib")
+project(':pLib').buildFileName = 'pLib.gradle'

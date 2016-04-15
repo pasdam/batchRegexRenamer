@@ -1,0 +1,47 @@
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+ 
+dependencies {
+    compile project(':pLib')
+    //compile files(project(":pLib").sourceSets.main.java.srcDirs)
+    
+    // testing compile-time dependencies
+    testCompile project(path: ":pLib", configuration: "testRuntime")
+    testCompile 'junit:junit:4.11'
+}
+
+// disable test of "pLib" subproject
+project(':pLib').tasks.withType(Test){
+    enabled = false
+}
+
+processResources {
+    from ('src/main/java') {
+        include '**/*.properties'
+    }
+}
+
+// make sure that subproject classes are bundled in generated jar
+subprojects.each { subproject -> evaluationDependsOn( subproject.path ) }
+jar.dependsOn subprojects.tasks['classes']
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.pasdam.regexren.gui.MainWindow'
+    }
+    
+    subprojects.each { subproject ->
+        from subproject.sourceSets.main.output.classesDir
+        from subproject.sourceSets.main.output.resourcesDir
+    }
+}
+
+// copy images resources to build dir
+task copyImages(type: Copy) {
+    from 'images'
+    into 'build/libs/images'
+}
+build.dependsOn copyImages
