@@ -38,21 +38,21 @@ class ScriptMenu extends JPopupMenu implements ActionListener, Localizable, Rule
 	public ScriptMenu() {
 		// Open menu item
 		this.openItem = new JMenuItem();
-		this.openItem.setIcon(new ImageIcon("images" + File.separator + "open.gif"));
+		this.openItem.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "open.gif")));
 		this.openItem.setActionCommand(""+ID_SCRIPT_OPEN);
 		this.openItem.addActionListener(this);
 		add(openItem);
 		
 		// Save menu item
 		this.saveItem = new JMenuItem();
-		this.saveItem.setIcon(new ImageIcon("images" + File.separator + "save.png"));
+		this.saveItem.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "save.png")));
 		this.saveItem.setActionCommand(""+ID_SCRIPT_SAVE);
 		this.saveItem.addActionListener(this);
 		add(saveItem);
 		
 		// Clear menu item
 		this.clearItem = new JMenuItem();
-		this.clearItem.setIcon(new ImageIcon("images" + File.separator + "clear.png"));
+		this.clearItem.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "clear.png")));
 		this.clearItem.setActionCommand(""+ID_SCRIPT_CLEAR);
 		this.clearItem.addActionListener(this);
 		add(clearItem);

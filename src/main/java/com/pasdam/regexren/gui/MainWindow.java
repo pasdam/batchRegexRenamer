@@ -74,7 +74,7 @@ public class MainWindow extends JFrame {
 
 		// create main frame
 		setTitle("Batch RegEx Renamer");
-		setIconImage(new ImageIcon("images" + File.separator + "rename.png").getImage());
+		setIconImage(ImageProvider.getInstance().getImage(this, "rename.png"));
 		setBounds(100, 100, 613, 404);
 
 		// create vertical splitter

@@ -41,14 +41,14 @@ class CheckMenu extends JPopupMenu implements ActionListener, Localizable {
 		// Check all button
 		this.itemCheckAll = new JMenuItem();
 		this.itemCheckAll.addActionListener(this);
-		this.itemCheckAll.setIcon(new ImageIcon("images" + File.separator + "check_all.gif"));
+		this.itemCheckAll.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "check_all.gif")));
 		this.itemCheckAll.setActionCommand("" + ITEM_CHECK_ALL);
 		add(this.itemCheckAll);
 
 		// Check none button
 		this.itemCheckNone = new JMenuItem();
 		this.itemCheckNone.addActionListener(this);
-		this.itemCheckNone.setIcon(new ImageIcon("images" + File.separator + "check_none.gif"));
+		this.itemCheckNone.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "check_none.gif")));
 		this.itemCheckNone.setActionCommand("" + ITEM_CHECK_NONE);
 		add(this.itemCheckNone);
 
@@ -58,14 +58,14 @@ class CheckMenu extends JPopupMenu implements ActionListener, Localizable {
 		// check selected button
 		this.itemCheckSelected = new JMenuItem();
 		this.itemCheckSelected.addActionListener(this);
-		this.itemCheckSelected.setIcon(new ImageIcon("images" + File.separator + "check_all.gif"));
+		this.itemCheckSelected.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "check_all.gif")));
 		this.itemCheckSelected.setActionCommand("" + ITEM_CHECK_SELECTED);
 		add(this.itemCheckSelected);
 
 		// uncheck selected button
 		this.itemUncheckSelected = new JMenuItem();
 		this.itemUncheckSelected.addActionListener(this);
-		this.itemUncheckSelected.setIcon(new ImageIcon("images" + File.separator + "check_none.gif"));
+		this.itemUncheckSelected.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "check_none.gif")));
 		this.itemUncheckSelected.setActionCommand("" + ITEM_UNCHECK_SELECTED);
 		add(this.itemUncheckSelected);
 
@@ -75,7 +75,7 @@ class CheckMenu extends JPopupMenu implements ActionListener, Localizable {
 		// invert selection button
 		this.itemInvertSelection = new JMenuItem();
 		this.itemInvertSelection.addActionListener(this);
-		this.itemInvertSelection.setIcon(new ImageIcon("images" + File.separator + "check.png"));
+		this.itemInvertSelection.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "check.png")));
 		this.itemInvertSelection.setActionCommand("" + ITEM_INVERT);
 		add(this.itemInvertSelection);
 	}

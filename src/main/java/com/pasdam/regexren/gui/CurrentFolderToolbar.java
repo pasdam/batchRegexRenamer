@@ -58,7 +58,7 @@ class CurrentFolderToolbar extends JToolBar implements Localizable {
 		// create and add "Check elements" button
 		this.checkMenu = new CheckMenu();
 		this.checkButton = new PopupMenuButton(this.checkMenu);
-		this.checkButton.setIcon(new ImageIcon("images" + File.separator + "check.png"));
+		this.checkButton.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "check.png")));
 		add(this.checkButton);
 		
 		// create and add separator
@@ -78,7 +78,7 @@ class CurrentFolderToolbar extends JToolBar implements Localizable {
 		// create and add filters button
 		this.filtersMenu = new FilterMenu();
 		this.filterButton = new PopupMenuButton(this.filtersMenu);
-		this.filterButton.setIcon(new ImageIcon("images" + File.separator + "filter.png"));
+		this.filterButton.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "filter.png")));
 		add(this.filterButton);
 	}
 	

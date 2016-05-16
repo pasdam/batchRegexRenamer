@@ -22,6 +22,8 @@ project(':pLib').tasks.withType(Test){
 processResources {
     from ('src/main/java') {
         include '**/*.properties'
+        include '**/*.png'
+        include '**/*.gif'
     }
 }
 
@@ -38,10 +40,3 @@ jar {
         from subproject.sourceSets.main.output.resourcesDir
     }
 }
-
-// copy images resources to build dir
-task copyImages(type: Copy) {
-    from 'images'
-    into 'build/libs/images'
-}
-build.dependsOn copyImages

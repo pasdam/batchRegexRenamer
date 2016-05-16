@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.util.List;
 
 import javax.swing.Box;
@@ -37,9 +36,6 @@ class RulesToolBar extends JToolBar implements Localizable,
 											   FilesListListener {
 
 	private static final long serialVersionUID = -3461213981982443383L;
-
-	/** Prefix of images paths */
-	private static final String IMAGES_PATH_PREFIX = "images" + File.separator;
 	
 	// Buttons IDs
 	private static final int ID_DELETE    = 0;
@@ -83,7 +79,7 @@ class RulesToolBar extends JToolBar implements Localizable,
 		// create and add script button
 		this.scriptMenu = new ScriptMenu();
 		this.scriptButton = new PopupMenuButton(this.scriptMenu);
-		this.scriptButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "script.png"));
+		this.scriptButton.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "script.png")));
 		add(this.scriptButton);
 		
 		// create and add separator
@@ -97,26 +93,26 @@ class RulesToolBar extends JToolBar implements Localizable,
 		// add rule button
 		this.addRuleMenu = new AddRuleMenu();
 		this.addButton = new PopupMenuButton(this.addRuleMenu);
-		this.addButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "add.png"));
+		this.addButton.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "add.png")));
 		add(this.addButton);
 		
 		// add move up button
 		moveUpButton = new JButton();
-		moveUpButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "up.png"));
+		moveUpButton.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "up.png")));
 		moveUpButton.setName(""+ID_MOVE_UP);
 		moveUpButton.addMouseListener(this);
 		add(moveUpButton);
 
 		// add move down button
 		moveDownButton = new JButton();
-		moveDownButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "down.png"));
+		moveDownButton.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "down.png")));
 		moveDownButton.setName(""+ID_MOVE_DOWN);
 		moveDownButton.addMouseListener(this);
 		add(moveDownButton);
 
 		// add delete button
 		this.deleteButton = new JButton();
-		this.deleteButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "delete.png"));
+		this.deleteButton.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "delete.png")));
 		this.deleteButton.setName(""+ID_DELETE);
 		this.deleteButton.addMouseListener(this);
 		add(this.deleteButton);
@@ -126,7 +122,7 @@ class RulesToolBar extends JToolBar implements Localizable,
 		
 		// add settings button
 		this.settingsButton = new JButton();
-		this.settingsButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "settings.png"));
+		this.settingsButton.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "settings.png")));
 		this.settingsButton.setName(""+ID_SETTINGS);
 		this.settingsButton.addMouseListener(this);
 		add(this.settingsButton);
@@ -141,21 +137,21 @@ class RulesToolBar extends JToolBar implements Localizable,
 
 		// add preview button
 		this.previewButton = new JButton();
-		this.previewButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "preview.png"));
+		this.previewButton.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "preview.png")));
 		this.previewButton.setName(""+ID_PREVIEW);
 		this.previewButton.addMouseListener(this);
 		add(this.previewButton);
 
 		// add apply button
 		this.applyButton = new JButton();
-		this.applyButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "apply.png"));
+		this.applyButton.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "apply.png")));
 		this.applyButton.setName(""+ID_APPLY);
 		this.applyButton.addMouseListener(this);
 		add(this.applyButton);
 
 		// add undo button
 		this.undoButton = new JButton();
-		this.undoButton.setIcon(new ImageIcon(IMAGES_PATH_PREFIX + "undo.png"));
+		this.undoButton.setIcon(new ImageIcon(ImageProvider.getInstance().getImage(this, "undo.png")));
 		this.undoButton.setName(""+ID_UNDO);
 		this.undoButton.addMouseListener(this);
 		add(this.undoButton);
