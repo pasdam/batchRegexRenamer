@@ -246,45 +246,44 @@ public class RulesManager extends ErrorListenerManager implements RuleFactoryLis
 	 */
 	public void loadScriptFile(File file) {
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(file));
+			if (file.exists()) {
+				BufferedReader reader = new BufferedReader(new FileReader(file));
+				List<AbstractRuleFactory> fileRules = new ArrayList<AbstractRuleFactory>();
+				// parse each line
+				String line;
+				AbstractRuleFactory currentRule;
+				boolean errorOccurred = false;
+				while ((line = reader.readLine()) != null && !line.equals("")) {
+					currentRule = parseRule(line);
 
-			List<AbstractRuleFactory> fileRules = new ArrayList<AbstractRuleFactory>();
-			
-			// parse each line
-			String line;
-			AbstractRuleFactory currentRule;
-			boolean errorOccurred = false;
-			while ((line = reader.readLine()) != null && !line.equals("")) {
-				currentRule = parseRule(line);
+					if (currentRule != null) {
+						fileRules.add(currentRule);
 
-				if (currentRule != null) {
-					fileRules.add(currentRule);
-					
-					currentRule.addConfigurationListener(this);
-				
+						currentRule.addConfigurationListener(this);
+
+					} else {
+						errorOccurred = true;
+						break;
+					}
+				}
+				reader.close();
+				if (!errorOccurred) {
+					// commit changes
+					this.rulesList = fileRules;
+					// notify listeners
+					for (RulesListener rulesListener : this.rulesListeners) {
+						rulesListener.rulesChanged(this.rulesList);
+					}
+
+					configurationChanged(true);
+
+					// save last script
+					ApplicationManager.getInstance().getPreferenceManager().setPreviousScriptFile(file);
+
 				} else {
-					errorOccurred = true;
-					break;
-				}
-			}
-			reader.close();
-			
-			if (!errorOccurred) {
-				// commit changes
-				this.rulesList = fileRules;
-				// notify listeners
-				for (RulesListener rulesListener : this.rulesListeners) {
-					rulesListener.rulesChanged(this.rulesList);
-				}
-				
-				configurationChanged(true);
-				
-				// save last script
-				ApplicationManager.getInstance().getPreferenceManager().setPreviousScriptFile(file);
-			
-			} else {
-				if (LogManager.ENABLED) LogManager.error("RulesManager.openScriptFile: wrong rule [" + line + "]");
-				notifyError("Error.RulesManager.addRule");
+					if (LogManager.ENABLED) LogManager.error("RulesManager.openScriptFile: wrong rule [" + line + "]");
+					notifyError("Error.RulesManager.addRule");
+				} 
 			}
 			
 		} catch (Exception e) {
