@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 public class LocaleManager {
 	
 	/** Resource bundle base name */
-	private static final String BUNDLE_BASE_NAME = "com.pasdam.regexren.lang.messages";
+	private static final String BUNDLE_BASE_NAME = "com.pasdam.regexren.gui.lang.messages";
 	
 	/** Resource bundle containing the string resources */
 	private ResourceBundle localeBundle;
